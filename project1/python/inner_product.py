@@ -13,9 +13,27 @@ def inner_product_forward(input, layer, param):
 
     d, k = input["data"].shape
     n = param["w"].shape[1]
-
+    
     ###### Fill in the code here ######
-
+    b_row = param["b"].shape[1]
+    w_row = param["w"].shape[0]
+    
+    assert n == d
+    assert w_row == b_row
+    
+    w = param["w"]
+    b = np.squeeze(param["b"])
+    result = []
+    for batch_id in range(k):
+        x = input['data'][:,batch_id]
+        Wx = np.matmul(w,x)
+        y = Wx + b
+        if result == []:
+            result = y
+        else:
+            result = np.vstack((result,y))
+    result = result.T
+    print(result.shape)
     # Initialize output data structure
     output = {
         "height": n,
