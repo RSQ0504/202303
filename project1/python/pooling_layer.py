@@ -44,10 +44,6 @@ def pooling_layer_forward(input, layer):
             new_data = tempt
         else:
             new_data = np.vstack((new_data,tempt))
-        print(tempt.shape)
-    print(new_data.shape)
-    quit()
-
 
     return output
 
