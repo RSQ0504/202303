@@ -33,7 +33,7 @@ def inner_product_forward(input, layer, param):
         else:
             result = np.vstack((result,y))
     result = result.T
-    print(result.shape)
+    # print(result.shape)
     # Initialize output data structure
     output = {
         "height": n,
