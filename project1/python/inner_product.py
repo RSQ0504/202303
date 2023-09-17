@@ -21,7 +21,7 @@ def inner_product_forward(input, layer, param):
     assert n == d
     assert w_row == b_row
     
-    w = param["w"]
+    w = param["w"].T
     b = np.squeeze(param["b"])
     result = []
     for batch_id in range(k):
@@ -41,8 +41,8 @@ def inner_product_forward(input, layer, param):
         "channel": 1,
         "batch_size": k,
         "data": result # replace 'data' value with your implementation
+        #"data": np.zeros((n,k))
     }
-
     return output
 
 
