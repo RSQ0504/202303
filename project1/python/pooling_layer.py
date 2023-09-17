@@ -44,7 +44,22 @@ def pooling_layer_forward(input, layer):
             new_data = tempt
         else:
             new_data = np.vstack((new_data,tempt))
-
+    
+    tempt_layer = np.zeros((h_out, w_out))
+    tempt_image = np.zeros((h_out, w_out,c))
+    for batch in range(batch_size):
+        image = new_data[batch,:,:,:]
+        for channel in range(c):
+            image_layer = image[:,:,channel]
+            for i in range(h_out):
+                for j in range(w_out):
+                    window = image_layer[i * stride : i * stride + k,
+                             j * stride : j * stride + k]
+                    max_value = np.max(window)
+                    tempt_layer[i,j] = max_value
+            tempt_image[:,:,channel] = tempt_layer
+        output["data"][:,:,:,batch] = tempt_image
+        
     return output
 
 def pooling_layer_backward(output, input, layer):
