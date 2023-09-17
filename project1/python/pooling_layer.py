@@ -59,7 +59,7 @@ def pooling_layer_forward(input, layer):
                     tempt_layer[i,j] = max_value
             tempt_image[:,:,channel] = tempt_layer
         output["data"][:,:,:,batch] = tempt_image
-        
+    output["data"] = output["data"].reshape(-1,batch_size)
     return output
 
 def pooling_layer_backward(output, input, layer):
