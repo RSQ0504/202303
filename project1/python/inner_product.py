@@ -40,7 +40,7 @@ def inner_product_forward(input, layer, param):
         "width": 1,
         "channel": 1,
         "batch_size": k,
-        "data": np.zeros((n, k)) # replace 'data' value with your implementation
+        "data": result # replace 'data' value with your implementation
     }
 
     return output
