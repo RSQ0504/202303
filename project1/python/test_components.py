@@ -200,7 +200,7 @@ def display_results_2(input_data, output, params, testname):
     plt.savefig(filename)
 
 
-#test_conv_1()
-#test_conv_2()
+test_conv_1()
+test_conv_2()
 test_pooling_1()
 test_inner_1()

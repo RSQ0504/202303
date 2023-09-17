@@ -34,17 +34,29 @@ def conv_layer_forward(input_data, layer, param):
         'batch_size': batch_size
     }
 
+    ############# Fill in the code here ###############
+    # Hint: use im2col_conv_batch for faster computation
+    new_data = np.zeros((h_out*w_out*num,batch_size))
+    weight = param["w"].T
+    b = param["b"]
+    data_col = im2col_conv_batch(input_n, layer, h_out, w_out)
+    #print(data_col.shape)
+    #print(weight.shape)
+    for batch in range(batch_size):
+        data_col_batch = data_col[:,:,batch]
+        wx = np.matmul(weight,data_col_batch)
+        y = wx.T + b
+        tempt = y.reshape((-1),order="F")
+        new_data[:,batch] = tempt
+    #print(new_data.shape)
     output = {
         'height': h_out,
         'width': w_out,
         'channel': num,
         'batch_size': batch_size,
-        'data': np.zeros((h_out, w_out, num, batch_size)) # replace 'data' value with your implementation
+        #'data': np.zeros((h_out, w_out, num, batch_size)) # replace 'data' value with your implementation
+        'data': new_data
     }
-
-    ############# Fill in the code here ###############
-    # Hint: use im2col_conv_batch for faster computation
-    
     return output
 
 
