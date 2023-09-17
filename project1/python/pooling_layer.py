@@ -31,11 +31,10 @@ def pooling_layer_forward(input, layer):
     ###### Fill in the code here ######
     old_data =  np.hsplit(input["data"],input["data"].shape[1])
     new_data = []
-
     for data in old_data:
-        data = data.reshape(h_in,w_in,c)
+        data = data.reshape(c,h_in,w_in)
         if pad != 0:
-            pad_width = [(pad, pad), (pad, pad), (0, 0)]
+            pad_width = [(0, 0) ,(pad, pad), (pad, pad)]
             tempt = np.pad(data, pad_width, mode='constant', constant_values=0)
         else:
             tempt = data
@@ -50,14 +49,14 @@ def pooling_layer_forward(input, layer):
     for batch in range(batch_size):
         image = new_data[batch,:,:,:]
         for channel in range(c):
-            image_layer = image[:,:,channel]
+            image_layer = image[channel,:,:]
             for i in range(h_out):
                 for j in range(w_out):
                     window = image_layer[i * stride : i * stride + k,
                              j * stride : j * stride + k]
                     max_value = np.max(window)
                     tempt_layer[i,j] = max_value
-            tempt_image[:,:,channel] = tempt_layer
+            tempt_image[channel,:,:] = tempt_layer
         output["data"][:,:,:,batch] = tempt_image
     output["data"] = output["data"].reshape(-1,batch_size)
     return output
