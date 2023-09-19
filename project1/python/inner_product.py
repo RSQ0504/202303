@@ -59,8 +59,19 @@ def inner_product_backward(output, input_data, layer, param):
     param_grad = {}
     ###### Fill in the code here ######
     # Replace the following lines with your implementation.
-    param_grad['b'] = np.zeros_like(param['b'])
-    param_grad['w'] = np.zeros_like(param['w'])
-    input_od = None
-
+    #param_grad['b'] = np.zeros_like(param['b'])
+    #param_grad['w'] = np.zeros_like(param['w'])
+    #input_od = None
+    
+    last_diff = output["diff"]
+    data = input_data["data"]
+    
+    diff_b = 1
+    diff_w = data
+    diff_h = param["w"]
+    
+    param_grad['b'] = last_diff * diff_b
+    param_grad['w'] = last_diff * diff_w
+    input_od = last_diff * diff_h
+    
     return param_grad, input_od

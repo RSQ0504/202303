@@ -11,15 +11,21 @@ def relu_forward(input_data):
     ###### Fill in the code here ######
     # Replace the following line with your implementation.
     output['data'] = input_data['data']
-    output["data"][output["data"]<0]=0
+    output["data"][output["data"]<0] = 0
 
     return output
 
 def relu_backward(output, input_data, layer):
     ###### Fill in the code here ######
     # Replace the following line with your implementation.
-    input_od = np.zeros_like(input_data['data'])
-
+    #input_od = np.zeros_like(input_data['data'])
+    last_diff = output["diff"]
+    data = input_data["data"]
+    
+    diff_h = data[data<0] = 0
+    
+    input_od = last_diff * diff_h
+    
     return input_od
 
 '''
