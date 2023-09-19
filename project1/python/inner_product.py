@@ -15,12 +15,6 @@ def inner_product_forward(input, layer, param):
     n = param["w"].shape[1]
     
     ###### Fill in the code here ######
-    b_row = param["b"].shape[1]
-    w_row = param["w"].shape[0]
-    
-    assert n == d
-    assert w_row == b_row
-    
     w = param["w"].T
     b = np.squeeze(param["b"])
     result = []
