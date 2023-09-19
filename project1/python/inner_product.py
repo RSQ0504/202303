@@ -62,9 +62,9 @@ def inner_product_backward(output, input_data, layer, param):
     batch_size = input_data["batch_size"]
     input_od = np.zeros_like(data)
     
-    diff_b = np.ones((batch_size,1))
+    learning = np.ones((batch_size,1))
     diff_h = param["w"].T
-    param_grad['b'] = np.matmul(last_diff,diff_b)
+    param_grad['b'] = np.matmul(last_diff,learning)
 
     for batch in range(batch_size):
         diff_w = np.tile(data[:,batch],(last_diff.shape[0],1)).T
