@@ -29,6 +29,7 @@ def pooling_layer_forward(input, layer):
     output['data'] = np.zeros((h_out, w_out, c, batch_size)) # replace with your implementation
 
     ###### Fill in the code here ######
+    output['data'] = np.zeros((c, h_out, w_out, batch_size))
     old_data =  np.hsplit(input["data"],input["data"].shape[1])
 
     new_data = []
