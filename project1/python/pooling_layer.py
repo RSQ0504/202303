@@ -30,6 +30,7 @@ def pooling_layer_forward(input, layer):
 
     ###### Fill in the code here ######
     old_data =  np.hsplit(input["data"],input["data"].shape[1])
+
     new_data = []
     for data in old_data:
         #data = data.reshape(c,h_in,w_in)
@@ -45,9 +46,10 @@ def pooling_layer_forward(input, layer):
             new_data = tempt
         else:
             new_data = np.vstack((new_data,tempt))
+
     
     tempt_layer = np.zeros((h_out, w_out))
-    tempt_image = np.zeros((h_out, w_out,c))
+    tempt_image = np.zeros((c, h_out, w_out))
     for batch in range(batch_size):
         image = new_data[batch,:,:,:]
         for channel in range(c):
