@@ -22,10 +22,10 @@ def relu_backward(output, input_data, layer):
     last_diff = output["diff"]
     data = input_data["data"]
     
-    diff_h = data[data<0] = 0
+    diff_h = np.where(data < 0, 0, 1)
     
     input_od = last_diff * diff_h
-    
+
     return input_od
 
 '''
