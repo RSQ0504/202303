@@ -5,7 +5,7 @@ from conv_net import conv_net
 from utils import sgd_momentum, get_lr, get_lenet
 import copy
 from scipy.io import savemat
-
+import tqdm
 # Set random seeds
 np.random.seed(100000)
 
@@ -45,7 +45,7 @@ xtrain = xtrain[:, new_order]
 ytrain = ytrain[:, new_order]
 curr_batch = 0  
 
-for iter in range(max_iter):
+for iter in tqdm.tqdm(range(max_iter)):
     if curr_batch >= m_train:
         new_order = np.random.permutation(m_train)
         xtrain = xtrain[:, new_order]
