@@ -10,8 +10,7 @@ def relu_forward(input_data):
 
     ###### Fill in the code here ######
     # Replace the following line with your implementation.
-    output['data'] = input_data['data']
-    output["data"][output["data"]<0] = 0
+    output['data'] = np.maximum(0, input_data["data"])
 
     return output
 
