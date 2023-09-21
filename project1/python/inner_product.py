@@ -17,16 +17,12 @@ def inner_product_forward(input, layer, param):
     ###### Fill in the code here ######
     w = param["w"].T
     b = np.squeeze(param["b"])
-    result = []
+    result = np.zeros((layer["num"],input["batch_size"]))
     for batch_id in range(k):
         x = input['data'][:,batch_id]
         Wx = np.matmul(w,x)
         y = Wx + b
-        if result == []:
-            result = y
-        else:
-            result = np.vstack((result,y))
-    result = result.T
+        result[:,batch_id] = y
     # print(result.shape)
     # Initialize output data structure
     output = {
