@@ -32,7 +32,7 @@ b_lr = 2
 test_interval = 500
 display_interval = 50
 snapshot = 500
-max_iter = 2000
+max_iter = 2001
 
 # Use the following to train from scratch
 params = init_convnet(layers)

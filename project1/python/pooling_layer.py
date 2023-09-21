@@ -32,21 +32,15 @@ def pooling_layer_forward(input, layer):
     output['data'] = np.zeros((c, h_out, w_out, batch_size))
     old_data =  np.hsplit(input["data"],input["data"].shape[1])
 
-    new_data = []
-    for data in old_data:
+    new_data = np.zeros((batch_size,h_in + 2 * pad,w_in + 2 * pad,c))
+    for index,data in enumerate(old_data):
         #data = data.reshape(c,h_in,w_in)
         data = data.reshape((h_in,w_in,c),order="F")
-        if pad != 0:
-            #pad_width = [(0, 0) ,(pad, pad), (pad, pad)]
-            pad_width = [(pad, pad), (pad, pad), (0, 0)]
-            tempt = np.pad(data, pad_width, mode='constant', constant_values=0)
-        else:
-            tempt = data
-        tempt = np.expand_dims(tempt, axis=0)
-        if new_data == []:
-            new_data = tempt
-        else:
-            new_data = np.vstack((new_data,tempt))
+        #pad_width = [(0,0),(pad,pad),(pad,pad)]
+        pad_width = [(pad,pad),(pad,pad),(0,0)]
+        data = np.pad(data,pad_width,mode="constant",constant_values=0)
+        new_data[index,:,:,:] = data
+        
 
     
     tempt_layer = np.zeros((h_out, w_out))
