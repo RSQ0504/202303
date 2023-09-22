@@ -5,7 +5,7 @@ from scipy.io import loadmat
 from conv_net import convnet_forward
 from init_convnet import init_convnet
 import matplotlib.pyplot as plt
-from sklearn.metrics import confusion_matrix,classification_report
+from sklearn.metrics import confusion_matrix,classification_report,ConfusionMatrixDisplay
 
 # Load the model architecture
 layers = get_lenet()
@@ -39,6 +39,9 @@ for i in range(0, xtest.shape[1], 100):
     cm = cm + cm_temp
 print(cm)
 print(classification_report(test,predict))
+disp = ConfusionMatrixDisplay(confusion_matrix=cm)
+disp.plot()
+plt.show()
 # hint: 
 #     you can use confusion_matrix from sklearn.metrics (pip install -U scikit-learn)
 #     to compute the confusion matrix. Or you can write your own code :)
