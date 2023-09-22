@@ -6,7 +6,7 @@ from init_convnet import init_convnet
 from scipy.io import loadmat
 from utils import get_lenet
 
-if "__name__"=="__main__":
+if __name__ == "__main__":
     # Load the model architecture
     layers = get_lenet(1)
     params = init_convnet(layers)
@@ -30,8 +30,6 @@ if "__name__"=="__main__":
         "4.png":2,
         "5.png":9
     }
-
-
     for file in os.listdir(path):
         if file.split('.')[-1] ==  "png":
             image = cv2.imread(os.path.join(path,file),cv2.IMREAD_GRAYSCALE)
