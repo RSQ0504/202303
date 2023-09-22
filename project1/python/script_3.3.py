@@ -20,7 +20,7 @@ for params_idx in range(len(params)):
     params[params_idx]['w'] = raw_w
     params[params_idx]['b'] = raw_b
 
-path = "3.3/"
+path = "3.3image/"
 label = {
     "1.png":7,
     "2.png":4,
