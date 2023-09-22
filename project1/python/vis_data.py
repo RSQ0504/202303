@@ -11,7 +11,7 @@ layers = get_lenet()
 params = init_convnet(layers)
 
 # Load the network
-data = loadmat('lenet.mat')
+data = loadmat('../results/lenet.mat')
 params_raw = data['params']
 
 for params_idx in range(len(params)):
