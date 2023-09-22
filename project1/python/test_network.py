@@ -5,6 +5,7 @@ from scipy.io import loadmat
 from conv_net import convnet_forward
 from init_convnet import init_convnet
 import matplotlib.pyplot as plt
+from sklearn.metrics import confusion_matrix
 
 # Load the model architecture
 layers = get_lenet()
@@ -26,14 +27,17 @@ for params_idx in range(len(params)):
 fullset = False
 xtrain, ytrain, xvalidate, yvalidate, xtest, ytest = load_mnist(fullset)
 
-
 # Testing the network
 #### Modify the code to get the confusion matrix ####
 all_preds = []
+cm = np.zeros((10,10))
 for i in range(0, xtest.shape[1], 100):
     cptest, P = convnet_forward(params, layers, xtest[:,i:i+100], test=True)
-
+    predict = np.argmax(P,axis=0)
+    test = np.squeeze(ytest[:,i:i+100])
+    cm_temp = confusion_matrix(test,predict)
+    cm = cm + cm_temp
+print(cm)
 # hint: 
 #     you can use confusion_matrix from sklearn.metrics (pip install -U scikit-learn)
 #     to compute the confusion matrix. Or you can write your own code :)
-
