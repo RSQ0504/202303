@@ -9,7 +9,16 @@ from init_convnet import init_convnet
 from utils import get_lenet
 
 path = "../images/"
-
+label = {
+    "image1.JPG":[1,2,3,4,5,6,7,8,9,0],
+    "image2.JPG":[1,2,3,4,5,6,7,8,9,0],
+    "image3.png":[6,0,6,2,4],
+    "image4.jpg":[7,2,1,0,4,1,4,9,5,9,
+                    0,6,9,0,1,5,9,7,3,4,
+                    9,6,4,5,4,0,7,4,0,1,
+                    3,1,3,4,7,2,7,1,2,1,
+                    1,7,4,2,3,5,1,2,4,4],
+}
 for file in os.listdir(path):
     if file.split('.')[-1] in  ["png","PNG","JPG","jpg"]:
         image = cv2.imread(os.path.join(path,file),cv2.IMREAD_GRAYSCALE)
@@ -67,4 +76,6 @@ for file in os.listdir(path):
                 
         cptest, P = convnet_forward(params, layers, classify_images, test=True)
         predict = np.argmax(P,axis=0)
-        print(file,predict)
+        print(file)
+        print(f"prediict: {predict}")
+        print(f"label: {label[file]}")
