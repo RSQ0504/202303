@@ -34,6 +34,7 @@ if __name__ == "__main__":
         if file.split('.')[-1] in  ["png","PNG","JGP","jpg"]:
             image = cv2.imread(os.path.join(path,file),cv2.IMREAD_GRAYSCALE)
             resized_image = cv2.resize(image, (28, 28), interpolation=cv2.INTER_LINEAR)
+            cv2.normalize(resized_image, resized_image, 0, 1, cv2.NORM_MINMAX)
             image_np = np.array(resized_image)
             image_np = image_np.reshape(-1,1)
             cptest, P = convnet_forward(params, layers, image_np, test=True)
