@@ -18,11 +18,19 @@ label = {
                     9,6,4,5,4,0,7,4,0,1,
                     3,1,3,4,7,2,7,1,2,1,
                     1,7,4,2,3,5,1,2,4,4],
+    "minst.jpg":[7,2,1,0,4,1,4,9,5,9,
+                    0,6,9,0,1,5,9,7,3,4,
+                    9,6,4,5,4,0,7,4,0,1,
+                    3,1,3,4,7,2,7,1,2,1,
+                    1,7,4,2,3,5,1,2,4,4,
+                    6,3,5,5,6,0,4,1,9,5,
+                    7,8,9,3],
 }
 for file in os.listdir(path):
     if file.split('.')[-1] in  ["png","PNG","JPG","jpg"]:
         image = cv2.imread(os.path.join(path,file),cv2.IMREAD_GRAYSCALE)
         _, binary_image = cv2.threshold(image, 0, 255, cv2.THRESH_BINARY_INV + cv2.THRESH_OTSU)
+        #_, binary_image = cv2.threshold(image, 127, 255, cv2.THRESH_BINARY)
         num, label_image = cv2.connectedComponents(binary_image)
         
         list_info = []
