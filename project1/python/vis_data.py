@@ -39,3 +39,26 @@ output = convnet_forward(params, layers, xtest[:,0:1])
 output_1 = np.reshape(output[0]['data'], (28,28), order='F')
 
 ##### Fill in your code here to plot the features ######
+output_2 = np.reshape(output[1]['data'], (24,24,20), order='F')
+features = [output_2[:, :, i].T for i in range(20)]
+
+fig = plt.figure(figsize=(10, 8))
+
+for i in range(1, 4 * 5 + 1):
+    ax = fig.add_subplot(4, 5, i)
+    ax.imshow(features[i - 1], cmap='gray')
+
+plt.tight_layout()
+plt.show()
+
+output_3 = np.reshape(output[2]['data'], (24,24,20), order='F')
+features = [output_3[:, :, i].T for i in range(20)]
+
+fig = plt.figure(figsize=(10, 8))
+
+for i in range(1, 4 * 5 + 1):
+    ax = fig.add_subplot(4, 5, i)
+    ax.imshow(features[i - 1], cmap='gray')
+
+plt.tight_layout()
+plt.show()
