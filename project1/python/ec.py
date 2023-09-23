@@ -31,12 +31,13 @@ for file in os.listdir(path):
             # Extract the digit region of interest (ROI)
             crop_image = image[y:y+h, x:x+w]
             resized_image = cv2.resize(crop_image, (28, 28), interpolation=cv2.INTER_LINEAR)
+            cv2.normalize(resized_image, resized_image, 0, 1, cv2.NORM_MINMAX)
             list_info.append((resized_image, (x, y, w, h)))
         
         list_info = sorted(list_info, key=lambda x: x[1][0])
         
-        classify_images = np.zeros((28*28,num))
-        show_images = np.zeros((28,28,num))
+        classify_images = np.zeros((28*28,num-1))
+        show_images = np.zeros((28,28,num-1))
         for index, info in enumerate(list_info):
             show_images[:,:,index] = info[0]
             classify_images[:,index] = info[0].reshape(-1,)
@@ -60,7 +61,7 @@ for file in os.listdir(path):
                 axes[i, j].axis('off')
         plt.show()
             
-        layers = get_lenet(num)
+        layers = get_lenet(num-1)
         params = init_convnet(layers)
 
         # Load the network
