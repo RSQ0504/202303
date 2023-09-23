@@ -4,25 +4,52 @@ import numpy as np
 import matplotlib.pyplot as plt
 from scipy.io import loadmat
 
-from ..python.conv_net import convnet_forward
-from ..python.init_convnet import init_convnet
-from ..python.utils import get_lenet
+from conv_net import convnet_forward
+from init_convnet import init_convnet
+from utils import get_lenet
 
 path = "../images/"
 
 for file in os.listdir(path):
-    if file.split('.')[-1] in  ["png","PNG","JGP","jpg"]:
+    if file.split('.')[-1] in  ["png","PNG","JPG","jpg"]:
         image = cv2.imread(os.path.join(path,file),cv2.IMREAD_GRAYSCALE)
         _, binary_image = cv2.threshold(image, 0, 255, cv2.THRESH_BINARY_INV + cv2.THRESH_OTSU)
         num, label_image = cv2.connectedComponents(binary_image)
-
-        classify_images = np.zeros((28*28,num))
+        
+        list_info = []
         for index in range(1, num):
             x, y, w, h = cv2.boundingRect((label_image == index).astype(np.uint8))
             # Extract the digit region of interest (ROI)
             crop_image = image[y:y+h, x:x+w]
             resized_image = cv2.resize(crop_image, (28, 28), interpolation=cv2.INTER_LINEAR)
-            classify_images[:,index] = resized_image.reshape(-1,1)
+            list_info.append((resized_image, (x, y, w, h)))
+        
+        list_info = sorted(list_info, key=lambda x: x[1][0])
+        
+        classify_images = np.zeros((28*28,num))
+        show_images = np.zeros((28,28,num))
+        for index, info in enumerate(list_info):
+            show_images[:,:,index] = info[0]
+            classify_images[:,index] = info[0].reshape(-1,)
+        
+        h, w, batch_size = show_images.shape
+    
+        num_cols = int(np.ceil(np.sqrt(batch_size)))
+        num_rows = int(np.ceil(batch_size / num_cols))
+        fig, axes = plt.subplots(num_rows, num_cols, figsize=(8, 8))
+        
+        if num_rows == 1:
+            axes = axes.reshape(1, -1)
+        if num_cols == 1:
+            axes = axes.reshape(-1, 1)
+
+        for i in range(num_rows):
+            for j in range(num_cols):
+                index = i * num_cols + j
+                if index < batch_size:
+                    axes[i, j].imshow(show_images[:,:,index], cmap='gray')
+                axes[i, j].axis('off')
+        plt.show()
             
         layers = get_lenet(num)
         params = init_convnet(layers)
@@ -37,6 +64,7 @@ for file in os.listdir(path):
             assert params[params_idx]['b'].shape == raw_b.shape, 'biases do not have the same shape'
             params[params_idx]['w'] = raw_w
             params[params_idx]['b'] = raw_b
-            
+                
         cptest, P = convnet_forward(params, layers, classify_images, test=True)
         predict = np.argmax(P,axis=0)
+        print(file,predict)
