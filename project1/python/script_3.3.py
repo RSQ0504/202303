@@ -31,9 +31,9 @@ if __name__ == "__main__":
         "5.png":9
     }
     for file in os.listdir(path):
-        if file.split('.')[-1] ==  "png":
+        if file.split('.')[-1] in  ["png","PNG","JGP","jpg"]:
             image = cv2.imread(os.path.join(path,file),cv2.IMREAD_GRAYSCALE)
-            resized_image = cv2.resize(image, (28, 28))
+            resized_image = cv2.resize(image, (28, 28), interpolation=cv2.INTER_LINEAR)
             image_np = np.array(resized_image)
             image_np = image_np.reshape(-1,1)
             cptest, P = convnet_forward(params, layers, image_np, test=True)
