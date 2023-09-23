@@ -32,15 +32,34 @@ for file in os.listdir(path):
             crop_image = image[y:y+h, x:x+w]
             resized_image = cv2.resize(crop_image, (28, 28), interpolation=cv2.INTER_LINEAR)
             cv2.normalize(resized_image, resized_image, 0, 1, cv2.NORM_MINMAX)
-            list_info.append((resized_image, (x, y, w, h)))
+            list_info.append((resized_image, x, y))
         
-        list_info = sorted(list_info, key=lambda x: x[1][0])
-        
+        list_info = sorted(list_info, key=lambda x: x[2])
+        rows = []
+        cur_row = []
+        prev_y = None
+        for image, x, y in list_info:
+            if prev_y is None:
+                cur_row.append((image,x,y))
+                prev_y = y
+            elif y - prev_y < 28:  # Adjust this threshold as needed
+                cur_row.append((image,x,y))
+                prev_y = y
+            else:
+                rows.append(cur_row)
+                cur_row = [(image,x,y)]
+                prev_y = y
+        rows.append(cur_row)
+        list_info = []
+        for row in rows:
+            row = sorted(row, key=lambda x: x[1])
+            for info in row:
+                list_info.append(info[0])
         classify_images = np.zeros((28*28,num-1))
         show_images = np.zeros((28,28,num-1))
         for index, info in enumerate(list_info):
-            show_images[:,:,index] = info[0]
-            classify_images[:,index] = info[0].reshape(-1,)
+            show_images[:,:,index] = info
+            classify_images[:,index] = info.reshape(-1,)
         
         h, w, batch_size = show_images.shape
     
