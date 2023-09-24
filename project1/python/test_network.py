@@ -37,8 +37,11 @@ for i in range(0, xtest.shape[1], 100):
     test = np.squeeze(ytest[:,i:i+100])
     cm_temp = confusion_matrix(test,predict)
     cm = cm + cm_temp
+    all_preds.extend(predict)
+    
 print(cm)
-print(classification_report(test,predict))
+ytest = np.squeeze(ytest)
+print(classification_report(ytest,all_preds))
 disp = ConfusionMatrixDisplay(confusion_matrix=cm)
 disp.plot()
 plt.show()
