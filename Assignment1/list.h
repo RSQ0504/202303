@@ -25,7 +25,7 @@ enum ListOutOfBounds {
 typedef struct List_s List;
 struct List_s{
     // TODO: You should change this!
-    Node* curr;
+    void* curr;
     Node* first;
     Node* last;
     unsigned int max_node_num;
