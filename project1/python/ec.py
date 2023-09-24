@@ -85,7 +85,7 @@ for file in os.listdir(path):
                 index = i * num_cols + j
                 if index < batch_size:
                     axes[i, j].imshow(show_images[:,:,index], cmap='gray')
-                axes[i, j].axis('off')
+                #axes[i, j].axis('off')
         plt.show()
             
         layers = get_lenet(num-1)
@@ -104,6 +104,7 @@ for file in os.listdir(path):
                 
         cptest, P = convnet_forward(params, layers, classify_images, test=True)
         predict = np.argmax(P,axis=0)
+        print(predict.shape)
         print(file)
         print(f"prediict: {predict}")
         print(f"label: {label[file]}")
