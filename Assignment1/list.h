@@ -28,7 +28,8 @@ struct List_s{
     void* curr;
     Node* first;
     Node* last;
-    unsigned int max_node_num;
+    bool is_empty;
+    bool is_using;
     unsigned int curr_node_num;
 };
 
