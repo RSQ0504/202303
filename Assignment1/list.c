@@ -1,17 +1,20 @@
 #include <stdio.h>
 #include "list.h"
 int count = 0; 
-
+List a[10];
 //TODO
 List* List_create(){
     count += 1;
-    List a[10];
     if (count > 10){
         return NULL;
     }
-    a[count-1].curr = NULL;
     a[count-1].first = NULL;
     a[count-1].last = NULL;
+    //set curr as before of head
+    a[count-1].curr->item = NULL;
+    a[count-1].curr->prev = NULL;
+    a[count-1].curr->next = a[count-1].first;
+
     a[count-1].is_using = true;
     a[count-1].is_empty = true;
     a[count-1].curr_node_num = 0;
@@ -20,48 +23,64 @@ List* List_create(){
 
 
 int List_count(List* pList){
-    assert(pList != NULL);
+    //assert(pList != NULL);
     return pList->curr_node_num;
 }
 
 
 void* List_first(List* pList){
-    assert(pList != NULL);
+    //assert(pList != NULL);
     if (pList->is_empty == true){
-        pList->curr = NULL;
+        pList->curr->item = NULL;
         return NULL;
     }else{
-        pList->curr = pList->first->item;
-        return pList->curr;
+        pList->curr = pList->first;
+        return pList->curr->item;
     }
 }
 
 
 void* List_last(List* pList){
-    assert(pList != NULL);
+    //assert(pList != NULL);
     if (pList->is_empty == true){
-        pList->curr = NULL;
+        pList->curr->item = NULL;
         return NULL;
     }else{
-        pList->curr = pList->last->item;
-        return pList->curr;
+        pList->curr = pList->last;
+        return pList->curr->item;
     }
 }
 
-// Advances pList's current item by one, and returns a pointer to the new current item.
-// If this operation advances the current item beyond the end of the pList, a NULL pointer 
-// is returned and the current item is set to be beyond end of pList.
-void* List_next(List* pList);
+void* List_next(List* pList){
+    Node* next = pList->curr->next;
+    if (next == NULL){
+        pList->curr->item = NULL;
+        pList->curr->prev = pList->last;
+        pList->curr->next = NULL;
+        return NULL;
+    }else{
+        pList->curr = next;
+        return pList->curr->item;
+    }
+}
 
-// Backs up pList's current item by one, and returns a pointer to the new current item. 
-// If this operation backs up the current item beyond the start of the pList, a NULL pointer 
-// is returned and the current item is set to be before the start of pList.
-void* List_prev(List* pList);
+void* List_prev(List* pList){
+    Node* prev = pList->curr->prev;
+    if (prev == NULL){
+        pList->curr->item = NULL;
+        pList->curr->prev = NULL;
+        pList->curr->next = pList->first;
+        return NULL;
+    }else{
+        pList->curr = prev;
+        return pList->curr->item;
+    }
+}
 
 
 void* List_curr(List* pList){
-    assert(pList != NULL);
-    return pList->curr;
+    //assert(pList != NULL);
+    return pList->curr->item;
 }
 
 // Adds the new item to pList directly after the current item, and makes item the current item. 
