@@ -1,24 +1,33 @@
 #include <stdio.h>
 #include "list.h"
-int count = 0; 
-List a[10];
+int list_count = 0; 
+int node_count = 0;
+List list_pool[LIST_MAX_NUM_HEADS];
+Node node_pool[LIST_MAX_NUM_HEADS * LIST_MAX_NUM_NODES];
 //TODO
 List* List_create(){
-    count += 1;
-    if (count > 10){
+    int list_index = list_count;
+    int node_index = node_count;
+    if (list_index >= LIST_MAX_NUM_HEADS || node_index>=LIST_MAX_NUM_HEADS*LIST_MAX_NUM_NODES){
         return NULL;
     }
-    a[count-1].first = NULL;
-    a[count-1].last = NULL;
-    //set curr as before of head
-    a[count-1].curr->item = NULL;
-    a[count-1].curr->prev = NULL;
-    a[count-1].curr->next = a[count-1].first;
+    list_count ++;
+    node_count ++;
 
-    a[count-1].is_using = true;
-    a[count-1].is_empty = true;
-    a[count-1].curr_node_num = 0;
-    return &(a[count-1]);
+    List* new_list =  &(list_pool[list_index]);
+    Node* new_node = &(node_pool[node_index]);
+
+    new_list->first = new_node;
+    new_list->last = new_node;
+    //set curr as before of head
+    new_list->curr->item = NULL;
+    new_list->curr->prev = NULL;
+    new_list->curr->next = new_node;
+
+    new_list->is_using = true;
+    new_list->is_empty = true;
+    new_list->curr_node_num = 0;
+    return new_list;
 }
 
 
