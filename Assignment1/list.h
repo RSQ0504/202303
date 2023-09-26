@@ -20,7 +20,8 @@ struct Node_s {
 
 enum ListOutOfBounds {
     LIST_OOB_START,
-    LIST_OOB_END
+    LIST_OOB_END,
+    IN_LIST
 };
 typedef struct List_s List;
 struct List_s{

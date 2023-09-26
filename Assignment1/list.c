@@ -40,6 +40,7 @@ void* List_first(List* pList){
         return NULL;
     }else{
         pList->curr = pList->first;
+        pList->curr_node_state = IN_LIST;
         return pList->curr->item;
     }
 }
@@ -53,6 +54,7 @@ void* List_last(List* pList){
         return NULL;
     }else{
         pList->curr = pList->last;
+        pList->curr_node_state = IN_LIST;
         return pList->curr->item;
     }
 }
@@ -65,6 +67,7 @@ void* List_next(List* pList){
         return NULL;
     }else{
         pList->curr = next;
+        pList->curr_node_state = IN_LIST;
         return pList->curr->item;
     }
 }
@@ -77,6 +80,7 @@ void* List_prev(List* pList){
         return NULL;
     }else{
         pList->curr = prev;
+        pList->curr_node_state = IN_LIST;
         return pList->curr->item;
     }
 }
