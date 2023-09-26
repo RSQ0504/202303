@@ -8,31 +8,20 @@ Node node_pool[LIST_MAX_NUM_HEADS * LIST_MAX_NUM_NODES];
 //TODO
 List* List_create(){
     int list_index = list_count;
-    int node_index = node_count;
-    if (list_index >= LIST_MAX_NUM_HEADS || node_index>=LIST_MAX_NUM_HEADS*LIST_MAX_NUM_NODES){
+    if (list_index >= LIST_MAX_NUM_HEADS){
         return NULL;
     }
     list_count ++;
-    node_count ++;
 
     List* new_list =  &(list_pool[list_index]);
-    Node* new_node = &(node_pool[node_index]);
-    Node* OOB_node = &(OOB_node_pool[list_index]);
 
-    new_list->first = new_node;
-    new_list->last = new_node;
-    new_list->curr = OOB_node;
-    //set curr as before of head
-    new_list->first->prev = OOB_node;
-    new_list->first->next = NULL;
-    new_list->first->item = NULL;
-    
-    new_list->curr->prev = NULL;
-    new_list->curr->next = new_node;
-    new_list->curr->item = NULL;
+    new_list->first = NULL;
+    new_list->last = NULL;
+    new_list->curr = NULL;
 
     new_list->is_using = true;
     new_list->is_empty = true;
+    new_list->curr_node_state = LIST_OOB_START;
     new_list->curr_node_num = 0;
     return new_list;
 }

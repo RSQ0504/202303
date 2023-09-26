@@ -28,8 +28,11 @@ struct List_s{
     Node* curr;
     Node* first;
     Node* last;
+
     bool is_empty;
     bool is_using;
+    
+    int curr_node_state;
     unsigned int curr_node_num;
 };
 
