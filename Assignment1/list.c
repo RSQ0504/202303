@@ -3,7 +3,6 @@
 int list_count = 0; 
 int node_count = 0;
 List list_pool[LIST_MAX_NUM_HEADS];
-Node OOB_node_pool[LIST_MAX_NUM_HEADS];
 Node node_pool[LIST_MAX_NUM_HEADS * LIST_MAX_NUM_NODES];
 //TODO
 List* List_create(){
