@@ -24,10 +24,12 @@ List* List_create(){
     new_list->curr = OOB_node;
     //set curr as before of head
     new_list->first->prev = OOB_node;
+    new_list->first->next = NULL;
+    new_list->first->item = NULL;
     
-    new_list->curr->item = NULL;
     new_list->curr->prev = NULL;
     new_list->curr->next = new_node;
+    new_list->curr->item = NULL;
 
     new_list->is_using = true;
     new_list->is_empty = true;
