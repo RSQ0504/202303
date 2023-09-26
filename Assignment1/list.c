@@ -3,6 +3,7 @@
 int list_count = 0; 
 int node_count = 0;
 List list_pool[LIST_MAX_NUM_HEADS];
+Node OOB_node_pool[LIST_MAX_NUM_HEADS];
 Node node_pool[LIST_MAX_NUM_HEADS * LIST_MAX_NUM_NODES];
 //TODO
 List* List_create(){
@@ -16,10 +17,14 @@ List* List_create(){
 
     List* new_list =  &(list_pool[list_index]);
     Node* new_node = &(node_pool[node_index]);
+    Node* OOB_node = &(OOB_node_pool[list_index]);
 
     new_list->first = new_node;
     new_list->last = new_node;
+    new_list->curr = OOB_node;
     //set curr as before of head
+    new_list->first->prev = OOB_node;
+    
     new_list->curr->item = NULL;
     new_list->curr->prev = NULL;
     new_list->curr->next = new_node;
