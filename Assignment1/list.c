@@ -35,7 +35,8 @@ int List_count(List* pList){
 void* List_first(List* pList){
     //assert(pList != NULL);
     if (pList->is_empty == true){
-        pList->curr->item = NULL;
+        pList->curr = NULL;
+        pList->curr_node_state = LIST_OOB_START;
         return NULL;
     }else{
         pList->curr = pList->first;
@@ -47,7 +48,8 @@ void* List_first(List* pList){
 void* List_last(List* pList){
     //assert(pList != NULL);
     if (pList->is_empty == true){
-        pList->curr->item = NULL;
+        pList->curr = NULL;
+        pList->curr_node_state = LIST_OOB_START;
         return NULL;
     }else{
         pList->curr = pList->last;
@@ -58,9 +60,8 @@ void* List_last(List* pList){
 void* List_next(List* pList){
     Node* next = pList->curr->next;
     if (next == NULL){
-        pList->curr->item = NULL;
-        pList->curr->prev = pList->last;
-        pList->curr->next = NULL;
+        pList->curr = NULL;
+        pList->curr_node_state = LIST_OOB_END;
         return NULL;
     }else{
         pList->curr = next;
@@ -71,9 +72,8 @@ void* List_next(List* pList){
 void* List_prev(List* pList){
     Node* prev = pList->curr->prev;
     if (prev == NULL){
-        pList->curr->item = NULL;
-        pList->curr->prev = NULL;
-        pList->curr->next = pList->first;
+        pList->curr = NULL;
+        pList->curr_node_state = LIST_OOB_START;
         return NULL;
     }else{
         pList->curr = prev;
@@ -84,6 +84,9 @@ void* List_prev(List* pList){
 
 void* List_curr(List* pList){
     //assert(pList != NULL);
+    if (pList->curr==NULL){
+        return NULL;
+    }
     return pList->curr->item;
 }
 
