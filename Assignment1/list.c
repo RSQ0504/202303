@@ -94,17 +94,103 @@ void* List_curr(List* pList){
     return pList->curr->item;
 }
 
-// Adds the new item to pList directly after the current item, and makes item the current item. 
-// If the current pointer is before the start of the pList, the item is added at the start. If 
-// the current pointer is beyond the end of the pList, the item is added at the end. 
-// Returns 0 on success, -1 on failure.
-int List_insert_after(List* pList, void* pItem);
+int List_insert_after(List* pList, void* pItem){
+    if (pList->curr_node_num == LIST_MAX_NUM_NODES||node_count==LIST_MAX_NUM_HEADS * LIST_MAX_NUM_NODES){
+        return -1;
+    }
 
-// Adds item to pList directly before the current item, and makes the new item the current one. 
-// If the current pointer is before the start of the pList, the item is added at the start. 
-// If the current pointer is beyond the end of the pList, the item is added at the end. 
-// Returns 0 on success, -1 on failure.
-int List_insert_before(List* pList, void* pItem);
+    Node* new_node = &(node_pool[node_count]);
+    new_node->item = pItem;
+    new_node->is_using = true;
+    
+    node_count++;
+    pList->curr_node_num ++;
+
+    int state = pList->curr_node_state;
+    if (state==LIST_OOB_START){
+        if (pList->first == NULL){
+            pList->first = new_node;
+            pList->is_empty = false;
+        }else{
+            new_node->next = pList->first;
+            pList->first->prev = new_node;
+            pList->first = new_node;
+        }
+    }else if (state==LIST_OOB_END){
+        if (pList->last == NULL&&pList->curr_node_num==2){
+            pList->last->prev = pList->first;
+            pList->first->next = pList->last;
+            pList->last = new_node;
+            pList->is_empty = false;
+        }else{
+            new_node->prev = pList->last;
+            pList->last->next = new_node;
+            pList->last = new_node;
+        }
+    }else{
+        new_node->next =  pList->curr->next;
+        if (new_node->next!=NULL){
+            new_node->next->prev = new_node;
+        }
+        new_node->prev = pList->curr;
+        pList->curr->next = new_node;
+        if (pList->curr_node_num==2||pList->curr == pList->last){
+            pList->last = new_node;
+        }
+    }
+    pList->curr_node_state = IN_LIST;
+    pList->curr = new_node;
+    return 0;
+}
+
+int List_insert_before(List* pList, void* pItem){
+    if (pList->curr_node_num == LIST_MAX_NUM_NODES||node_count==LIST_MAX_NUM_HEADS * LIST_MAX_NUM_NODES){
+        return -1;
+    }
+
+    Node* new_node = &(node_pool[node_count]);
+    new_node->item = pItem;
+    new_node->is_using = true;
+    
+    node_count++;
+    pList->curr_node_num ++;
+
+    int state = pList->curr_node_state;
+    if (state==LIST_OOB_START){
+        if (pList->first == NULL){
+            pList->first = new_node;
+            pList->is_empty = false;
+        }else{
+            new_node->next = pList->first;
+            pList->first->prev = new_node;
+            pList->first = new_node;
+        }
+    }else if (state==LIST_OOB_END){
+        if (pList->last == NULL&&pList->curr_node_num==2){
+            pList->last->prev = pList->first;
+            pList->first->next = pList->last;
+            pList->last = new_node;
+            pList->is_empty = false;
+        }else{
+            new_node->prev = pList->last;
+            pList->last->next = new_node;
+            pList->last = new_node;
+        }
+    }else{
+        new_node->next = pList->curr;
+        new_node->prev = pList->curr->prev;
+        if (new_node->prev != NULL){
+            new_node->prev->next = new_node;
+        }
+        pList->curr->prev = new_node;
+        if (pList->curr == pList->first){
+            pList->first = new_node;
+        }
+    }
+    pList->curr_node_state = IN_LIST;
+    pList->curr = new_node;
+    return 0;
+}
 
 // Adds item to the end of pList, and makes the new item the current one. 
 // Returns 0 on success, -1 on failure.
