@@ -18,6 +18,7 @@ int main(){
     List_prepend(a,&(num[5]));
     List_append(a,&(num[6]));
     List_remove(a);
+    List_append(a,&(num[7]));
 
     //num = 4;
     //List_insert_after(a, &num);

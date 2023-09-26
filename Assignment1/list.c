@@ -100,6 +100,8 @@ int List_insert_after(List* pList, void* pItem){
 
     Node* new_node = &(node_pool[node_count]);
     new_node->item = pItem;
+    new_node->prev = NULL;
+    new_node->next = NULL;
     
     node_count++;
     pList->curr_node_num ++;
@@ -148,6 +150,8 @@ int List_insert_before(List* pList, void* pItem){
 
     Node* new_node = &(node_pool[node_count]);
     new_node->item = pItem;
+    new_node->prev = NULL;
+    new_node->next = NULL;
     
     node_count++;
     pList->curr_node_num ++;
@@ -244,6 +248,21 @@ void* List_remove(List* pList){
         pList->curr = curr_n->next;
         pList->curr_node_num --;
     }
+    node_count--;
+    //realesing the last node
+    Node* releasing_node = &(node_pool[node_count]);
+    curr_n->item = releasing_node->item;
+    curr_n->next = releasing_node->next;
+    curr_n->prev = releasing_node->prev;
+    if (releasing_node->prev!=NULL){
+        releasing_node->prev->next = curr_n;
+    }
+    if (releasing_node->next!=NULL){
+        releasing_node->next->prev = curr_n;
+    }
+    releasing_node->prev=NULL;
+    releasing_node->item=NULL;
+    releasing_node->next=NULL;
     return item;
 }
 
