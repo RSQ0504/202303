@@ -15,7 +15,6 @@ struct Node_s {
     void* item;
     Node* prev;
     Node* next;
-    bool is_using;
 };
 
 enum ListOutOfBounds {
@@ -31,7 +30,6 @@ struct List_s{
     Node* last;
 
     bool is_empty;
-    bool is_using;
     
     int curr_node_state;
     unsigned int curr_node_num;

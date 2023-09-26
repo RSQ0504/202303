@@ -18,7 +18,6 @@ List* List_create(){
     new_list->last = NULL;
     new_list->curr = NULL;
 
-    new_list->is_using = true;
     new_list->is_empty = true;
     new_list->curr_node_state = LIST_OOB_START;
     new_list->curr_node_num = 0;
@@ -101,7 +100,6 @@ int List_insert_after(List* pList, void* pItem){
 
     Node* new_node = &(node_pool[node_count]);
     new_node->item = pItem;
-    new_node->is_using = true;
     
     node_count++;
     pList->curr_node_num ++;
@@ -150,7 +148,6 @@ int List_insert_before(List* pList, void* pItem){
 
     Node* new_node = &(node_pool[node_count]);
     new_node->item = pItem;
-    new_node->is_using = true;
     
     node_count++;
     pList->curr_node_num ++;
