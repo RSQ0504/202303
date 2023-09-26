@@ -194,16 +194,61 @@ int List_insert_before(List* pList, void* pItem){
 
 // Adds item to the end of pList, and makes the new item the current one. 
 // Returns 0 on success, -1 on failure.
-int List_append(List* pList, void* pItem);
+int List_append(List* pList, void* pItem){
+    List_last(pList);
+    return List_insert_after(pList,pItem);
+}
 
 // Adds item to the front of pList, and makes the new item the current one. 
 // Returns 0 on success, -1 on failure.
-int List_prepend(List* pList, void* pItem);
+int List_prepend(List* pList, void* pItem){
+    List_first(pList);
+    return List_insert_before(pList,pItem);
+}
 
 // Return current item and take it out of pList. Make the next item the current one.
 // If the current pointer is before the start of the pList, or beyond the end of the pList,
 // then do not change the pList and return NULL.
-void* List_remove(List* pList);
+void* List_remove(List* pList){
+    if(pList->curr_node_state==LIST_OOB_START||pList->curr_node_state==LIST_OOB_END){
+        return NULL;
+    }
+    Node* curr_n = pList->curr;
+    void* item = curr_n->item;
+    if (curr_n == pList->first){
+        pList->curr_node_num --;
+        if (pList->curr_node_num == 0){
+            pList->first = NULL;
+            pList->last = NULL;
+            pList->is_empty = true;
+            pList->curr = NULL;
+            pList->curr_node_state = LIST_OOB_START;
+        }else if(pList->curr_node_num == 1){
+            pList->first = curr_n->next;
+            pList->first->prev = NULL;
+            pList->curr = pList->first;
+            if (pList->first == pList->last){
+                pList->last = NULL;
+            }
+        }else{
+            pList->first = curr_n->next;
+            pList->first->prev = NULL;
+            pList->curr = pList->first;
+        }
+    }else if (curr_n == pList->last){
+        pList->last = curr_n->prev;
+        pList->last->next = NULL;
+        pList->curr = NULL;
+        pList->curr_node_state = LIST_OOB_END;
+        pList->curr_node_num --;
+    }else{
+        curr_n->prev->next = curr_n->next;
+        curr_n->next->prev = curr_n->prev;
+        pList->curr = curr_n->next;
+        pList->curr_node_num --;
+    }
+    return item;
+}
 
 // Return last item and take it out of pList. Make the new last item the current one.
 // Return NULL if pList is initially empty.
