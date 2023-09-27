@@ -3,7 +3,7 @@
 int list_count = 0; 
 int node_count = 0;
 List list_pool[LIST_MAX_NUM_HEADS];
-Node node_pool[LIST_MAX_NUM_HEADS * LIST_MAX_NUM_NODES];
+Node node_pool[LIST_MAX_NUM_NODES];
 //TODO
 List* List_create(){
     int list_index = list_count;
@@ -112,7 +112,7 @@ void* List_curr(List* pList){
 }
 
 int List_insert_after(List* pList, void* pItem){
-    if (pList->curr_node_num == LIST_MAX_NUM_NODES||node_count==LIST_MAX_NUM_HEADS * LIST_MAX_NUM_NODES){
+    if (node_count==LIST_MAX_NUM_NODES){
         return -1;
     }
 
@@ -162,7 +162,7 @@ int List_insert_after(List* pList, void* pItem){
 }
 
 int List_insert_before(List* pList, void* pItem){
-    if (pList->curr_node_num == LIST_MAX_NUM_NODES||node_count==LIST_MAX_NUM_HEADS * LIST_MAX_NUM_NODES){
+    if (node_count==LIST_MAX_NUM_NODES){
         return -1;
     }
 
