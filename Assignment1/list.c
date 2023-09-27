@@ -60,11 +60,11 @@ void* List_last(List* pList){
 
 void* List_next(List* pList){
     if (pList->curr==NULL){
-        if(pList->curr_node_state=LIST_OOB_START){
+        if(pList->curr_node_state==LIST_OOB_START){
             pList->curr = pList->first;
             pList->curr_node_state = IN_LIST;
             return pList->curr->item;
-        }else if(pList->curr_node_state=LIST_OOB_END){
+        }else if(pList->curr_node_state==LIST_OOB_END){
             return NULL;
         }
     }
@@ -82,9 +82,9 @@ void* List_next(List* pList){
 
 void* List_prev(List* pList){
     if (pList->curr==NULL){
-        if(pList->curr_node_state=LIST_OOB_START){
+        if(pList->curr_node_state==LIST_OOB_START){
             return NULL;
-        }else if(pList->curr_node_state=LIST_OOB_END){
+        }else if(pList->curr_node_state==LIST_OOB_END){
             pList->curr = pList->last;
             pList->curr_node_state = IN_LIST;
             return pList->curr->item;
@@ -286,7 +286,15 @@ void* List_remove(List* pList){
 
 // Return last item and take it out of pList. Make the new last item the current one.
 // Return NULL if pList is initially empty.
-void* List_trim(List* pList);
+void* List_trim(List* pList){
+    if (pList->is_empty == true){
+        return NULL;
+    }
+    List_last(pList);
+    void* item = List_remove(pList);
+    pList->curr = pList->last;
+    return item;
+}
 
 // Adds pList2 to the end of pList1. The current pointer is set to the current pointer of pList1. 
 // pList2 no longer exists after the operation; its head is available
