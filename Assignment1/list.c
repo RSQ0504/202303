@@ -59,6 +59,15 @@ void* List_last(List* pList){
 }
 
 void* List_next(List* pList){
+    if (pList->curr==NULL){
+        if(pList->curr_node_state=LIST_OOB_START){
+            pList->curr = pList->first;
+            pList->curr_node_state = IN_LIST;
+            return pList->curr->item;
+        }else if(pList->curr_node_state=LIST_OOB_END){
+            return NULL;
+        }
+    }
     Node* next = pList->curr->next;
     if (next == NULL){
         pList->curr = NULL;
@@ -72,6 +81,15 @@ void* List_next(List* pList){
 }
 
 void* List_prev(List* pList){
+    if (pList->curr==NULL){
+        if(pList->curr_node_state=LIST_OOB_START){
+            return NULL;
+        }else if(pList->curr_node_state=LIST_OOB_END){
+            pList->curr = pList->last;
+            pList->curr_node_state = IN_LIST;
+            return pList->curr->item;
+        }
+    }
     Node* prev = pList->curr->prev;
     if (prev == NULL){
         pList->curr = NULL;
