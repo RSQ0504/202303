@@ -20,8 +20,10 @@ void print_list(List* pList){
 }
 
 void freeitem(void* pItem) {
+    int * temp;
     if (pItem != NULL) {
-        printf("delete\n");
+        temp = pItem;
+        printf("delete %d\n",*temp);
     }
 }
 
