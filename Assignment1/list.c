@@ -69,7 +69,11 @@ void* List_last(List* pList){
         pList->curr_node_state = LIST_OOB_START;
         return NULL;
     }else{
-        pList->curr = pList->last;
+        if (pList->last!=NULL){
+            pList->curr = pList->last;
+        }else{
+            pList->curr = pList->first;
+        }
         pList->curr_node_state = IN_LIST;
         return pList->curr->item;
     }
