@@ -1,7 +1,7 @@
 #include <stdio.h>
 #include "list.h"
-int list_count = 0; 
-int node_count = 0;
+
+
 bool first_setup = true;
 List list_pool[LIST_MAX_NUM_HEADS];
 List* current_using_list;
@@ -9,9 +9,6 @@ Node node_pool[LIST_MAX_NUM_NODES];
 Node* current_using_node;
 //TODO
 List* List_create(){
-    if (list_count >= LIST_MAX_NUM_HEADS){
-        return NULL;
-    }
     if (first_setup){
         first_setup = false;
         current_using_list = &(list_pool[0]);
@@ -27,9 +24,12 @@ List* List_create(){
         }
         node_pool[LIST_MAX_NUM_NODES-1].next_node = NULL;
     }
+
+    if (current_using_list == NULL){
+        return NULL;
+    }
     List* new_list =  current_using_list;
     current_using_list = current_using_list->next_list;
-    list_count ++;
 
     new_list->first = NULL;
     new_list->last = NULL;
@@ -129,7 +129,7 @@ void* List_curr(List* pList){
 }
 
 int List_insert_after(List* pList, void* pItem){
-    if (node_count==LIST_MAX_NUM_NODES){
+    if (current_using_node==NULL){
         return -1;
     }
 
@@ -139,7 +139,6 @@ int List_insert_after(List* pList, void* pItem){
     new_node->next = NULL;
     
     current_using_node = current_using_node->next_node;
-    node_count++;
     pList->curr_node_num ++;
 
     int state = pList->curr_node_state;
@@ -180,7 +179,7 @@ int List_insert_after(List* pList, void* pItem){
 }
 
 int List_insert_before(List* pList, void* pItem){
-    if (node_count==LIST_MAX_NUM_NODES){
+    if (current_using_node==NULL){
         return -1;
     }
 
@@ -190,7 +189,6 @@ int List_insert_before(List* pList, void* pItem){
     new_node->next = NULL;
     
     current_using_node = current_using_node->next_node;
-    node_count++;
     pList->curr_node_num ++;
 
     int state = pList->curr_node_state;
@@ -279,7 +277,7 @@ void* List_remove(List* pList){
         pList->curr = curr_n->next;
     }
     pList->curr_node_num --;
-    node_count--;
+
     //put back to pull
     curr_n->prev=NULL;
     curr_n->item=NULL;
