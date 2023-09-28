@@ -336,10 +336,7 @@ void List_concat(List* pList1, List* pList2){
     current_using_list->next_list = pList2;
 }
 
-// Delete pList. pItemFreeFn is a pointer to a routine that frees an item. 
-// It should be invoked (within List_free) as: (*pItemFreeFn)(itemToBeFreedFromNode);
-// pList and all its nodes no longer exists after the operation; its head and nodes are 
-// available for future operations.
+
 typedef void (*FREE_FN)(void* pItem);
 void List_free(List* pList, FREE_FN pItemFreeFn){
     List_first(pList);
@@ -356,18 +353,7 @@ void List_free(List* pList, FREE_FN pItemFreeFn){
     current_using_list->next_list = pList;
 }
 
-// Search pList, starting at the current item, until the end is reached or a match is found. 
-// In this context, a match is determined by the comparator parameter. This parameter is a
-// pointer to a routine that takes as its first argument an item pointer, and as its second 
-// argument pComparisonArg. Comparator returns 0 if the item and comparisonArg don't match, 
-// or 1 if they do. Exactly what constitutes a match is up to the implementor of comparator. 
-// 
-// If a match is found, the current pointer is left at the matched item and the pointer to 
-// that item is returned. If no match is found, the current pointer is left beyond the end of 
-// the list and a NULL pointer is returned.
-// 
-// If the current pointer is before the start of the pList, then start searching from
-// the first node in the list (if any).
+
 typedef bool (*COMPARATOR_FN)(void* pItem, void* pComparisonArg);
 void* List_search(List* pList, COMPARATOR_FN pComparator, void* pComparisonArg){
     Node* current_node = pList->curr;
@@ -381,7 +367,7 @@ void* List_search(List* pList, COMPARATOR_FN pComparator, void* pComparisonArg){
         }
         current_node = current_node->next;
     }
-    // No match found, update the current pointer beyond the end of the list
+    
     pList->curr = NULL;
     pList->curr_node_state = LIST_OOB_END;
     return NULL;
