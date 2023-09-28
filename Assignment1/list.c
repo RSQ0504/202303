@@ -270,6 +270,9 @@ void* List_remove(List* pList){
         pList->last->next = NULL;
         pList->curr = NULL;
         pList->curr_node_state = LIST_OOB_END;
+        if(pList->last == pList->first){
+            pList->last = NULL;
+        }
     }else{
         curr_n->prev->next = curr_n->next;
         curr_n->next->prev = curr_n->prev;
