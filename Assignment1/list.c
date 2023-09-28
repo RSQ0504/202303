@@ -296,6 +296,7 @@ void* List_trim(List* pList){
     List_last(pList);
     void* item = List_remove(pList);
     pList->curr = pList->last;
+    pList->curr_node_state = IN_LIST;
     return item;
 }
 
@@ -303,14 +304,38 @@ void* List_trim(List* pList){
 // pList2 no longer exists after the operation; its head is available
 // for future operations.
 void List_concat(List* pList1, List* pList2){
-    pList1->last->next = pList2->first;
-    pList1->last = pList2->last;
-    pList2->first->prev = pList1->last;
-    pList1->curr_node_num = pList1->curr_node_num + pList2->curr_node_num;
-    if (pList1->curr_node_state==LIST_OOB_END){
-        pList1->curr = pList2->first;
+    if (pList1->curr_node_num>=2&&pList2->curr_node_num>=2){
+        pList1->last->next = pList2->first;
+        pList2->first->prev = pList1->last;
+        pList1->last = pList2->last;
+    }else if (pList1->curr_node_num>=2&&pList2->curr_node_num==1){
+        pList1->last->next = pList2->first;
+        pList2->first->prev = pList1->last;
+        pList1->last = pList2->first;
+    }else if (pList1->curr_node_num==1&&pList2->curr_node_num==1){
+        pList1->first->next = pList2->first;
+        pList2->first->prev = pList1->first;
+        pList1->last = pList2->first;
+    }else if (pList1->curr_node_num==0){
+        pList1->first = pList2->first;
+        pList1->last = pList2->last;
     }
-
+    pList1->curr_node_num = pList1->curr_node_num + pList2->curr_node_num;
+    if (pList1->curr_node_num>0){
+        pList1->is_empty=false;
+    }
+    if (pList1->curr_node_state==LIST_OOB_END&&pList2->first!=NULL&&pList1->first!=NULL){
+        pList1->curr = pList2->first;
+        pList1->curr_node_state = IN_LIST;
+    }
+    pList2->curr = NULL;
+    pList2->curr_node_num = 0;
+    pList2->curr_node_state = LIST_OOB_START;
+    pList2->first = NULL;
+    pList2->is_empty = true;
+    pList2->last = NULL;
+    pList2->next_list = current_using_list->next_list;
+    current_using_list->next_list = pList2;
 }
 
 // Delete pList. pItemFreeFn is a pointer to a routine that frees an item. 
