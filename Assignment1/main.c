@@ -3,6 +3,8 @@
 
 int main(){
     List * a = List_create();
+    List * b = List_create();
+    List * c = List_create();
     int num[10] = {1,2,3,4,5,6,7,8,9,10};
     List_insert_after(a, &num);
     int* curr = List_curr(a);
@@ -18,7 +20,7 @@ int main(){
     List_prepend(a,&(num[5]));
     List_append(a,&(num[6]));
     List_remove(a);
-    List_append(a,&(num[7]));
+    //List_append(a,&(num[7]));
 
     //num = 4;
     //List_insert_after(a, &num);

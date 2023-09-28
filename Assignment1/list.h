@@ -15,6 +15,8 @@ struct Node_s {
     void* item;
     Node* prev;
     Node* next;
+
+    Node* next_node;
 };
 
 enum ListOutOfBounds {
@@ -28,6 +30,8 @@ struct List_s{
     Node* curr;
     Node* first;
     Node* last;
+
+    List * next_list;
 
     bool is_empty;
     

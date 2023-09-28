@@ -2,17 +2,34 @@
 #include "list.h"
 int list_count = 0; 
 int node_count = 0;
+bool first_setup = true;
 List list_pool[LIST_MAX_NUM_HEADS];
+List* current_using_list;
 Node node_pool[LIST_MAX_NUM_NODES];
+Node* current_using_node;
 //TODO
 List* List_create(){
-    int list_index = list_count;
-    if (list_index >= LIST_MAX_NUM_HEADS){
+    if (list_count >= LIST_MAX_NUM_HEADS){
         return NULL;
     }
-    list_count ++;
+    if (first_setup){
+        first_setup = false;
+        current_using_list = &(list_pool[0]);
+        current_using_node = &(node_pool[0]);
 
-    List* new_list =  &(list_pool[list_index]);
+        for (int i = 1;i<LIST_MAX_NUM_HEADS;i++){
+            list_pool[i-1].next_list = &(list_pool[i]);
+        }
+        list_pool[LIST_MAX_NUM_HEADS-1].next_list = NULL;
+
+        for (int i = 1;i<LIST_MAX_NUM_NODES;i++){
+            node_pool[i-1].next_node = &(node_pool[i]);
+        }
+        node_pool[LIST_MAX_NUM_NODES-1].next_node = NULL;
+    }
+    List* new_list =  current_using_list;
+    current_using_list = current_using_list->next_list;
+    list_count ++;
 
     new_list->first = NULL;
     new_list->last = NULL;
@@ -116,11 +133,12 @@ int List_insert_after(List* pList, void* pItem){
         return -1;
     }
 
-    Node* new_node = &(node_pool[node_count]);
+    Node* new_node = current_using_node;
     new_node->item = pItem;
     new_node->prev = NULL;
     new_node->next = NULL;
     
+    current_using_node = current_using_node->next_node;
     node_count++;
     pList->curr_node_num ++;
 
@@ -166,11 +184,12 @@ int List_insert_before(List* pList, void* pItem){
         return -1;
     }
 
-    Node* new_node = &(node_pool[node_count]);
+    Node* new_node = current_using_node;
     new_node->item = pItem;
     new_node->prev = NULL;
     new_node->next = NULL;
     
+    current_using_node = current_using_node->next_node;
     node_count++;
     pList->curr_node_num ++;
 
@@ -260,20 +279,12 @@ void* List_remove(List* pList){
         pList->curr_node_num --;
     }
     node_count--;
-    //realesing the last node
-    Node* releasing_node = &(node_pool[node_count]);
-    curr_n->item = releasing_node->item;
-    curr_n->next = releasing_node->next;
-    curr_n->prev = releasing_node->prev;
-    if (releasing_node->prev!=NULL){
-        releasing_node->prev->next = curr_n;
-    }
-    if (releasing_node->next!=NULL){
-        releasing_node->next->prev = curr_n;
-    }
-    releasing_node->prev=NULL;
-    releasing_node->item=NULL;
-    releasing_node->next=NULL;
+    //put back to pull
+    curr_n->prev=NULL;
+    curr_n->item=NULL;
+    curr_n->next=NULL;
+    curr_n->next_node = current_using_node->next_node;
+    current_using_node->next_node = curr_n;
     return item;
 }
 
@@ -290,7 +301,16 @@ void* List_trim(List* pList){
 // Adds pList2 to the end of pList1. The current pointer is set to the current pointer of pList1. 
 // pList2 no longer exists after the operation; its head is available
 // for future operations.
-void List_concat(List* pList1, List* pList2);
+void List_concat(List* pList1, List* pList2){
+    pList1->last->next = pList2->first;
+    pList1->last = pList2->last;
+    pList2->first->prev = pList1->last;
+    pList1->curr_node_num = pList1->curr_node_num + pList2->curr_node_num;
+    if (pList1->curr_node_state==LIST_OOB_END){
+        pList1->curr = pList2->first;
+    }
+
+}
 
 // Delete pList. pItemFreeFn is a pointer to a routine that frees an item. 
 // It should be invoked (within List_free) as: (*pItemFreeFn)(itemToBeFreedFromNode);
