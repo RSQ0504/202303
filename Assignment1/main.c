@@ -16,7 +16,15 @@ void print_list(List* pList){
         temp = List_prev(pList);
     }
     printf("\n");
+    printf("%d\n",List_count(pList));
 }
+
+void freeitem(void* pItem) {
+    if (pItem != NULL) {
+        printf("delete\n");
+    }
+}
+
 
 int main(){
     List * a = List_create();
@@ -34,6 +42,19 @@ int main(){
     print_list(a);
     print_list(b);
     List_concat(a,b);
+    print_list(a);
+    
+    List_last(a);
+    List_remove(a);
+    print_list(a);
+    List_first(a);
+    List_remove(a);
+    print_list(a);
+
+    List_remove(b);
+    print_list(b);
+
+    List_free(a,freeitem);
     print_list(a);
 
     return 0;
