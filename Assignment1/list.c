@@ -341,7 +341,20 @@ void List_concat(List* pList1, List* pList2){
 // pList and all its nodes no longer exists after the operation; its head and nodes are 
 // available for future operations.
 typedef void (*FREE_FN)(void* pItem);
-void List_free(List* pList, FREE_FN pItemFreeFn);
+void List_free(List* pList, FREE_FN pItemFreeFn){
+    List_first(pList);
+    while (pList->curr!=NULL){
+        (*pItemFreeFn)(List_remove(pList));
+    }
+    pList->curr = NULL;
+    pList->curr_node_num = 0;
+    pList->curr_node_state = LIST_OOB_START;
+    pList->first = NULL;
+    pList->is_empty = true;
+    pList->last = NULL;
+    pList->next_list = current_using_list->next_list;
+    current_using_list->next_list = pList;
+}
 
 // Search pList, starting at the current item, until the end is reached or a match is found. 
 // In this context, a match is determined by the comparator parameter. This parameter is a
