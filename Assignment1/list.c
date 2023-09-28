@@ -247,13 +247,13 @@ void* List_remove(List* pList){
     Node* curr_n = pList->curr;
     void* item = curr_n->item;
     if (curr_n == pList->first){
-        if (pList->curr_node_num == 0){
+        if (pList->curr_node_num == 1){
             pList->first = NULL;
             pList->last = NULL;
             pList->is_empty = true;
             pList->curr = NULL;
             pList->curr_node_state = LIST_OOB_START;
-        }else if(pList->curr_node_num == 1){
+        }else if(pList->curr_node_num == 2){
             pList->first = curr_n->next;
             pList->first->prev = NULL;
             pList->curr = pList->first;
