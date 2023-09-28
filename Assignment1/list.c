@@ -369,4 +369,20 @@ void List_free(List* pList, FREE_FN pItemFreeFn){
 // If the current pointer is before the start of the pList, then start searching from
 // the first node in the list (if any).
 typedef bool (*COMPARATOR_FN)(void* pItem, void* pComparisonArg);
-void* List_search(List* pList, COMPARATOR_FN pComparator, void* pComparisonArg);
+void* List_search(List* pList, COMPARATOR_FN pComparator, void* pComparisonArg){
+    Node* current_node = pList->curr;
+    if (pList->curr_node_state==LIST_OOB_START){
+        current_node = pList->first;
+    }
+    while (current_node != NULL) {
+        if ((*pComparator)(current_node->item, pComparisonArg)) {
+            pList->curr = current_node;
+            return current_node->item;
+        }
+        current_node = current_node->next;
+    }
+    // No match found, update the current pointer beyond the end of the list
+    pList->curr = NULL;
+    pList->curr_node_state = LIST_OOB_END;
+    return NULL;
+}
