@@ -4,7 +4,7 @@ import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.io.File;
-import read_wave;
+//import read_wave;
 
 public class file_chooser {
     public static void main(String[] args) {
@@ -33,6 +33,10 @@ public class file_chooser {
                 if (check == JFileChooser.APPROVE_OPTION) {
                     File file = file_window.getSelectedFile();
                     System.out.println("Selected .wav File: " + file.getPath());
+                    read_wave reader = new read_wave(file.getPath());
+                    reader.draw();
+                    frame.add(reader);
+                    frame.setVisible(true);
                 } else {
                     System.out.println("Wrong format");
                 }
