@@ -8,7 +8,7 @@ import java.io.File;
 public class file_chooser {
     private static read_wave wav_reader;
     public static void main(String[] args) {
-        JFrame frame = new JFrame("Part");
+        JFrame frame = new JFrame("Project 1");
         frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
         frame.setSize(800, 400);
 
