@@ -51,12 +51,16 @@ public class read_wave  extends JPanel {
     protected void paintComponent(Graphics g) {
         super.paintComponent(g);
 
-        int width = getWidth();
-        int height = getHeight();
+        int w = getWidth();
+        int h = getHeight();
+        int w_drawing = getWidth();
+        int h_drawing = getHeight()-40;
+        g.setColor(Color.BLACK);
+        g.fillRect(0, 0, w, h);
 
         int sample_num = data_c1.length / bytes_per_sample;
-        double unit_x = (double) width / sample_num;
-        double unit_y = (double) height / (1 << (bytes_per_sample * 8 - 1));
+        double unit_x = (double) w_drawing / sample_num;
+        double unit_y = (double) h_drawing / (1 << (bytes_per_sample * 8 - 1));
 
         for (int i = 0; i < sample_num - 1; i++) {
             int x1 = (int) (i * unit_x);
@@ -64,18 +68,18 @@ public class read_wave  extends JPanel {
             int y1 = (int) (ByteBuffer.wrap(data_c1, i * bytes_per_sample, bytes_per_sample).order(ByteOrder.LITTLE_ENDIAN).getShort() * unit_y);
             int y2 = (int) (ByteBuffer.wrap(data_c1, (i + 1) * bytes_per_sample, bytes_per_sample).order(ByteOrder.LITTLE_ENDIAN).getShort() * unit_y);
 
-            g.setColor(Color.RED);
-            g.drawLine(x1, height / 4 + y1, x2, height / 4 + y2);
+            g.setColor(Color.GREEN);
+            g.drawLine(x1, h_drawing / 4 + y1 + 40, x2, h_drawing / 4 + y2 + 40);
 
             y1 = (int) (ByteBuffer.wrap(data_c2, i * bytes_per_sample, bytes_per_sample).order(ByteOrder.LITTLE_ENDIAN).getShort() * unit_y);
             y2 = (int) (ByteBuffer.wrap(data_c2, (i + 1) * bytes_per_sample, bytes_per_sample).order(ByteOrder.LITTLE_ENDIAN).getShort() * unit_y);
 
-            g.setColor(Color.BLUE);
-            g.drawLine(x1, 3 * height / 4 + y1, x2, 3 * height / 4 + y2);
+            g.setColor(Color.GREEN);
+            g.drawLine(x1, 3 * h_drawing / 4 + y1 + 40, x2, 3 * h_drawing / 4 + y2 + 40);
         }
 
-        g.setColor(Color.BLACK);
-        g.drawString("Total Samples: " + sample_num, 10, 20);
-        g.drawString("Sampling Frequency: " + sample_rate + " Hz", 10, 40);
+        g.setColor(Color.white);
+        g.drawString("total number of the samples: " + sample_num, 30, 20);
+        g.drawString("sampling frequency: " + sample_rate + " Hz", 30, 40);
     }
 }
