@@ -6,6 +6,7 @@ import java.awt.event.ActionListener;
 import java.io.File;
 
 public class file_chooser {
+    private static read_wave wav_reader;
     public static void main(String[] args) {
         JFrame frame = new JFrame("Part");
         frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
@@ -15,6 +16,9 @@ public class file_chooser {
         button_wav.setBounds(150, 70, 150, 30);
 
         JButton button_tif = new JButton("Open .tif File");
+        button_tif.setBounds(150, 120, 150, 30);
+
+        JButton button_back = new JButton("back");
         button_tif.setBounds(150, 120, 150, 30);
 
         JFileChooser file_window_wav = new JFileChooser();
@@ -32,6 +36,8 @@ public class file_chooser {
         panel.setLayout(new FlowLayout(FlowLayout.CENTER, 10, 10)); 
         panel.add(button_wav);
         panel.add(button_tif);
+        panel.add(button_back);
+        button_back.setVisible(false);
         frame.add(panel);
         frame.setVisible(true);
 
@@ -42,12 +48,13 @@ public class file_chooser {
                 if (check == JFileChooser.APPROVE_OPTION) {
                     File file = file_window_wav.getSelectedFile();
                     System.out.println("Selected .wav File: " + file.getPath());
-                    frame.getContentPane().removeAll();
-                    read_wave reader = new read_wave(file.getPath());
-                    reader.draw();
-                    frame.add(reader);
-                    frame.revalidate();
-                    frame.repaint();
+                    //frame.getContentPane().removeAll();
+                    wav_reader = new read_wave(file.getPath());
+                    wav_reader.draw();
+                    frame.add(wav_reader);
+                    button_tif.setVisible(false);
+                    button_wav.setVisible(false);
+                    button_back.setVisible(true);
                 } else {
                     System.out.println("Cancel");
                 }
@@ -64,6 +71,16 @@ public class file_chooser {
                 } else {
                     System.out.println("cancel");
                 }
+            }
+        });
+        button_back.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                wav_reader.setVisible(false);
+                button_tif.setVisible(true);
+                button_wav.setVisible(true);
+                button_back.setVisible(false);
+                
             }
         });
     }
