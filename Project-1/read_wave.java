@@ -31,10 +31,10 @@ public class read_wave  extends JPanel {
             audioInputStream.read(data);
 
             for (int i = 0; i < byte_num_per_channel; i+=bytes_per_sample) {
-                data_c1[i] = data[i * 2];
-                data_c1[i+1] = data[i * 2 + 1];
-                data_c2[i] = data[i * 2 + 2];
-                data_c2[i+1] = data[i * 2 + 3];
+                for(int j = 0; j<bytes_per_sample;j++){
+                    data_c1[i+j] = data[i * 2 + j];
+                    data_c2[i+j] = data[i * 2 + bytes_per_sample + j];
+                }
             }
 
         } catch (Exception e) {
@@ -74,7 +74,7 @@ public class read_wave  extends JPanel {
             g.drawLine(x1, 3 * height / 4 + y1, x2, 3 * height / 4 + y2);
         }
 
-        g.setColor(Color.WHITE);
+        g.setColor(Color.BLACK);
         g.drawString("Total Samples: " + sample_num, 10, 20);
         g.drawString("Sampling Frequency: " + sample_rate + " Hz", 10, 40);
     }

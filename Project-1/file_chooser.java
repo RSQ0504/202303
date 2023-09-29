@@ -9,7 +9,7 @@ public class file_chooser {
     public static void main(String[] args) {
         JFrame frame = new JFrame("Part");
         frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-        frame.setSize(1000, 1000);
+        frame.setSize(800, 400);
 
         JButton button = new JButton("Open .wav File");
         button.setBounds(150, 70, 150, 30);
