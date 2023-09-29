@@ -4,7 +4,6 @@ import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.io.File;
-//import read_wave;
 
 public class file_chooser {
     public static void main(String[] args) {
