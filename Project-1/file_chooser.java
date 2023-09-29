@@ -13,13 +13,16 @@ public class file_chooser {
         frame.setSize(800, 400);
 
         JButton button_wav = new JButton("Open .wav File");
-        button_wav.setBounds(150, 70, 150, 30);
+        button_wav.setBounds(150, 70, 200, 100);
 
         JButton button_tif = new JButton("Open .tif File");
-        button_tif.setBounds(150, 120, 150, 30);
+        button_tif.setBounds(150, 120, 200, 100);
 
         JButton button_back = new JButton("back");
-        button_tif.setBounds(150, 120, 150, 30);
+        button_tif.setBounds(150, 120, 200, 100);
+
+        JButton button_exit = new JButton("exit");
+        button_tif.setBounds(150, 120, 200, 100);
 
         JFileChooser file_window_wav = new JFileChooser();
 
@@ -36,6 +39,7 @@ public class file_chooser {
         panel.setLayout(new FlowLayout(FlowLayout.CENTER, 10, 10)); 
         panel.add(button_wav);
         panel.add(button_tif);
+        panel.add(button_exit);
         frame.add(panel);
         frame.setVisible(true);
 
@@ -53,6 +57,7 @@ public class file_chooser {
                     frame.add(wav_reader);
                     button_tif.setVisible(false);
                     button_wav.setVisible(false);
+                    button_exit.setVisible(false);
                     panel.setVisible(false);
                     button_back.setVisible(true);
                 } else {
@@ -80,7 +85,15 @@ public class file_chooser {
                 panel.setVisible(true);
                 button_tif.setVisible(true);
                 button_wav.setVisible(true);
+                button_exit.setVisible(true);
                 
+            }
+        });
+
+        button_exit.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                System.exit(0);
             }
         });
     }
