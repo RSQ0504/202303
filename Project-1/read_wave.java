@@ -55,13 +55,13 @@ public class read_wave  extends JPanel {
         int w = getWidth();
         int h = getHeight();
         int w_drawing = getWidth();
-        int h_drawing = getHeight()-40;
+        int h_drawing = getHeight() - 35;
         g.setColor(Color.BLACK);
         g.fillRect(0, 0, w, h);
 
         int sample_num = data_c1.length / bytes_per_sample;
         double unit_x = (double) w_drawing / sample_num;
-        double unit_y = (double) h_drawing / (1 << (bytes_per_sample * 8 - 1));
+        double unit_y = (double) (h_drawing/2) / (1 << (bytes_per_sample * 8 - 1));
 
         for (int i = 0; i < sample_num - 1; i++) {
             int x1 = (int) (i * unit_x);
@@ -77,7 +77,7 @@ public class read_wave  extends JPanel {
             }
 
             g.setColor(Color.GREEN);
-            g.drawLine(x1, 2*h_drawing / 6 + y1 + 40, x2, 2*h_drawing / 6 + y2 + 40);
+            g.drawLine(x1, h_drawing / 4 + y1 + 35, x2, h_drawing / 4 + y2 + 35);
 
             if(audioFormat.isBigEndian()){
                 y1 = (int) (ByteBuffer.wrap(data_c2, i * bytes_per_sample, bytes_per_sample).order(ByteOrder.BIG_ENDIAN).getShort() * unit_y);
@@ -88,7 +88,7 @@ public class read_wave  extends JPanel {
             }
 
             g.setColor(Color.GREEN);
-            g.drawLine(x1, 5 * h_drawing / 6 + y1 + 40, x2, 5 * h_drawing / 6 + y2 + 40);
+            g.drawLine(x1, 3 * h_drawing / 4 + y1 + 35, x2, 3 * h_drawing / 4 + y2 + 35);
         }
 
         g.setColor(Color.white);
