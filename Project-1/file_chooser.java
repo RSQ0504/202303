@@ -9,7 +9,7 @@ public class file_chooser {
     public static void main(String[] args) {
         JFrame frame = new JFrame("Part");
         frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-        frame.setSize(400, 200);
+        frame.setSize(1000, 1000);
 
         JButton button = new JButton("Open .wav File");
         button.setBounds(150, 70, 150, 30);
@@ -32,10 +32,12 @@ public class file_chooser {
                 if (check == JFileChooser.APPROVE_OPTION) {
                     File file = file_window.getSelectedFile();
                     System.out.println("Selected .wav File: " + file.getPath());
+                    frame.getContentPane().removeAll();
                     read_wave reader = new read_wave(file.getPath());
                     reader.draw();
                     frame.add(reader);
-                    frame.setVisible(true);
+                    frame.revalidate();
+                    frame.repaint();
                 } else {
                     System.out.println("Wrong format");
                 }
