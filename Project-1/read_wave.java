@@ -30,9 +30,11 @@ public class read_wave  extends JPanel {
             byte[] data = new byte[byte_num_per_channel*2];
             audioInputStream.read(data);
 
-            for (int i = 0; i < byte_num_per_channel; i++) {
+            for (int i = 0; i < byte_num_per_channel; i+=bytes_per_sample) {
                 data_c1[i] = data[i * 2];
-                data_c2[i] = data[i * 2 + 1];
+                data_c1[i+1] = data[i * 2 + 1];
+                data_c2[i] = data[i * 2 + 2];
+                data_c2[i+1] = data[i * 2 + 3];
             }
 
         } catch (Exception e) {
