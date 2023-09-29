@@ -55,11 +55,7 @@ public class file_chooser {
                     wav_reader.draw();
                     wav_reader.add(button_back);
                     frame.add(wav_reader);
-                    button_tif.setVisible(false);
-                    button_wav.setVisible(false);
-                    button_exit.setVisible(false);
                     panel.setVisible(false);
-                    button_back.setVisible(true);
                 } else {
                     System.out.println("Cancel");
                 }
@@ -83,9 +79,6 @@ public class file_chooser {
             public void actionPerformed(ActionEvent e) {
                 wav_reader.setVisible(false);
                 panel.setVisible(true);
-                button_tif.setVisible(true);
-                button_wav.setVisible(true);
-                button_exit.setVisible(true);
                 
             }
         });
