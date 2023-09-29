@@ -36,8 +36,6 @@ public class file_chooser {
         panel.setLayout(new FlowLayout(FlowLayout.CENTER, 10, 10)); 
         panel.add(button_wav);
         panel.add(button_tif);
-        panel.add(button_back);
-        button_back.setVisible(false);
         frame.add(panel);
         frame.setVisible(true);
 
@@ -51,9 +49,11 @@ public class file_chooser {
                     //frame.getContentPane().removeAll();
                     wav_reader = new read_wave(file.getPath());
                     wav_reader.draw();
+                    wav_reader.add(button_back);
                     frame.add(wav_reader);
                     button_tif.setVisible(false);
                     button_wav.setVisible(false);
+                    panel.setVisible(false);
                     button_back.setVisible(true);
                 } else {
                     System.out.println("Cancel");
@@ -77,9 +77,9 @@ public class file_chooser {
             @Override
             public void actionPerformed(ActionEvent e) {
                 wav_reader.setVisible(false);
+                panel.setVisible(true);
                 button_tif.setVisible(true);
                 button_wav.setVisible(true);
-                button_back.setVisible(false);
                 
             }
         });
