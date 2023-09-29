@@ -7,6 +7,7 @@ import java.io.File;
 
 public class file_chooser {
     private static read_wave wav_reader;
+    private static read_tif tif_reader;
     public static void main(String[] args) {
         JFrame frame = new JFrame("Project 1");
         frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
@@ -18,7 +19,10 @@ public class file_chooser {
         JButton button_tif = new JButton("Open .tif File");
         button_tif.setBounds(150, 120, 200, 100);
 
-        JButton button_back = new JButton("back");
+        JButton button_back1 = new JButton("back");
+        button_tif.setBounds(150, 120, 200, 100);
+
+        JButton button_back2 = new JButton("back");
         button_tif.setBounds(150, 120, 200, 100);
 
         JButton button_exit = new JButton("exit");
@@ -53,7 +57,7 @@ public class file_chooser {
                     //frame.getContentPane().removeAll();
                     wav_reader = new read_wave(file.getPath());
                     wav_reader.draw();
-                    wav_reader.add(button_back);
+                    wav_reader.add(button_back1);
                     frame.add(wav_reader);
                     panel.setVisible(false);
                 } else {
@@ -69,15 +73,29 @@ public class file_chooser {
                 if (check == JFileChooser.APPROVE_OPTION) {
                     File file = file_window_tif.getSelectedFile();
                     System.out.println("Selected .tif File: " + file.getPath());
+                    tif_reader = new read_tif(file.getPath());
+                    tif_reader.draw();
+                    tif_reader.add(button_back2);
+                    frame.add(tif_reader);
+                    panel.setVisible(false);
                 } else {
                     System.out.println("cancel");
                 }
             }
         });
-        button_back.addActionListener(new ActionListener() {
+        button_back1.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
                 wav_reader.setVisible(false);
+                panel.setVisible(true);
+                
+            }
+        });
+
+        button_back2.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                tif_reader.setVisible(false);
                 panel.setVisible(true);
                 
             }
