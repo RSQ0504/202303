@@ -27,6 +27,13 @@ void freeitem(void* pItem) {
     }
 }
 
+bool compare_item(void* pItem, void* pComparisonArg){
+    if(pItem==pComparisonArg){
+        return true;
+    }else{
+        return false;
+    }
+}
 
 int main(){
     List * a = List_create();
@@ -55,6 +62,9 @@ int main(){
 
     List_remove(b);
     print_list(b);
+
+    int* hi = List_search(a,compare_item,&(num[3]));
+    printf("hi: %d\n",*hi);
 
     List_free(a,freeitem);
     print_list(a);
