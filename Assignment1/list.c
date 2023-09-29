@@ -286,8 +286,13 @@ void* List_remove(List* pList){
     curr_n->prev=NULL;
     curr_n->item=NULL;
     curr_n->next=NULL;
-    curr_n->next_node = current_using_node->next_node;
-    current_using_node->next_node = curr_n;
+    if(current_using_node!=NULL){
+        curr_n->next_node = current_using_node->next_node;
+        current_using_node->next_node = curr_n;
+    }else{
+        curr_n->next_node = NULL;
+        current_using_node = curr_n;
+    }
     return item;
 }
 
@@ -336,8 +341,13 @@ void List_concat(List* pList1, List* pList2){
     pList2->first = NULL;
     pList2->is_empty = true;
     pList2->last = NULL;
-    pList2->next_list = current_using_list->next_list;
-    current_using_list->next_list = pList2;
+    if (current_using_list!=NULL){
+        pList2->next_list = current_using_list->next_list;
+        current_using_list->next_list = pList2;
+    }else{
+        pList2->next_list = NULL;
+        current_using_list = pList2;
+    }
 }
 
 
@@ -353,8 +363,13 @@ void List_free(List* pList, FREE_FN pItemFreeFn){
     pList->first = NULL;
     pList->is_empty = true;
     pList->last = NULL;
-    pList->next_list = current_using_list->next_list;
-    current_using_list->next_list = pList;
+    if (current_using_list!=NULL){
+        pList->next_list = current_using_list->next_list;
+        current_using_list->next_list = pList;
+    }else{
+        pList->next_list = NULL;
+        current_using_list = pList;
+    }
 }
 
 

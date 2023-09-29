@@ -39,6 +39,18 @@ int main(){
     List * a = List_create();
     List * b = List_create();
     List * c = List_create();
+    List * d = List_create();
+    List * e = List_create();
+    List * f = List_create();
+    List * g = List_create();
+    List * h = List_create();
+    List * i = List_create();
+    List * io = List_create();
+    List * re = List_create();
+    List * OO = List_create();
+    if (OO==NULL){
+        printf("out of list");
+    }
     int num[10] = {1,2,3,4,5,6,7,8,9,10};
     List_prepend(a,&(num[1]));
     List_append(a,&(num[2]));
@@ -69,5 +81,9 @@ int main(){
     List_free(a,freeitem);
     print_list(a);
 
+    OO = List_create();
+    if (OO==NULL){
+        printf("out of list");
+    }
     return 0;
 }
