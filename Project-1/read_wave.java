@@ -12,13 +12,14 @@ public class read_wave  extends JPanel {
     private static int sample_rate;
     private static byte[] data_c1;
     private static byte[] data_c2;
+    private static AudioFormat audioFormat;
 
 
     public read_wave(String filePath) {
         try {
             // Open the audio file
             AudioInputStream audioInputStream = AudioSystem.getAudioInputStream(new File(filePath));
-            AudioFormat audioFormat = audioInputStream.getFormat();
+            audioFormat = audioInputStream.getFormat();
             
             bytes_per_sample = audioFormat.getSampleSizeInBits() / 8;
             sample_rate = (int) audioFormat.getSampleRate();
@@ -65,14 +66,26 @@ public class read_wave  extends JPanel {
         for (int i = 0; i < sample_num - 1; i++) {
             int x1 = (int) (i * unit_x);
             int x2 = (int) ((i + 1) * unit_x);
-            int y1 = (int) (ByteBuffer.wrap(data_c1, i * bytes_per_sample, bytes_per_sample).order(ByteOrder.LITTLE_ENDIAN).getShort() * unit_y);
-            int y2 = (int) (ByteBuffer.wrap(data_c1, (i + 1) * bytes_per_sample, bytes_per_sample).order(ByteOrder.LITTLE_ENDIAN).getShort() * unit_y);
+            int y1;
+            int y2;
+            if(audioFormat.isBigEndian()){
+                y1 = (int) (ByteBuffer.wrap(data_c1, i * bytes_per_sample, bytes_per_sample).order(ByteOrder.BIG_ENDIAN).getShort() * unit_y);
+                y2 = (int) (ByteBuffer.wrap(data_c1, (i + 1) * bytes_per_sample, bytes_per_sample).order(ByteOrder.BIG_ENDIAN).getShort() * unit_y);
+            }else{
+                y1 = (int) (ByteBuffer.wrap(data_c1, i * bytes_per_sample, bytes_per_sample).order(ByteOrder.LITTLE_ENDIAN).getShort() * unit_y);
+                y2 = (int) (ByteBuffer.wrap(data_c1, (i + 1) * bytes_per_sample, bytes_per_sample).order(ByteOrder.LITTLE_ENDIAN).getShort() * unit_y);
+            }
 
             g.setColor(Color.GREEN);
             g.drawLine(x1, h_drawing / 4 + y1 + 40, x2, h_drawing / 4 + y2 + 40);
 
-            y1 = (int) (ByteBuffer.wrap(data_c2, i * bytes_per_sample, bytes_per_sample).order(ByteOrder.LITTLE_ENDIAN).getShort() * unit_y);
-            y2 = (int) (ByteBuffer.wrap(data_c2, (i + 1) * bytes_per_sample, bytes_per_sample).order(ByteOrder.LITTLE_ENDIAN).getShort() * unit_y);
+            if(audioFormat.isBigEndian()){
+                y1 = (int) (ByteBuffer.wrap(data_c2, i * bytes_per_sample, bytes_per_sample).order(ByteOrder.BIG_ENDIAN).getShort() * unit_y);
+                y2 = (int) (ByteBuffer.wrap(data_c2, (i + 1) * bytes_per_sample, bytes_per_sample).order(ByteOrder.BIG_ENDIAN).getShort() * unit_y);
+            }else{
+                y1 = (int) (ByteBuffer.wrap(data_c2, i * bytes_per_sample, bytes_per_sample).order(ByteOrder.LITTLE_ENDIAN).getShort() * unit_y);
+                y2 = (int) (ByteBuffer.wrap(data_c2, (i + 1) * bytes_per_sample, bytes_per_sample).order(ByteOrder.LITTLE_ENDIAN).getShort() * unit_y);
+            }
 
             g.setColor(Color.GREEN);
             g.drawLine(x1, 3 * h_drawing / 4 + y1 + 40, x2, 3 * h_drawing / 4 + y2 + 40);
