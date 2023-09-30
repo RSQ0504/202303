@@ -12,6 +12,7 @@ public class read_wave  extends JPanel {
     private static int sample_rate;
     private static byte[] data_c1;
     private static byte[] data_c2;
+    private static byte[] total_data;
     private static AudioFormat audioFormat;
 
 
@@ -28,13 +29,13 @@ public class read_wave  extends JPanel {
 
             data_c1 = new byte[byte_num_per_channel];
             data_c2 = new byte[byte_num_per_channel];
-            byte[] data = new byte[byte_num_per_channel*2];
-            audioInputStream.read(data);
+            total_data = new byte[byte_num_per_channel*2];
+            audioInputStream.read(total_data);
 
             for (int i = 0; i < byte_num_per_channel; i+=bytes_per_sample) {
                 for(int j = 0; j<bytes_per_sample;j++){
-                    data_c1[i+j] = data[i * 2 + j];
-                    data_c2[i+j] = data[i * 2 + bytes_per_sample + j];
+                    data_c1[i+j] = total_data[i * 2 + j];
+                    data_c2[i+j] = total_data[i * 2 + bytes_per_sample + j];
                 }
             }
 
@@ -60,6 +61,7 @@ public class read_wave  extends JPanel {
         g.fillRect(0, 0, w, h);
 
         int sample_num = data_c1.length / bytes_per_sample;
+        int sample_num_total = total_data.length / bytes_per_sample;
         double unit_x = (double) w_drawing / sample_num;
         double unit_y = (double) (h_drawing/2) / (1 << (bytes_per_sample * 8 - 1));
 
@@ -92,7 +94,8 @@ public class read_wave  extends JPanel {
         }
 
         g.setColor(Color.white);
-        g.drawString("total number of the samples: " + sample_num, 30, 20);
-        g.drawString("sampling frequency: " + sample_rate + " Hz", 30, 40);
+        g.drawString("number of the samples (per channel): " + sample_num, 30, 20);
+        g.drawString("total number of the samples: " + sample_num_total, 30, 40);
+        g.drawString("sampling frequency: " + sample_rate + " Hz", 30, 60);
     }
 }
