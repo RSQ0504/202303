@@ -1,0 +1,4 @@
+data/*
+data/cifar100.tar.gz
+data/test.tar.gz
+data/train.tar.gz
