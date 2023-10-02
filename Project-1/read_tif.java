@@ -80,43 +80,43 @@ public class read_tif extends JPanel{
             int data_offset = (int)(ByteBuffer.wrap(Arrays.copyOfRange(tag, 8, 12)).order(coding_order).getInt());
             switch (tag_id) {
                 case 256: // ImageWidth
-                    System.out.println("ImageWidth"+" "+ data_type+ " "+data_count+ " "+data_offset);
+                    System.out.println("ImageWidth"+" "+ tag_id +" " + data_type+ " "+data_count+ " "+data_offset);
                     break;
                 case 257: // ImageLength
-                    System.out.println("ImageLength"+" "+ data_type+ " "+data_count+ " "+data_offset);
+                    System.out.println("ImageLength"+" "+ tag_id +" " + data_type+ " "+data_count+ " "+data_offset);
                     break;
                 case 258: // BitsPerSample
-                System.out.println("BitsPerSample"+" "+ data_type+ " "+data_count+ " "+data_offset);
+                System.out.println("BitsPerSample"+" "+ tag_id +" " + data_type+ " "+data_count+ " "+data_offset);
                     break;
                 case 259: // Compression
-                    System.out.println("Compression"+" "+ data_type+ " "+data_count+ " "+data_offset);
+                    System.out.println("Compression"+" "+ tag_id +" " + data_type+ " "+data_count+ " "+data_offset);
                     break;
                 case 262: //PhotometricInterpretation
-                    System.out.println("PhotometricInterpretation"+" "+ data_type+ " "+data_count+ " "+data_offset);
+                    System.out.println("PhotometricInterpretation"+" "+ tag_id +" " + data_type+ " "+data_count+ " "+data_offset);
                     break;
                 case 273: // StripOffsets
-                    System.out.println("StripOffsets"+" "+ data_type+ " "+data_count+ " "+data_offset);
+                    System.out.println("StripOffsets"+" "+ tag_id +" " + data_type+ " "+data_count+ " "+data_offset);
                     break;
                 case 277: // SamplePerPixel
-                    System.out.println("SamplePerPixel"+" "+ data_type+ " "+data_count+ " "+data_offset);
+                    System.out.println("SamplePerPixel"+" "+ tag_id +" " + data_type+ " "+data_count+ " "+data_offset);
                     break;
                 case 278: // RowsPerStrip
-                    System.out.println("RowsPerStrip"+" "+ data_type+ " "+data_count+ " "+data_offset);
+                    System.out.println("RowsPerStrip"+" "+ tag_id +" " + data_type+ " "+data_count+ " "+data_offset);
                     break;
                 case 279: // StripByteCounts
-                    System.out.println("StripByteCounts"+" "+ data_type+ " "+data_count+ " "+data_offset);
+                    System.out.println("StripByteCounts"+" "+ tag_id +" " + data_type+ " "+data_count+ " "+data_offset);
                     break;
                 case 282: // XResolution
-                    System.out.println("XResolution"+" "+ data_type+ " "+data_count+ " "+data_offset);
+                    System.out.println("XResolution"+" "+ tag_id +" " + data_type+ " "+data_count+ " "+data_offset);
                     break;
                 case 283: // YResolution
-                    System.out.println("YResolution"+" "+ data_type+ " "+data_count+ " "+data_offset);
+                    System.out.println("YResolution"+" "+ tag_id +" " + data_type+ " "+data_count+ " "+data_offset);
                     break;
                 case 296: // Resolution Unit
-                    System.out.println("Resolution Unit"+" "+ data_type+ " "+data_count+ " "+data_offset);
+                    System.out.println("Resolution Unit"+" "+ tag_id +" " + data_type+ " "+data_count+ " "+data_offset);
                     break;
                 case 284: // PlanarConfiguration
-                    System.out.println("PlanarConfiguration"+" "+ data_type+ " "+data_count+ " "+data_offset);
+                    System.out.println("PlanarConfiguration"+" "+ tag_id +" " + data_type+ " "+data_count+ " "+data_offset);
                     break;
                 default:
                     System.out.println(tag_id+" "+ data_type+ " "+data_count+ " "+data_offset);
