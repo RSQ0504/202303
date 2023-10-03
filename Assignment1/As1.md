@@ -134,3 +134,51 @@ CREATE TABLE Record(
 )
 ```
 
+## Q 2
+
+## Q 2.1
+
+Professors can teach the same course in several semesters, and each offering must be recorded.
+
+![1](/Users/davidqian/Desktop/CMPT 354/Assignment/Assignment1/src/1.png)
+
+```sql
+CREATE TABLE professors(
+    ssn CHAR(10),
+    PRIMARY KEY (ssn)
+)
+CREATE TABLE courses(
+    courseid CHAR(10),
+    PRIMARY KEY (courseid)
+)
+CREATE TABLE teach(
+    ssn CHAR(10),
+    courseid CHAR(10),
+    semester CHAR(10),
+    PRIMARY KEY (ssn, courseid, semester)
+)
+```
+
+## Q 2.2
+
+Professors can teach the same course in several semesters, and only the most recent such offering needs to be recorded. (Assume this condition applies in all subsequent questions.)
+
+![2](/Users/davidqian/Desktop/CMPT 354/Assignment/Assignment1/src/2.png)
+
+```sql
+CREATE TABLE professors(
+    ssn CHAR(10),
+    PRIMARY KEY (ssn)
+)
+CREATE TABLE courses(
+    courseid CHAR(10),
+    PRIMARY KEY (courseid)
+)
+CREATE TABLE teach(
+    ssn CHAR(10),
+    courseid CHAR(10),
+    semester CHAR(10),
+    PRIMARY KEY (ssn, courseid)
+)
+```
+
