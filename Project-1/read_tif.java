@@ -15,7 +15,6 @@ import java.util.Arrays;
 public class read_tif extends JPanel{
     private static ByteOrder coding_order;
     private BufferedImage image;
-    private static byte[] fileData;
 
     public read_tif(String imagePath) {
         try {
