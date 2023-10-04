@@ -36,7 +36,7 @@ public class read_tif extends JPanel{
 
 
     public static void main(String[] args) {
-        String inputFilePath = "./Q2/image1.tif"; // Replace with the path to your .tif file
+        String inputFilePath = "./Q2/image1.tif";
         File inputFile = new File(inputFilePath);
         try {
             FileInputStream fileInputStream = new FileInputStream(inputFilePath);
@@ -77,6 +77,7 @@ public class read_tif extends JPanel{
             int tag_id = (int)(ByteBuffer.wrap(Arrays.copyOfRange(tag, 0, 2)).order(coding_order).getShort());
             int data_type = (int)(ByteBuffer.wrap(Arrays.copyOfRange(tag, 2, 4)).order(coding_order).getShort());
             int data_count = (int)(ByteBuffer.wrap(Arrays.copyOfRange(tag, 4, 8)).order(coding_order).getInt());
+            //TODO fenqingkuangtaolun
             int data_offset = (int)(ByteBuffer.wrap(Arrays.copyOfRange(tag, 8, 12)).order(coding_order).getInt());
             switch (tag_id) {
                 case 256: // ImageWidth
