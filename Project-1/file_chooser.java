@@ -11,7 +11,7 @@ public class file_chooser {
     public static void main(String[] args) {
         JFrame frame = new JFrame("Project 1");
         frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-        frame.setSize(800, 400);
+        frame.setSize(800, 600);
 
         JButton button_wav = new JButton("Open .wav File");
         button_wav.setBounds(150, 70, 200, 100);
