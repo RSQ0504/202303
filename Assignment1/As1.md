@@ -85,7 +85,7 @@ CREATE TABLE Record(
     pid CHAR(10),
     info CHAR(10),
     data_of_attend DATE,
-    PRIMARY KEY (pid),
+    PRIMARY KEY (did,pid),
     FOREIGN KEY (did) REFERENCES Doctors
 )
 ```
@@ -280,3 +280,79 @@ CREATE TABLE teach(
 ```
 
 ## Q3
+
+## Q 3.1
+
+<img src="/Users/davidqian/Desktop/CMPT 354/Assignment/Assignment1/src/IMG_62D5A36B5698-1.jpeg" alt="IMG_62D5A36B5698-1" style="zoom:120%;" />
+
+## Q 3.2
+
+```sql
+CREATE TABLE artists(
+    name CHAR(10),
+  	birthplace CHAR(10),
+  	age INTEGER,
+  	sytle CHAR(10),
+    PRIMARY KEY (name)
+)
+CREATE TABLE artwork(
+    title CHAR(10),
+  	year CHAR(10),
+  	type CHAR(10),
+  	artist CHAR(10),
+  	price INTEGER,
+    PRIMARY KEY (title)
+)
+CREATE TABLE art_group(
+    gname CHAR(10),
+    PRIMARY KEY (gname)
+)
+CREATE TABLE customer(
+    cname CHAR(10),
+  	address CHAR(10),
+  	spent INTEGER,
+    PRIMARY KEY (cname)
+)
+CREATE TABLE art_record(
+  	title CHAR(10),
+  	gname CHAR(10),
+    PRIMARY KEY (title,gname)
+  	FOREIGN KEY (title) REFERENCES artwork
+  	FOREIGN KEY (gname) REFERENCES art_group
+)
+CREATE TABLE tends_to_like(
+    name CHAR(10),
+  	cname CHAR(10),
+  	gname CHAR(10),
+    PRIMARY KEY (naem,cname,gname)
+  	FOREIGN KEY (name) REFERENCES artists
+  	FOREIGN KEY (cname) REFERENCES customer
+  	FOREIGN KEY (gname) REFERENCES art_group
+)
+```
+
+## Q 3.3
+
+<img src="/Users/davidqian/Desktop/CMPT 354/Assignment/Assignment1/src/IMG_16E12660039A-1.jpeg" alt="IMG_16E12660039A-1" style="zoom:120%;" />
+
+- Delet the artiist attribute of artwork entity. 
+- Set the title as partial key. 
+- Link artists entity into art_record relationship. 
+- Create one to many relationship.
+- Make names as foreign key
+- Merge art_record and artwork as artwork_record:
+
+```sql
+CREATE TABLE artwork_record(
+  	title CHAR(10),
+  	year CHAR(10),
+  	type CHAR(10),
+  	price INTEGER,
+  
+  	name CHAR(10),
+  	gname CHAR(10),
+    PRIMARY KEY (title,name,gname)
+  	FOREIGN KEY (name) REFERENCES artists
+)
+```
+
