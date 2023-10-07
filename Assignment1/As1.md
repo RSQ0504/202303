@@ -182,3 +182,101 @@ CREATE TABLE teach(
 )
 ```
 
+## Q 2.3
+
+Every professor must teach some course.
+
+![Screenshot 2023-10-07 at 9.16.27 AM](/Users/davidqian/Desktop/CMPT 354/Assignment/Assignment1/src/Screenshot 2023-10-07 at 9.16.27 AM.png)
+
+```sql
+CREATE TABLE courses(
+    courseid CHAR(10),
+    PRIMARY KEY (courseid)
+)
+CREATE TABLE teach_professors(
+    ssn CHAR(10),
+    courseid CHAR(10) NOT NULL,
+    semester CHAR(10),
+    PRIMARY KEY (ssn, courseid)
+  	FOREIGN KEY (courseid) REFERENCES courses
+)
+```
+
+## Q 2.4
+
+Every professor teaches exactly one course (no more, no less).
+
+![Screenshot 2023-10-07 at 9.19.04 AM](/Users/davidqian/Desktop/CMPT 354/Assignment/Assignment1/src/Screenshot 2023-10-07 at 9.19.04 AM.png)
+
+```sql
+CREATE TABLE courses(
+    courseid CHAR(10),
+    PRIMARY KEY (courseid)
+)
+CREATE TABLE teach_professors(
+    ssn CHAR(10),
+    courseid CHAR(10) NOT NULL,
+    semester CHAR(10),
+    PRIMARY KEY (ssn)
+    FOREIGN KEY (courseid) REFERENCES courses
+)
+```
+
+## Q 2.5
+
+Every professor teaches exactly one course (no more, no less), and every course must be taught by some professor.
+
+![Screenshot 2023-10-07 at 9.23.11 AM](/Users/davidqian/Desktop/CMPT 354/Assignment/Assignment1/src/Screenshot 2023-10-07 at 9.23.11 AM.png)
+
+```sql
+CREATE TABLE teach_courses(
+    courseid CHAR(10),
+    ssn CHAR(10) NOT NULL,
+    PRIMARY KEY (courseid, ssn)
+  	FOREIGN KEY (ssn) REFERENCES teach_professors
+)
+CREATE TABLE teach_professors(
+    ssn CHAR(10),
+    courseid CHAR(10) NOT NULL,
+    semester CHAR(10),
+    PRIMARY KEY (ssn)
+    FOREIGN KEY (courseid) REFERENCES teach_courses
+)
+```
+
+## Q 2.6
+
+Now suppose that certain courses can be taught by a team of professors jointly, but it is possible that no one professor in a team can teach the course. Model this situation, introducing additional entity sets and relationship sets if necessary.
+
+![Screenshot 2023-10-07 at 9.51.55 AM](/Users/davidqian/Desktop/CMPT 354/Assignment/Assignment1/src/Screenshot 2023-10-07 at 9.51.55 AM.png)
+
+```sql
+CREATE TABLE professors(
+    ssn CHAR(10),
+    PRIMARY KEY (ssn)
+)
+CREATE TABLE courses(
+    courseid CHAR(10),
+    PRIMARY KEY (courseid)
+)
+CREATE TABLE group(
+    gid CHAR(10),
+    PRIMARY KEY (gid)
+)
+CREATE TABLE t_group(
+    gid CHAR(10),
+  	ssn CHAR(10),
+    PRIMARY KEY (gid,ssn)
+  	FOREIGN KEY (gid) REFERENCES group
+  	FOREIGN KEY (ssn) REFERENCES professors
+)
+CREATE TABLE teach(
+    gid CHAR(10),
+  	courseid CHAR(10),
+    PRIMARY KEY (gid,courseid)
+  	FOREIGN KEY (gid) REFERENCES t_group
+  	FOREIGN KEY (courseid) REFERENCES courses
+)
+```
+
+## Q3
