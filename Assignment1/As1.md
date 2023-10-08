@@ -300,7 +300,7 @@ CREATE TABLE artwork(
   	year CHAR(10),
   	type CHAR(10),
   	artist CHAR(10),
-  	price INTEGER,
+  	price INTEGER NOT NULL,
     PRIMARY KEY (title)
 )
 CREATE TABLE art_group(
@@ -347,7 +347,7 @@ CREATE TABLE artwork_record(
   	title CHAR(10),
   	year CHAR(10),
   	type CHAR(10),
-  	price INTEGER,
+  	price INTEGER NOT NULL,
   
   	name CHAR(10),
   	gname CHAR(10),
