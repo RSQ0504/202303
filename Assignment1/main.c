@@ -59,31 +59,7 @@ int main(){
     List_append(b,&(num[5]));
     List_append(b,&(num[6]));
     List_append(b,&(num[7]));
-    List_append(b,&(num[8]));
+    List_insert_before(a,&(num[8]));
     print_list(a);
-    print_list(b);
-    List_concat(a,b);
-    print_list(a);
-    
-    List_last(a);
-    List_remove(a);
-    print_list(a);
-    List_first(a);
-    List_remove(a);
-    print_list(a);
-
-    List_remove(b);
-    print_list(b);
-
-    int* hi = List_search(a,compare_item,&(num[3]));
-    printf("hi: %d\n",*hi);
-
-    List_free(a,freeitem);
-    print_list(a);
-
-    OO = List_create();
-    if (OO==NULL){
-        printf("out of list");
-    }
     return 0;
 }
