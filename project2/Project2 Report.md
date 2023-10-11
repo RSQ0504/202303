@@ -6,7 +6,7 @@
 
 ### Names of group members: Rongsheng Qian, Isaac Ding, Yuwen Jia SFU
 
-### Best accuracy:
+### Best accuracy: 69.6%
 
 # Part 1
 
@@ -53,15 +53,31 @@
 
 ![plot](/Users/davidqian/Desktop/CMPT 412/Project/project2/colab_result/plot.png)
 
+Validation Accuracy increased quickly from 30% to 60% which cooresponds the trainning  loss from 4 to 1
 
+After loss below 1.0 and validation Accuracy above 60%, accuracy increased slowly.
+
+There were huge fluctuations between 61% and 63%.
+
+When the loss dropped to 0.01, Best accuracy achieved 69.6%
 
 ## 1.3 Ablation Study & Performance Improvement
 
-### 1.3.1 SENet
+### 1.3.1 Deleting Totall_num//2 fc layer, doubling in-feature fc layers(two layers have the same number of), and increase channels from 3 to 64 directly.
+
+This change can make network learn more complex features. 
+
+Before modify:
+
+![Screenshot 2023-10-10 at 9.28.18 PM](/Users/davidqian/Desktop/CMPT 412/Project/project2/colab_result/Screenshot 2023-10-10 at 9.28.18 PM.png)
+
+After modify:
+
+![Screenshot 2023-10-10 at 9.28.30 PM](/Users/davidqian/Desktop/CMPT 412/Project/project2/colab_result/Screenshot 2023-10-10 at 9.28.30 PM.png)
 
 ### 1.3.2 Repeating the CONV with the same number of input channels and output channels
 
-Each convolutional layer can capture different features, which can let network learn more complex features.
+Each repeating convolutional layer can capture different features, which can let network learn more complex features.
 
 It works when the train data is limited, which can mitigate overfitting issues
 
