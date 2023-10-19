@@ -77,6 +77,7 @@ int main(int argCount, char** args){
     //......
     //pthread_mutex_unlock(&counter_mutex);
     pthread_create(&listener_thread, NULL, listening, NULL);
+    pthread_cancel(listener_thread);
     pthread_join(listener_thread, NULL);
     pthread_mutex_destroy(&counter_mutex);
 }
