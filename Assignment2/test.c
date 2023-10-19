@@ -4,16 +4,20 @@
 #include <netdb.h>
 #include <string.h>
 #include <unistd.h>
+#include <arpa/inet.h>
 
 #define MSG_MAX_LEN 1024
-#define PORT 22110
+#define LOCAL_PORT 22110
+#define REMOTE_PORT 22110
+#define REMOTE_IP "127.0.0.1"
+
+
 void* listening(void* arg){
     struct sockaddr_in sin;
     memset(&sin,0,sizeof(sin));
     sin.sin_family = AF_INET;
     sin.sin_addr.s_addr = INADDR_ANY;
-    //inet_pton(AF_INET, "127.0.0.1", &(sin.sin_addr))
-    sin.sin_port = htons(PORT);
+    sin.sin_port = htons(LOCAL_PORT);
 
     int socket_descriptor = socket(AF_INET, SOCK_DGRAM, 0);
     bind(socket_descriptor,(struct sockaddr*) &sin,sizeof(sin));
@@ -31,6 +35,34 @@ void* listening(void* arg){
         //int incMe = atoi (messageRx);
         //char messageTx[MSG_MAX_LEN];
         //sprintf (messageTx, "Math: %d + 1 = %d\n", incMe, incMe + 1);
+    }
+}
+
+void* sender(void* arg){
+    struct sockaddr_in sin, sinRemote;
+    memset(&sin,0,sizeof(sin));
+    sin.sin_family = AF_INET;
+    sin.sin_addr.s_addr = INADDR_ANY;
+    sin.sin_port = htons(LOCAL_PORT);
+
+    int socket_descriptor = socket(AF_INET, SOCK_DGRAM, 0);
+    bind(socket_descriptor,(struct sockaddr*) &sin,sizeof(sin));
+
+    memset(&sinRemote, 0, sizeof(sinRemote));
+    sinRemote.sin_family = AF_INET;
+    sinRemote.sin_port = htons(REMOTE_PORT);
+    inet_pton(AF_INET, REMOTE_IP, &(sinRemote.sin_addr));
+
+    while (1){
+        char message[] = "Hello, remote process!"; // Data to send
+        int message_len = strlen(message);
+
+        int bytesTx = sendto(socket_descriptor, message, message_len, 0, (struct sockaddr*)&sinRemote, sizeof(sinRemote));
+        if (bytesTx < 0) {
+            perror("Send failed");
+        } else {
+            printf("Sent: '%s'\n", message);
+        }
     }
 }
 
