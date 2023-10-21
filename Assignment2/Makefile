@@ -1,6 +1,6 @@
 # Compiler and compiler flags
 CC = gcc
-CFLAGS = -Wall
+CFLAGS = -Wall -pthread
 
 # Source files
 src = test.c

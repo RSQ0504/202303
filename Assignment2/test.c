@@ -9,7 +9,10 @@
 #define MSG_MAX_LEN 1024
 #define LOCAL_PORT 22110
 #define REMOTE_PORT 22110
-#define REMOTE_IP "127.0.0.1"
+#define REMOTE_IP "142.58.15.214"
+
+pthread_mutex_t counter_mutex = PTHREAD_MUTEX_INITIALIZER;
+void* dynamic_string;
 
 
 void* listening(void* arg){
@@ -21,17 +24,24 @@ void* listening(void* arg){
 
     int socket_descriptor = socket(AF_INET, SOCK_DGRAM, 0);
     bind(socket_descriptor,(struct sockaddr*) &sin,sizeof(sin));
+    char pre_message[MSG_MAX_LEN];
 
     while (1){
         struct sockaddr_in sinRemote;
         unsigned int sin_len = sizeof(sinRemote);
-
         char message[MSG_MAX_LEN];
-        int bytesRx = recvfrom(socket_descriptor, message, MSG_MAX_LEN, 0, (struct sockaddr*) &sinRemote, &sin_len);
         
+        pthread_mutex_lock(&counter_mutex);
+        int bytesRx = recvfrom(socket_descriptor, message, MSG_MAX_LEN, 0, (struct sockaddr*) &sinRemote, &sin_len);
         int terminateId = (bytesRx < MSG_MAX_LEN) ? bytesRx : MSG_MAX_LEN - 1;
         message[terminateId] = 0;
-        printf (">>'%s'\n", message);
+        if(strcmp(message,pre_message)!=0){
+            printf (">>'%s'\n", message);
+            dynamic_string = message;
+            strcpy(pre_message,message);
+        }
+        pthread_mutex_unlock(&counter_mutex);
+
         //int incMe = atoi (messageRx);
         //char messageTx[MSG_MAX_LEN];
         //sprintf (messageTx, "Math: %d + 1 = %d\n", incMe, incMe + 1);
@@ -56,8 +66,13 @@ void* sender(void* arg){
     while (1){
         char message[] = "Hello, remote process!"; // Data to send
         int message_len = strlen(message);
-
-        int bytesTx = sendto(socket_descriptor, message, message_len, 0, (struct sockaddr*)&sinRemote, sizeof(sinRemote));
+        pthread_mutex_lock(&counter_mutex);
+        int bytesTx = -1;
+        if (dynamic_string != message){
+            dynamic_string = message;
+        }
+        bytesTx = sendto(socket_descriptor, message, message_len, 0, (struct sockaddr*)&sinRemote, sizeof(sinRemote));
+        pthread_mutex_unlock(&counter_mutex);
         if (bytesTx < 0) {
             perror("Send failed");
         } else {
@@ -72,7 +87,6 @@ int main(int argCount, char** args){
     }
 
     pthread_t listener_thread;
-    pthread_mutex_t counter_mutex = PTHREAD_MUTEX_INITIALIZER;
     //pthread_mutex_lock(&counter_mutex);
     //......
     //pthread_mutex_unlock(&counter_mutex);
