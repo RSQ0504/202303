@@ -23,7 +23,7 @@ void* enter_str(void* arg){
         char new_str[MSG_MAX_LEN];
         fgets(new_str,sizeof(new_str),stdin);
 
-        if (new_str!=""){
+        if (strlen(new_str)!=0){
             char* temp = (char *)malloc(strlen(new_str)+1);
             strcpy(temp,new_str);
             pthread_mutex_lock(&counter_mutex);
