@@ -8,15 +8,15 @@
 #include "list.h"
 
 #define MSG_MAX_LEN 1024
-#define LOCAL_PORT 22110
-#define REMOTE_PORT 22110
-#define REMOTE_IP "192.168.10.147"
+#define LOCAL_PORT 2000
+#define REMOTE_PORT 2000
+#define REMOTE_IP "142.58.15.38"
 
 pthread_mutex_t counter_mutex = PTHREAD_MUTEX_INITIALIZER;
 pthread_cond_t cond = PTHREAD_COND_INITIALIZER;
-char current_send[MSG_MAX_LEN] = "";
 bool new_item_added;
 List* string_list;
+List* need_to_send;
 
 void* enter_str(void* arg){
     while (1){
@@ -29,8 +29,7 @@ void* enter_str(void* arg){
             strcpy(temp,new_str);
             pthread_mutex_lock(&counter_mutex);
             new_item_added = true;
-            List_append(string_list,temp);
-            strcpy(current_send,new_str);
+            List_append(need_to_send,temp);
             pthread_cond_signal(&cond); 
             pthread_mutex_unlock(&counter_mutex);
         }
@@ -40,14 +39,11 @@ void* enter_str(void* arg){
 void* screen_print(void* arg){
     while (1){
         if (new_item_added){
-            system("clear");
-            char *temp = List_first(string_list);
-            while (temp != NULL)
-            {
-                printf("<< %s",temp);
-                temp = List_next(string_list);
-            }
             pthread_mutex_lock(&counter_mutex);
+            char *temp = List_trim(string_list);
+            if (temp!=NULL){
+                printf(">> %s",temp);
+            }
             new_item_added = false;
             pthread_mutex_unlock(&counter_mutex);
         }
@@ -103,6 +99,10 @@ void* sender(void* arg){
     inet_pton(AF_INET, REMOTE_IP, &(sinRemote.sin_addr));
 
     while (1){
+        char* current_send = List_trim(need_to_send);
+        if (current_send == NULL){
+            continue;
+        }
         int message_len = strlen(current_send);
         pthread_mutex_lock(&counter_mutex);
         sendto(socket_descriptor, current_send, message_len, 0, (struct sockaddr*)&sinRemote, sizeof(sinRemote));
@@ -115,7 +115,8 @@ int main(int argCount, char** args){
         for(int i =0; i< argCount;i++){
         printf("Arg %d : %s\n",i,args[i]);
     }
-    string_list= List_create();
+    string_list = List_create();
+    need_to_send = List_create();
     pthread_t listener_thread,sender_thread,enter_thread,screen_thread;
     //pthread_mutex_lock(&counter_mutex);
     //......
