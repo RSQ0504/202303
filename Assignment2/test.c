@@ -42,7 +42,7 @@ void* screen_print(void* arg){
             char *temp = List_first(string_list);
             while (temp != NULL)
             {
-                printf("<< %s \n",temp);
+                printf("<< %s",temp);
                 temp = List_next(string_list);
             }
             pthread_mutex_lock(&counter_mutex);
