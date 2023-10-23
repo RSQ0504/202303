@@ -13,6 +13,7 @@
 #define REMOTE_IP "192.168.10.147"
 
 pthread_mutex_t counter_mutex = PTHREAD_MUTEX_INITIALIZER;
+pthread_cond_t cond = PTHREAD_COND_INITIALIZER;
 char current_send[MSG_MAX_LEN] = "";
 bool new_item_added;
 List* string_list;
@@ -30,6 +31,7 @@ void* enter_str(void* arg){
             new_item_added = true;
             List_append(string_list,temp);
             strcpy(current_send,new_str);
+            pthread_cond_signal(&cond); 
             pthread_mutex_unlock(&counter_mutex);
         }
     }
@@ -61,7 +63,6 @@ void* listening(void* arg){
 
     int socket_descriptor = socket(AF_INET, SOCK_DGRAM, 0);
     bind(socket_descriptor,(struct sockaddr*) &sin,sizeof(sin));
-    char pre_message[MSG_MAX_LEN];
 
     while (1){
         struct sockaddr_in sinRemote;
@@ -72,16 +73,13 @@ void* listening(void* arg){
         int bytesRx = recvfrom(socket_descriptor, message, MSG_MAX_LEN, 0, (struct sockaddr*) &sinRemote, &sin_len);
         int terminateId = (bytesRx < MSG_MAX_LEN) ? bytesRx : MSG_MAX_LEN - 1;
         message[terminateId] = 0;
-        if(strcmp(message,pre_message)!=0){
-            char* temp = (char *)malloc(terminateId+1);
-            strcpy(temp,message);
-            pthread_mutex_lock(&counter_mutex);
-            new_item_added = true;
-            List_append(string_list,temp);
-            pthread_mutex_unlock(&counter_mutex);
-            
-            strcpy(pre_message,message);
-        }
+        
+        char* temp = (char *)malloc(terminateId+1);
+        strcpy(temp,message);
+        pthread_mutex_lock(&counter_mutex);
+        new_item_added = true;
+        List_append(string_list,temp);
+        pthread_mutex_unlock(&counter_mutex);
 
         //int incMe = atoi (messageRx);
         //char messageTx[MSG_MAX_LEN];
@@ -108,6 +106,7 @@ void* sender(void* arg){
         int message_len = strlen(current_send);
         pthread_mutex_lock(&counter_mutex);
         sendto(socket_descriptor, current_send, message_len, 0, (struct sockaddr*)&sinRemote, sizeof(sinRemote));
+        pthread_cond_wait(&cond, &counter_mutex);
         pthread_mutex_unlock(&counter_mutex);
     }
 }
