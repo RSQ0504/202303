@@ -3,7 +3,7 @@ CC = gcc
 CFLAGS = -Wall -pthread
 
 # Source files
-src = test.c
+src = test.c list.c
 
 # Object files
 obj = $(src:.c=.o)

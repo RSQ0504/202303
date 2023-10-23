@@ -5,15 +5,52 @@
 #include <string.h>
 #include <unistd.h>
 #include <arpa/inet.h>
+#include "list.h"
 
 #define MSG_MAX_LEN 1024
 #define LOCAL_PORT 22110
 #define REMOTE_PORT 22110
-#define REMOTE_IP "142.58.15.214"
+#define REMOTE_IP "192.168.10.147"
 
 pthread_mutex_t counter_mutex = PTHREAD_MUTEX_INITIALIZER;
-void* dynamic_string;
+char current_send[MSG_MAX_LEN] = "";
+bool new_item_added;
+List* string_list;
 
+void* enter_str(void* arg){
+    while (1){
+
+        char new_str[MSG_MAX_LEN];
+        fgets(new_str,sizeof(new_str),stdin);
+
+        if (new_str!=""){
+            char* temp = (char *)malloc(strlen(new_str)+1);
+            strcpy(temp,new_str);
+            pthread_mutex_lock(&counter_mutex);
+            new_item_added = true;
+            List_append(string_list,temp);
+            strcpy(current_send,new_str);
+            pthread_mutex_unlock(&counter_mutex);
+        }
+    }
+}
+
+void* screen_print(void* arg){
+    while (1){
+        if (new_item_added){
+            system("clear");
+            char *temp = List_first(string_list);
+            while (temp != NULL)
+            {
+                printf("<< %s \n",temp);
+                temp = List_next(string_list);
+            }
+            pthread_mutex_lock(&counter_mutex);
+            new_item_added = false;
+            pthread_mutex_unlock(&counter_mutex);
+        }
+    }
+}
 
 void* listening(void* arg){
     struct sockaddr_in sin;
@@ -31,16 +68,20 @@ void* listening(void* arg){
         unsigned int sin_len = sizeof(sinRemote);
         char message[MSG_MAX_LEN];
         
-        pthread_mutex_lock(&counter_mutex);
+
         int bytesRx = recvfrom(socket_descriptor, message, MSG_MAX_LEN, 0, (struct sockaddr*) &sinRemote, &sin_len);
         int terminateId = (bytesRx < MSG_MAX_LEN) ? bytesRx : MSG_MAX_LEN - 1;
         message[terminateId] = 0;
         if(strcmp(message,pre_message)!=0){
-            printf (">>'%s'\n", message);
-            dynamic_string = message;
+            char* temp = (char *)malloc(terminateId+1);
+            strcpy(temp,message);
+            pthread_mutex_lock(&counter_mutex);
+            new_item_added = true;
+            List_append(string_list,temp);
+            pthread_mutex_unlock(&counter_mutex);
+            
             strcpy(pre_message,message);
         }
-        pthread_mutex_unlock(&counter_mutex);
 
         //int incMe = atoi (messageRx);
         //char messageTx[MSG_MAX_LEN];
@@ -64,20 +105,10 @@ void* sender(void* arg){
     inet_pton(AF_INET, REMOTE_IP, &(sinRemote.sin_addr));
 
     while (1){
-        char message[] = "Hello, remote process!"; // Data to send
-        int message_len = strlen(message);
+        int message_len = strlen(current_send);
         pthread_mutex_lock(&counter_mutex);
-        int bytesTx = -1;
-        if (dynamic_string != message){
-            dynamic_string = message;
-        }
-        bytesTx = sendto(socket_descriptor, message, message_len, 0, (struct sockaddr*)&sinRemote, sizeof(sinRemote));
+        sendto(socket_descriptor, current_send, message_len, 0, (struct sockaddr*)&sinRemote, sizeof(sinRemote));
         pthread_mutex_unlock(&counter_mutex);
-        if (bytesTx < 0) {
-            perror("Send failed");
-        } else {
-            printf("Sent: '%s'\n", message);
-        }
     }
 }
 
@@ -85,13 +116,26 @@ int main(int argCount, char** args){
         for(int i =0; i< argCount;i++){
         printf("Arg %d : %s\n",i,args[i]);
     }
-
-    pthread_t listener_thread;
+    string_list= List_create();
+    pthread_t listener_thread,sender_thread,enter_thread,screen_thread;
     //pthread_mutex_lock(&counter_mutex);
     //......
     //pthread_mutex_unlock(&counter_mutex);
     pthread_create(&listener_thread, NULL, listening, NULL);
-    pthread_cancel(listener_thread);
+    pthread_create(&sender_thread, NULL, sender, NULL);
+    pthread_create(&enter_thread, NULL, enter_str, NULL);
+    pthread_create(&screen_thread, NULL, screen_print, NULL);
+
+
+    //pthread_cancel(listener_thread);
+    //pthread_cancel(sender_thread);
+    //pthread_cancel(enter_thread);
+    //pthread_cancel(screen_thread);
+
     pthread_join(listener_thread, NULL);
+    pthread_join(sender_thread, NULL);
+    pthread_join(enter_thread, NULL);
+    pthread_join(screen_thread, NULL);
+
     pthread_mutex_destroy(&counter_mutex);
 }
