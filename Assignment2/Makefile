@@ -3,12 +3,12 @@ CC = gcc
 CFLAGS = -Wall -pthread
 
 # Source files
-src = test.c list.c
+src = main.c list.c
 
 # Object files
 obj = $(src:.c=.o)
 
-exe = program
+exe = s-talk
 
 # Compile object files
 %.o: %.c
