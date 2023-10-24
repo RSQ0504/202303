@@ -47,7 +47,8 @@ void* screen_print(void* arg) {
             pthread_mutex_lock(&counter_mutex);
             char *temp = List_trim(string_list);
             if (temp != NULL) {
-                printf(">> %s", temp);
+                fputs(">> ", stdout);
+                fputs(temp, stdout);
             }
             new_item_added = false;
             pthread_mutex_unlock(&counter_mutex);
@@ -136,10 +137,7 @@ void initializeGlobalsFromArgs(int argc, char **argv) {
 }
 
 int main(int argCount, char** args) {
-    for (int i = 0; i < argCount; i++) {
-        printf("Arg %d : %s\n", i, args[i]);
-    }
-
+    
     initializeGlobalsFromArgs(argCount, args);
 
     string_list = List_create();
