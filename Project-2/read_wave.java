@@ -46,6 +46,7 @@ public class read_wave  extends JPanel {
     }
 
     public void draw(){
+        setLayout(new BorderLayout());
         repaint(); 
     }
 

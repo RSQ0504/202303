@@ -19,11 +19,13 @@ public class file_chooser {
         JButton button_tif = new JButton("Open .tif File");
         button_tif.setBounds(150, 120, 200, 100);
 
+        JPanel buttonPanel1= new JPanel(new FlowLayout(FlowLayout.CENTER));
         JButton button_back1 = new JButton("back");
-        button_tif.setBounds(150, 500, 200, 100);
+        buttonPanel1.add(button_back1);
 
+        JPanel buttonPanel2= new JPanel(new FlowLayout(FlowLayout.CENTER));
         JButton button_back2 = new JButton("back");
-        button_tif.setBounds(150, 500, 200, 100);
+        buttonPanel2.add(button_back2);
 
         JButton button_exit = new JButton("exit");
         button_tif.setBounds(150, 120, 200, 100);
@@ -57,7 +59,7 @@ public class file_chooser {
                     //frame.getContentPane().removeAll();
                     wav_reader = new read_wave(file.getPath());
                     wav_reader.draw();
-                    wav_reader.add(button_back1);
+                    wav_reader.add(buttonPanel2, BorderLayout.EAST);
                     frame.add(wav_reader);
                     panel.setVisible(false);
                 } else {
@@ -75,7 +77,7 @@ public class file_chooser {
                     System.out.println("Selected .tif File: " + file.getPath());
                     tif_reader = new read_tif(file.getPath());
                     tif_reader.draw();
-                    tif_reader.add(button_back2);
+                    tif_reader.add(buttonPanel2, BorderLayout.EAST);
                     frame.add(tif_reader);
                     panel.setVisible(false);
                 } else {
