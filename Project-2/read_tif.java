@@ -8,19 +8,22 @@ import java.awt.*;
 import java.awt.image.BufferedImage;
 
 public class read_tif extends JPanel{
-    private BufferedImage image;
+    private static BufferedImage image;
     private int page = 0;
+    private static int width;
+    private static int height;
 
     public read_tif(String imagePath) {
         try {
             image = ImageIO.read(new File(imagePath));
+            width = image.getWidth();
+            height = image.getHeight();
         } catch (IOException e) {
             e.printStackTrace();
         }
     }
+
     public BufferedImage Grayscale() {
-        int width = image.getWidth();
-        int height = image.getHeight();
         BufferedImage grey_image  = new BufferedImage(width, height,BufferedImage.TYPE_BYTE_GRAY);
 
         for (int y = 0; y < height; y++) {
@@ -30,7 +33,7 @@ public class read_tif extends JPanel{
                 int g = (c_value >> 8) & 0xFF;  
                 int b = c_value & 0xFF;
 
-                int gray = (r + g + b) / 3; // Calculate the grayscale value
+                int gray = (r + g + b) / 3;
 
                 int grayPixel = (gray << 16) | (gray << 8) | gray;
                 grey_image.setRGB(x, y, grayPixel);
@@ -38,6 +41,32 @@ public class read_tif extends JPanel{
         }
         return grey_image;
     }
+
+    public BufferedImage ReduceBright(BufferedImage i){
+        BufferedImage copy;
+        if (i.getType() == 0){
+            copy  = new BufferedImage(width, height,BufferedImage.TYPE_INT_RGB);
+        }else{
+            copy  = new BufferedImage(width, height,i.getType());
+        }
+        for (int y = 0; y < height; y++) {
+            for (int x = 0; x < width; x++) {
+                int rgb = i.getRGB(x, y);
+
+                int r = (rgb >> 16) & 0xFF;
+                int g = (rgb >> 8) & 0xFF;
+                int b = rgb & 0xFF;
+                r = (int)(r * 0.5);
+                g = (int)(g * 0.5);
+                b = (int)(b * 0.5);
+                int result = (r << 16) | (g << 8) | b;
+                copy.setRGB(x, y, result);
+            }
+        }
+        return copy;
+    }
+
+
     public void draw(){
         setLayout(new BorderLayout());
         repaint(); 
@@ -46,25 +75,25 @@ public class read_tif extends JPanel{
     @Override
     protected void paintComponent(Graphics g) {
         super.paintComponent(g);
-        double scale_a = (double) image.getWidth()/350;
-        double scale_b = (double) image.getHeight()/250;
+        double scale_a = (double) width/350;
+        double scale_b = (double) height/250;
         double s = (scale_a>scale_b)?scale_a:scale_b;
         //System.out.println(s);
         int scale = (int) Math.ceil(s);
         //System.out.println(scale);
-        int scale_w=image.getWidth()/scale;
-        int scale_h=image.getHeight()/scale;
+        int scale_w=width/scale;
+        int scale_h=height/scale;
         BufferedImage left;
         BufferedImage right;
-        
+
         switch (page) {
             case 0:
                 left = image;
                 right = Grayscale();
                 break;
             case 1:
-                left = Grayscale();
-                right = image;
+                left = ReduceBright(image);
+                right = ReduceBright(Grayscale());
                 break;
             default:
                 left = image;
