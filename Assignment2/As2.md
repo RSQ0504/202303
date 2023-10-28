@@ -4,7 +4,7 @@
 
 List items available in both “red” and “blue”.
 
-### $\pi_{item}(\sigma_{color = red}(Types)\cap\sigma_{color = blue}(Types))$
+### $\pi_{item}(\sigma_{color = red}(Types))\cap\pi_{item}(\sigma_{color = blue}(Types))$
 
 ## Q 1.2
 
@@ -38,19 +38,29 @@ What departments sell only items with a red color, in other words, what departme
 
 ### $\pi_{dept}(Sales⋈Types)-\pi_{dept}(Sales⋈\sigma_{color\neq red}(Types))$
 
-# Q1
 
-## Q 1.1
+
+
+
+
+
+# Q2
+
+## Q 2.1
 
 List items available in both “red” and “blue”.
 
 ```sql
 SELECT t.item
 FROM Types t
-WHERE t.color = 'blue' AND t.color = 'red'
+WHERE t.color = 'blue'
+INTERSECT
+SELECT t.item
+FROM Types t
+WHERE t.color = 'red'
 ```
 
-## Q 1.2
+## Q 2.2
 
 List the name of the employees making at least as much as “Jane”. If there are several employees named ”Jane”, which Jane’s salary is used in this comparison in your answer?
 
@@ -60,7 +70,7 @@ FROM Employee E1, Employee E2
 WHERE E1.salary >= E2.salary AND E2.name = 'Jane'
 ```
 
-## Q 1.3
+## Q 2.3
 
 Find the largest salary paid to any employees.
 
@@ -69,12 +79,12 @@ SELECT MAX(salary)
 FROM Employee;
 ```
 
-## Q 1.4
+## Q 2.4
 
 What departments sell every item with a red color.
 
 ```sql
-SELECT s.dept
+SELECT DISTINCT s.dept
 FROM sales s
 WHERE NOT EXISTS (
     SELECT t.item
@@ -87,20 +97,87 @@ WHERE NOT EXISTS (
 )
 ```
 
-## Q 1.5
+## Q 2.5
 
 What departments sell only items with a red color, in other words, what departments do not sell any item with a non-red color.
 
 ```sql
-SELECT s.dept
+SELECT DISTINCT s.dept
 FROM sales s
 EXCEPT
-SELECT s.dept
+SELECT DISTINCT s.dept
 FROM sales s
-WHERE s.item NOT IN (
+WHERE s.item IN (
   SELECT t.item 
   FROM types t 
-  WHERE t.color = 'red'
+  WHERE t.color != 'red'
+)
+```
+
+# Q3
+
+## Q 3.1
+
+Express query 1 in SQL without using INTERSECT
+
+```sql
+SELECT t.item
+FROM Types t
+WHERE t.color = 'blue' AND t.item IN (
+  SELECT t1.item 
+  FROM Types t1 
+  WHERE t1.color = 'red'
+)
+```
+
+## Q 3.2
+
+Express query 2 in SQL using nested query
+
+```sql
+SELECT E1.name
+FROM Employee E1
+WHERE E1.salary >=(
+	SELECT MAX(E2.salary)
+  From Employee E2
+  WHERE E2.name = "Jane"
+)
+```
+
+
+
+
+
+
+
+## Q 3.3
+
+Express query 3 without using EXCEPT
+
+```sql
+SELECT e.salary
+FROM Employee e
+WHERE e.salary = (
+	SELECT MAX(e2.salary)
+	FROM Employee e2;
+)
+```
+
+## Q 3.4
+
+Express query 5 without using EXCEPT
+
+```sql
+SELECT DISTINCT s.dept
+FROM sales s
+WHERE s.dept NOT IN (
+	SELECT s1.dept
+	FROM sales s1
+	WHERE s1.item IN (
+  	SELECT t.item 
+  	FROM types t 
+  	WHERE t.color != 'red'
+	)
 )
 ```
 
