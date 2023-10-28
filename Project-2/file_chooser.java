@@ -23,9 +23,13 @@ public class file_chooser {
         JButton button_back1 = new JButton("back");
         buttonPanel1.add(button_back1);
 
-        JPanel buttonPanel2= new JPanel(new FlowLayout(FlowLayout.CENTER));
+        JPanel buttonPanel2= new JPanel();
+        BoxLayout boxLayout = new BoxLayout(buttonPanel2, BoxLayout.Y_AXIS);
+        buttonPanel2.setLayout(boxLayout);
         JButton button_back2 = new JButton("back");
+        JButton button_next2 = new JButton("next");
         buttonPanel2.add(button_back2);
+        buttonPanel2.add(button_next2);
 
         JButton button_exit = new JButton("exit");
         button_tif.setBounds(150, 120, 200, 100);
@@ -100,6 +104,13 @@ public class file_chooser {
                 tif_reader.setVisible(false);
                 panel.setVisible(true);
                 
+            }
+        });
+
+        button_next2.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                tif_reader.draw();
             }
         });
 

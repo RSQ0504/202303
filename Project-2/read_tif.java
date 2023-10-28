@@ -9,6 +9,7 @@ import java.awt.image.BufferedImage;
 
 public class read_tif extends JPanel{
     private BufferedImage image;
+    private int page = 0;
 
     public read_tif(String imagePath) {
         try {
@@ -45,22 +46,35 @@ public class read_tif extends JPanel{
     @Override
     protected void paintComponent(Graphics g) {
         super.paintComponent(g);
-        BufferedImage grey = Grayscale();
-        if (image.getWidth()>350||image.getHeight()>250){
-            double scale_a = (double) image.getWidth()/350;
-            double scale_b = (double) image.getHeight()/250;
-            double s = (scale_a>scale_b)?scale_a:scale_b;
-            //System.out.println(s);
-            int scale = (int) Math.ceil(s);
-            //System.out.println(scale);
-            int scale_w=image.getWidth()/scale;
-            int scale_h=image.getHeight()/scale;
-            g.drawImage(image, 0, 0, scale_w, scale_h, null);
-            g.drawImage(grey, scale_w + 10, 0, scale_w, scale_h, null);
-        }else{
-            g.drawImage(image, 0, 0, null);
-            g.drawImage(grey, image.getWidth()+10, 0, null);
+        double scale_a = (double) image.getWidth()/350;
+        double scale_b = (double) image.getHeight()/250;
+        double s = (scale_a>scale_b)?scale_a:scale_b;
+        //System.out.println(s);
+        int scale = (int) Math.ceil(s);
+        //System.out.println(scale);
+        int scale_w=image.getWidth()/scale;
+        int scale_h=image.getHeight()/scale;
+        BufferedImage left;
+        BufferedImage right;
+        
+        switch (page) {
+            case 0:
+                left = image;
+                right = Grayscale();
+                break;
+            case 1:
+                left = Grayscale();
+                right = image;
+                break;
+            default:
+                left = image;
+                right = Grayscale();
+                page = 0;
+                break;
         }
+        page+=1;
+        g.drawImage(left, 0, 0, scale_w, scale_h, null);
+        g.drawImage(right, scale_w + 10, 0, scale_w, scale_h, null);
     }
 }
 
