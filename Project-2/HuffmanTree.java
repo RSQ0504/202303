@@ -37,19 +37,19 @@ public class HuffmanTree {
             nodes.sort(Comparator.comparingInt(node -> node.frequency));
             HuffmanNode left = nodes.remove(0);
             HuffmanNode right = nodes.remove(0);
-            HuffmanNode mergedNode = new HuffmanNode(-1, left.frequency + right.frequency);
-            mergedNode.left = left;
-            mergedNode.right = right;
-            nodes.add(mergedNode);
+            HuffmanNode interval = new HuffmanNode(999999999, left.frequency + right.frequency);
+            interval.left = left;
+            interval.right = right;
+            nodes.add(interval);
         }
         return new HuffmanTree(nodes.get(0));
     }
 
     public static Map<Integer, String> generating(HuffmanTree tree) {
-    Map<Integer, String> huffmanCodes = new HashMap<>();
-    generateCode(tree.root, "", huffmanCodes);
-    return huffmanCodes;
-}
+        Map<Integer, String> huffmanCodes = new HashMap<>();
+        generateCode(tree.root, "", huffmanCodes);
+        return huffmanCodes;
+    }
 
     private static void generateCode(HuffmanNode node, String code, Map<Integer, String> huffmanCodes) {
         if (node.isLeaf()) {
