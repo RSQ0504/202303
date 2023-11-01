@@ -63,7 +63,7 @@ public class file_chooser {
                     //frame.getContentPane().removeAll();
                     wav_reader = new read_wave(file.getPath());
                     wav_reader.draw();
-                    wav_reader.add(buttonPanel2, BorderLayout.EAST);
+                    wav_reader.add(buttonPanel1, BorderLayout.EAST);
                     frame.add(wav_reader);
                     panel.setVisible(false);
                 } else {
