@@ -55,38 +55,24 @@ public class read_wave  extends JPanel {
     private static Map<Integer, Integer> calculate_freq(){
         Map<Integer, Integer> table = new HashMap<>();
         int sample_num = data_c1.length / bytes_per_sample;
-        int c1_v1,c1_v2,c2_v1,c2_v2;
+        int c1,c2;
         for (int i = 0; i < sample_num - 1; i++) {
             if(audioFormat.isBigEndian()){
-                c1_v1 = (int) (ByteBuffer.wrap(data_c1, i * bytes_per_sample, bytes_per_sample).order(ByteOrder.BIG_ENDIAN).getShort());
-                c1_v2 = (int) (ByteBuffer.wrap(data_c1, (i + 1) * bytes_per_sample, bytes_per_sample).order(ByteOrder.BIG_ENDIAN).getShort());
-                c2_v1 = (int) (ByteBuffer.wrap(data_c2, i * bytes_per_sample, bytes_per_sample).order(ByteOrder.BIG_ENDIAN).getShort());
-                c2_v2 = (int) (ByteBuffer.wrap(data_c2, (i + 1) * bytes_per_sample, bytes_per_sample).order(ByteOrder.BIG_ENDIAN).getShort());
+                c1 = (int) (ByteBuffer.wrap(data_c1, i * bytes_per_sample, bytes_per_sample).order(ByteOrder.BIG_ENDIAN).getShort());
+                c2 = (int) (ByteBuffer.wrap(data_c2, i * bytes_per_sample, bytes_per_sample).order(ByteOrder.BIG_ENDIAN).getShort());
             }else{
-                c1_v1 = (int) (ByteBuffer.wrap(data_c1, i * bytes_per_sample, bytes_per_sample).order(ByteOrder.LITTLE_ENDIAN).getShort());
-                c1_v2 = (int) (ByteBuffer.wrap(data_c1, (i + 1) * bytes_per_sample, bytes_per_sample).order(ByteOrder.LITTLE_ENDIAN).getShort());
-                c2_v1 = (int) (ByteBuffer.wrap(data_c2, i * bytes_per_sample, bytes_per_sample).order(ByteOrder.LITTLE_ENDIAN).getShort());
-                c2_v2 = (int) (ByteBuffer.wrap(data_c2, (i + 1) * bytes_per_sample, bytes_per_sample).order(ByteOrder.LITTLE_ENDIAN).getShort());
+                c1 = (int) (ByteBuffer.wrap(data_c1, i * bytes_per_sample, bytes_per_sample).order(ByteOrder.LITTLE_ENDIAN).getShort());
+                c2 = (int) (ByteBuffer.wrap(data_c2, i * bytes_per_sample, bytes_per_sample).order(ByteOrder.LITTLE_ENDIAN).getShort());
             }
-            if (table.containsKey(c1_v1)) {
-                table.put(c1_v1, table.get(c1_v1) + 1);
+            if (table.containsKey(c1)) {
+                table.put(c1, table.get(c1) + 1);
             } else {
-                table.put(c1_v1, 1);
+                table.put(c1, 1);
             }
-            if (table.containsKey(c1_v2)) {
-                table.put(c1_v2, table.get(c1_v2) + 1);
+            if (table.containsKey(c2)) {
+                table.put(c2, table.get(c2) + 1);
             } else {
-                table.put(c1_v2, 1);
-            }
-            if (table.containsKey(c2_v1)) {
-                table.put(c2_v1, table.get(c2_v1) + 1);
-            } else {
-                table.put(c2_v1, 1);
-            }
-            if (table.containsKey(c2_v2)) {
-                table.put(c2_v2, table.get(c2_v2) + 1);
-            } else {
-                table.put(c2_v2, 1);
+                table.put(c2, 1);
             }
         }
         return table;
