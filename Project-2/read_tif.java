@@ -33,7 +33,7 @@ public class read_tif extends JPanel{
                 int g = (c_value >> 8) & 0xFF;  
                 int b = c_value & 0xFF;
 
-                int gray = (r + g + b) / 3;
+                int gray = (int) (0.3*r + 0.59*g + 0.11*b);
 
                 int grayPixel = (gray << 16) | (gray << 8) | gray;
                 grey_image.setRGB(x, y, grayPixel);
