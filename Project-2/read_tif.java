@@ -95,6 +95,63 @@ public class read_tif extends JPanel{
         return orderedDither(image,mat);
     }
 
+    private static double[] calculateCDF(BufferedImage image,char channel) {
+        int[] count = new int[256];
+        for(int i =0; i<256;i++){
+            count[i] = 0;
+        }
+        for (int y = 0; y < height; y++) {
+            for (int x = 0; x < width; x++) {
+                int rgb = image.getRGB(x, y);
+                int colorValue = 0;
+
+                if (channel == 'r') {
+                    colorValue = (rgb >> 16) & 0xFF; // Red channel
+                } else if (channel == 'g') {
+                    colorValue = (rgb >> 8) & 0xFF; // Green channel
+                } else if (channel == 'b') {
+                    colorValue = rgb & 0xFF; // Blue channel
+                }
+                count[colorValue]++;
+            }
+        }
+        int sum = 0;
+        for(int i =0; i<256;i++){
+            sum+=count[i];
+        }
+        double[] cdf = new double[256];
+        int step = 0;
+        for(int i =0; i<256;i++){
+            step+=count[i];
+            cdf[i] = (double) step/sum;
+            //System.out.println(cdf[i]);
+        }
+        return cdf;
+    }
+
+    private static BufferedImage atuoLevel_output(BufferedImage image) {
+        BufferedImage result_image = new BufferedImage(width, height,BufferedImage.TYPE_INT_RGB);
+        double[] cdf_r = calculateCDF(image,'r');
+        double[] cdf_b = calculateCDF(image,'b');
+        double[] cdf_g = calculateCDF(image,'g');
+
+        for (int y = 0; y < height; y++) {
+            for (int x = 0; x < width; x++) {
+                int rgb = image.getRGB(x, y);
+
+                int r = (rgb >> 16) & 0xFF;
+                int g = (rgb >> 8) & 0xFF;
+                int b = rgb & 0xFF;
+                r = (int)(cdf_r[r] * 255.0);
+                g = (int)(cdf_g[g] * 255.0);
+                b = (int)(cdf_b[b] * 255.0);
+                int result = (r << 16) | (g << 8) | b;
+                result_image.setRGB(x, y, result);
+            }
+        }
+        return result_image;
+    }
+
     public void draw(){
         setLayout(new BorderLayout());
         repaint(); 
@@ -126,6 +183,10 @@ public class read_tif extends JPanel{
             case 2:
                 left = Grayscale();
                 right = orderedDither_output(Grayscale());
+                break;
+            case 3:
+                left = image;
+                right = atuoLevel_output(image);
                 break;
             default:
                 left = image;
