@@ -116,9 +116,11 @@ public class read_wave  extends JPanel {
         double e = calculateEntropy();
         HuffmanTree tree = new HuffmanTree(null);
         tree = tree.buildHuffmanTree(calculate_freq());
+        Map<Integer, String> result = HuffmanTree.generating(tree);
+        double avg = HuffmanTree.avgLength(calculate_freq(), result);
 
         g.setColor(Color.white);
         g.drawString("the entropy of the audio samples : " + e, 30, 20);
-        g.drawString("the average code word length: " + sample_rate + " Hz", 30, 60);
+        g.drawString("the average code word length: " + avg + " bits", 30, 60);
     }
 }
