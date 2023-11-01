@@ -66,6 +66,34 @@ public class read_tif extends JPanel{
         return copy;
     }
 
+    private static BufferedImage orderedDither(BufferedImage image, int[][] mat) {
+        BufferedImage result_image  = new BufferedImage(width, height,BufferedImage.TYPE_BYTE_GRAY);
+
+        for (int y = 0; y < height; y++) {
+            for (int x = 0; x < width; x++) {
+                int original_value = image.getRGB(x, y) & 0xFF;
+                int dither_Value = mat[x % mat.length][y % mat[0].length];
+                
+                if (original_value%(mat.length*mat.length+1) > dither_Value) {
+                    result_image.setRGB(x, y, 0xFFFFFF);
+                } else {
+                    result_image.setRGB(x, y, 0);
+                }
+            }
+        }
+        return result_image;
+    }
+
+    private static BufferedImage orderedDither_output(BufferedImage image) {
+        int[][] mat = {
+            {0, 8, 2, 10},
+            {12, 4, 14, 6},
+            {3, 11, 1, 9},
+            {15, 7, 13, 5}
+        };
+
+        return orderedDither(image,mat);
+    }
 
     public void draw(){
         setLayout(new BorderLayout());
@@ -94,6 +122,10 @@ public class read_tif extends JPanel{
             case 1:
                 left = ReduceBright(image);
                 right = ReduceBright(Grayscale());
+                break;
+            case 2:
+                left = Grayscale();
+                right = orderedDither_output(Grayscale());
                 break;
             default:
                 left = image;
