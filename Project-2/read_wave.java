@@ -11,7 +11,6 @@ import javax.swing.*;
 public class read_wave  extends JPanel {
 
     private static int bytes_per_sample;
-    private static int sample_rate;
     private static byte[] data_c1;
     private static byte[] data_c2;
     private static byte[] total_data;
@@ -25,7 +24,6 @@ public class read_wave  extends JPanel {
             audioFormat = audioInputStream.getFormat();
             
             bytes_per_sample = audioFormat.getSampleSizeInBits() / 8;
-            sample_rate = (int) audioFormat.getSampleRate();
             int frame_num = (int) audioInputStream.getFrameLength();
             int byte_num_per_channel = frame_num * bytes_per_sample;
 
