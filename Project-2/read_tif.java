@@ -75,9 +75,9 @@ public class read_tif extends JPanel{
                 int dither_Value = mat[x % mat.length][y % mat[0].length];
                 
                 if (original_value%(mat.length*mat.length+1) > dither_Value) {
-                    result_image.setRGB(x, y, 0xFFFFFF);
-                } else {
                     result_image.setRGB(x, y, 0);
+                } else {
+                    result_image.setRGB(x, y, 0xFFFFFF);
                 }
             }
         }
@@ -86,12 +86,16 @@ public class read_tif extends JPanel{
 
     private static BufferedImage orderedDither_output(BufferedImage image) {
         int[][] mat = {
-            {0, 8, 2, 10},
-            {12, 4, 14, 6},
-            {3, 11, 1, 9},
-            {15, 7, 13, 5}
+            {1, 49, 13, 61, 4, 52, 14, 62},
+            {33, 17, 45, 29, 36, 20, 48, 32},
+            {9, 57, 5, 53, 12, 60, 8, 56},
+            {41, 25, 37, 21, 44, 28, 40, 24},
+            {3, 51, 15, 63, 2, 50, 16, 64},
+            {35, 19, 47, 31, 34, 18, 46, 30},
+            {11, 59, 7, 55, 10, 58, 6, 54},
+            {43, 27, 39, 23, 42, 26, 38, 22}
         };
-
+        
         return orderedDither(image,mat);
     }
 
