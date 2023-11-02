@@ -9,7 +9,7 @@ public class file_chooser {
     private static read_wave wav_reader;
     private static read_tif tif_reader;
     public static void main(String[] args) {
-        JFrame frame = new JFrame("Project 1");
+        JFrame frame = new JFrame("Project 2");
         frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
         frame.setSize(800, 600);
 
