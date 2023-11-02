@@ -8,8 +8,8 @@
 
 ```c
 .
-├── HuffmanTree.class
-├── HuffmanTree.java     // implement HuffmanTree
+├── Huffman_Tree.class
+├── Huffman_Tree.java     // implement HuffmanTree
 ├── file_chooser.java   // main file which is a launcher with GUI
 ├── read_tif.class       
 ├── read_tif.java       // implement all api which is required in Q1
@@ -217,6 +217,25 @@ Calculating the average code word length, the steps are below:
            Node right;}
    ```
 
-   
+2. add freq table into nodes pool, sort them and apply huffman code algorithm
 
-2. 
+   ```java
+   // generate the node_pool by the freq_table before
+   // add all of them into pool
+   // ......
+   Node right = node_pool.remove(0)
+   Node left = node_pool.remove(0)
+   Node interval = merge(right,left)
+   node_pool.add(interval)
+   ```
+
+3. Encode the huffman code by recursive function:
+
+   ```java
+   node.left = code + '0'
+   node.right = code + '1'
+   ```
+
+4. Calculate the avg by the formula
+
+   ## $$\frac{sampleCount*code.length}{totalSampleCount} = \frac{totalCode.length}{totalSampleCount}$$

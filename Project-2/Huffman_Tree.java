@@ -66,17 +66,17 @@ public class Huffman_Tree {
     }
 
     public static double avgLength(Map<Integer, Integer> table, Map<Integer, String> code_map) {
-        double totalLength = 0.0;
-        int totalFrequency = 0;
+        double total_code_length = 0.0;
+        int total_sample_count = 0;
 
         for (int value : table.keySet()) {
             int frequency = table.get(value);
             String code = code_map.get(value);
-            totalLength += frequency * code.length();
-            totalFrequency += frequency;
+            total_code_length += frequency * code.length();
+            total_sample_count += frequency;
         }
 
-        return totalLength / totalFrequency;
+        return total_code_length / total_sample_count;
     }
 
 }
