@@ -178,21 +178,45 @@ The result is shown below:
 
 ### Step 1:
 
-Calculating the entropy of the audio samples, the pseudo-code is below:
+**Calculating the entropy of the audio samples, the pseudo-code is below:**
+
+1. **store the frequency for each value**
+2. **Calculate prob and entropy by frequency table**
 
 ```java
 Map<Integer, Integer> table = new HashMap<>(); // Table to store the frequency of occurrence of each value
 
 int value = ...; // int value is read from .wav
 
-if (table.containsKey(c1)) {
-	table.put(c1, table.get(c1) + 1);
+if (table.containsKey(value)) {
+	table.put(value, table.get(value) + 1);
 } else {
-  table.put(c1, 1);
+  table.put(value, 1);
 }
 
-
+// for each value calculate prob and then calculate entropy
+for (int sample : table.keySet()) {
+	double probability = (double) table.get(sample) / sample_num_total;
+  entropy -= probability * (Math.log(probability) / Math.log(2)); //
+}
 ```
 
+### Step 2:
 
+Calculating the average code word length, the steps are below:
 
+1. Create Huffan tree (binary tree)
+
+   ```java
+   public class Tree {
+       private Node root;}
+   private static class Node {
+           int value;           
+           int frequency;     
+           Node left;   
+           Node right;}
+   ```
+
+   
+
+2. 

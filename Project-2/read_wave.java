@@ -98,10 +98,10 @@ public class read_wave  extends JPanel {
         g.fillRect(0, 0, w, h);
         
         double e = calculateEntropy();
-        HuffmanTree tree = new HuffmanTree(null);
-        tree = tree.buildHuffmanTree(calculate_freq());
-        Map<Integer, String> result = HuffmanTree.generating(tree);
-        double avg = HuffmanTree.avgLength(calculate_freq(), result);
+        Huffman_Tree tree = new Huffman_Tree(null);
+        tree = tree.buildTree(calculate_freq());
+        Map<Integer, String> result = Huffman_Tree.generating(tree);
+        double avg = Huffman_Tree.avgLength(calculate_freq(), result);
 
         g.setColor(Color.white);
         g.drawString("the entropy of the audio samples : " + e, 30, 20);
