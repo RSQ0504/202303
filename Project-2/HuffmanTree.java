@@ -25,11 +25,11 @@ public class HuffmanTree {
         this.root = root;
     }
 
-    public HuffmanTree buildHuffmanTree (Map<Integer, Integer> frequencyTable) {
+    public HuffmanTree buildHuffmanTree (Map<Integer, Integer> table) {
         List<HuffmanNode> nodes = new ArrayList<>();
 
-        for (int value : frequencyTable.keySet()) {
-            HuffmanNode node = new HuffmanNode(value, frequencyTable.get(value));
+        for (int value : table.keySet()) {
+            HuffmanNode node = new HuffmanNode(value, table.get(value));
             nodes.add(node);
         }
 
@@ -65,12 +65,12 @@ public class HuffmanTree {
         }
     }
 
-    public static double avgLength(Map<Integer, Integer> frequencyTable, Map<Integer, String> huffmanCodes) {
+    public static double avgLength(Map<Integer, Integer> table, Map<Integer, String> huffmanCodes) {
         double totalLength = 0.0;
         int totalFrequency = 0;
 
-        for (int value : frequencyTable.keySet()) {
-            int frequency = frequencyTable.get(value);
+        for (int value : table.keySet()) {
+            int frequency = table.get(value);
             String code = huffmanCodes.get(value);
             totalLength += frequency * code.length();
             totalFrequency += frequency;

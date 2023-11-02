@@ -78,12 +78,12 @@ public class read_wave  extends JPanel {
 
     private static double calculateEntropy() {
         int sample_num_total = total_data.length / bytes_per_sample;
-        Map<Integer, Integer> frequencyTable = calculate_freq();
+        Map<Integer, Integer> table = calculate_freq();
 
         double entropy = 0.0;
 
-        for (int sample : frequencyTable.keySet()) {
-            double probability = (double) frequencyTable.get(sample) / sample_num_total;
+        for (int sample : table.keySet()) {
+            double probability = (double) table.get(sample) / sample_num_total;
             entropy -= probability * (Math.log(probability) / Math.log(2));
         }
         return entropy;

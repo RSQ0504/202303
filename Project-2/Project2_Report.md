@@ -165,3 +165,34 @@ The result is shown below:
 
 
 ## Q2
+
+### **Overall result:**
+
+**audio1**![Screenshot 2023-11-01 at 9.16.44 PM](/Users/davidqian/Desktop/cache/Screenshot 2023-11-01 at 9.16.44 PM.png)
+
+**audio2**
+
+![Screenshot 2023-11-01 at 9.16.54 PM](/Users/davidqian/Desktop/cache/Screenshot 2023-11-01 at 9.16.54 PM.png)
+
+## Implementation Detail:
+
+### Step 1:
+
+Calculating the entropy of the audio samples, the pseudo-code is below:
+
+```java
+Map<Integer, Integer> table = new HashMap<>(); // Table to store the frequency of occurrence of each value
+
+int value = ...; // int value is read from .wav
+
+if (table.containsKey(c1)) {
+	table.put(c1, table.get(c1) + 1);
+} else {
+  table.put(c1, 1);
+}
+
+
+```
+
+
+
