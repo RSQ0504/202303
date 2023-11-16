@@ -1,16 +1,11 @@
 #include <stdio.h>
+#include <stdlib.h>
 #include <math.h>
 #include "list.h"
 #include "my_malloc.h"
 
 Block* curr_root = NULL;
 
-Block* findMin(Block* node) {
-    while (node->left != NULL) {
-        node = node->left;
-    }
-    return node;
-}
 
 int get_height(Block* node) {
     if (node == NULL) {
@@ -135,10 +130,39 @@ Block* free_tree_delete(Block* root, Block* picked) {
             }
         } else {
             // Case 2: Node with two children
-            Block* temp = findMin(root->right);
-            root->size = temp->size;
-            root->depth = temp->depth;
-            root->right = free_tree_delete(root->right, temp);
+            Block* temp = root->right;
+            Block* prev = root;
+
+            while (temp->left != NULL) {
+                prev = temp;
+                temp = temp->left;
+            }
+
+            Block* new_malloc = (Block*)malloc(sizeof(Block));
+            new_malloc->height = temp->height;
+            new_malloc->right = temp->right;
+            new_malloc->left = temp->left;
+            new_malloc->size = temp->size;
+            new_malloc->depth = NULL;
+            if (prev == root){
+                root->right = new_malloc;
+            }else{
+                prev->left = new_malloc;
+            }
+
+            temp->height = root->height;
+            temp->left = root->left;
+            temp->right = root->right;
+
+            root->depth = NULL;
+            root->free = false;
+            root->left = NULL;
+            root->right = NULL;
+            root->height = -1;
+            root = temp;
+
+            root->right = free_tree_delete(root->right, new_malloc);
+            free(new_malloc);
         }
     }
 
