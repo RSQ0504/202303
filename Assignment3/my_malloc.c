@@ -92,11 +92,20 @@ Block* free_tree_delete(Block* root, Block* del) {
             if (temp == NULL) {
                 temp = root;
                 root = NULL;
+                temp->depth = NULL;
+                temp->free = false;
+                temp->left = NULL;
+                temp->right = NULL;
+                temp->height = -1;
             } else {
                 // One child case
-                *root = *temp; // Copy the contents of the non-empty child
+                root->depth = NULL;
+                root->free = false;
+                root->left = NULL;
+                root->right = NULL;
+                root->height = -1;
+                root = temp; // Copy the contents of the non-empty child
             }
-            free(temp);
         } else {
             // Case 2: Node with two children
             Block* temp = findMin(root->right);

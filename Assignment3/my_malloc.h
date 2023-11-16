@@ -11,8 +11,9 @@ typedef struct Block_mem Block;
 struct Block_mem
 {
     void* start;
-    bool free;
     size_t size;
+
+    bool free;
 
     // for tree
     Block* right;
