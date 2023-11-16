@@ -3,42 +3,42 @@
 #include "list.h"
 #include "my_malloc.h"
 
-int height(Block* node) {
+int get_height(Block* node) {
     if (node == NULL) {
         return 0;
     }
     return node->height;
 }
 
-int getBalance(Block* node) {
+int get_balance(Block* node) {
     if (node == NULL) {
         return 0;
     }
-    return height(node->left) - height(node->right);
+    return get_height(node->left) - get_height(node->right);
 }
 
-Block* rightRotate(Block* y) {
+Block* right_rotation(Block* y) {
     Block* x = y->left;
     Block* T2 = x->right;
 
     x->right = y;
     y->left = T2;
 
-    y->height = 1 + fmax(height(y->left), height(y->right));
-    x->height = 1 + fmax(height(x->left), height(x->right));
+    y->height = 1 + fmax(get_height(y->left), get_height(y->right));
+    x->height = 1 + fmax(get_height(x->left), get_height(x->right));
 
     return x;
 }
 
-Block* leftRotate(Block* x) {
+Block* left_rotation(Block* x) {
     Block* y = x->right;
     Block* T2 = y->left;
 
     y->left = x;
     x->right = T2;
 
-    x->height = 1 + fmax(height(x->left), height(x->right));
-    y->height = 1 + fmax(height(y->left), height(y->right));
+    x->height = 1 + fmax(get_height(x->left), get_height(x->right));
+    y->height = 1 + fmax(get_height(y->left), get_height(y->right));
 
     return y;
 }
