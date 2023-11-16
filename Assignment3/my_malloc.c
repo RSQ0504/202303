@@ -1,7 +1,7 @@
 #include <stdio.h>
 #include <stdlib.h>
 #include <math.h>
-#include "list.h"
+
 #include "my_malloc.h"
 
 Block* curr_root = NULL;

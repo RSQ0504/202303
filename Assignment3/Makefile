@@ -3,7 +3,7 @@ CC = gcc
 CFLAGS = -Wall
 
 # Source files
-src = mem_test.c my_malloc.c list.c
+src = mem_test.c my_malloc.c
 
 # Object files
 obj = $(src:.c=.o)
