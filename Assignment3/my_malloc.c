@@ -131,7 +131,7 @@ Block* free_tree_delete(Block* root, Block* picked) {
                 root->left = NULL;
                 root->right = NULL;
                 root->height = -1;
-                root = temp; // Copy the contents of the non-empty child
+                root = temp;
             }
         } else {
             // Case 2: Node with two children
