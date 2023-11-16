@@ -23,6 +23,10 @@ struct Block_mem
     // store the same size block in the same position in tree
     // by creating a 3D depth
     Block* depth;
+
+    //用来检查相邻的block是否是free的,如果是就合并
+    Block* prev;
+    Block* next;
 };
 
 
