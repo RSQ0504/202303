@@ -98,6 +98,21 @@ Block* free_tree_delete(Block* root, Block* picked) {
     } else if (picked->size > root->size) {
         root->right = free_tree_delete(root->right, picked);
     } else {
+        if(root->depth!=NULL){
+            root->depth->left = root->left;
+            root->depth->right = root->right;
+            root->depth->height = root->height;
+
+            new_root = root->depth
+
+            root->depth = NULL;
+            root->free = false;
+            root->left = NULL;
+            root->right = NULL;
+            root->height = -1;
+
+            return new_root
+        }
         // Case 1: Node with one child or no child
         if (root->left == NULL || root->right == NULL) {
             Block* temp = (root->left != NULL) ? root->left : root->right;
