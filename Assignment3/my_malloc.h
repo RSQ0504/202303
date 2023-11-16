@@ -25,9 +25,9 @@ struct Block_mem
 };
 
 
-int get_balance(Block * block);
+int get_balance(Block * node);
 
-int get_height(Block * block);
+int get_height(Block * node);
 
 Block* right_rotation(Block* y);
 
