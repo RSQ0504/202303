@@ -49,6 +49,11 @@ Block* left_rotation(Block* x) {
 
 Block* free_tree_insert(Block* root, Block* insert_block) {
     if (root == NULL) {
+        insert_block->left = NULL;
+        insert_block->right = NULL;
+        insert_block->height = 1;
+        insert_block->free = true;
+        insert_block->depth = NULL;
         return insert_block;
     }
     if (insert_block->size < root->size) {
@@ -188,4 +193,27 @@ Block* free_tree_delete(Block* root, Block* picked) {
         return left_rotation(root);
     }
     return root;
+}
+
+void printDotFormat(Block *root) {
+    if (root != NULL) {
+        if (root->left != NULL) {
+            printf("%zu -> %zu;\n", root->size, root->left->size);
+            printDotFormat(root->left);
+        }
+        if (root->right != NULL) {
+            printf("%zu -> %zu;\n", root->size, root->right->size);
+            printDotFormat(root->right);
+        }
+    }
+}
+void printTree(Block *root, int level) {
+    if (root != NULL) {
+        printTree(root->right, level + 1);
+        for (int i = 0; i < level; i++) {
+            printf("   ");
+        }
+        printf("%zu\n", root->size);
+        printTree(root->left, level + 1);
+    }
 }
