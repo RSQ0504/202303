@@ -3,6 +3,8 @@
 #include "list.h"
 #include "my_malloc.h"
 
+Block* curr_root = NULL;
+
 int get_height(Block* node) {
     if (node == NULL) {
         return 0;
@@ -66,7 +68,11 @@ Block* free_tree_insert(Block* root, Block* insert_block) {
         root->right = insert(root->right, insert_block);
         root->right->parent = root;
     } else {
-        root->depth = insert_block;
+        Block* temp_d = root;
+        while (temp_d->depth!=NULL){
+            temp_d = temp_d->depth;
+        }
+        temp_d->depth = insert_block;
         return root;
     }
 
