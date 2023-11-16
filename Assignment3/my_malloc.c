@@ -90,13 +90,12 @@ Block* free_tree_delete(Block* root, Block* del) {
             Block* temp = (root->left != NULL) ? root->left : root->right;
             // No child case
             if (temp == NULL) {
-                temp = root;
+                root->depth = NULL;
+                root->free = false;
+                root->left = NULL;
+                root->right = NULL;
+                root->height = -1;
                 root = NULL;
-                temp->depth = NULL;
-                temp->free = false;
-                temp->left = NULL;
-                temp->right = NULL;
-                temp->height = -1;
             } else {
                 // One child case
                 root->depth = NULL;
