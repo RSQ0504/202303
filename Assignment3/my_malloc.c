@@ -76,14 +76,14 @@ Block* free_tree_insert(Block* root, Block* insert_block) {
     return root;
 }
 
-Block* free_tree_delete(Block* root, Block* del) {
+Block* free_tree_delete(Block* root, Block* picked) {
     if (root == NULL) {
         return NULL;
     }
-    if (del->size < root->size) {
-        root->left = free_tree_delete(root->left, del);
-    } else if (del->size > root->size) {
-        root->right = free_tree_delete(root->right, del);
+    if (picked->size < root->size) {
+        root->left = free_tree_delete(root->left, picked);
+    } else if (picked->size > root->size) {
+        root->right = free_tree_delete(root->right, picked);
     } else {
         // Case 1: Node with one child or no child
         if (root->left == NULL || root->right == NULL) {
