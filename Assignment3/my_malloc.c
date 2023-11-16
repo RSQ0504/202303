@@ -5,6 +5,13 @@
 
 Block* curr_root = NULL;
 
+Block* findMin(Block* node) {
+    while (node->left != NULL) {
+        node = node->left;
+    }
+    return node;
+}
+
 int get_height(Block* node) {
     if (node == NULL) {
         return 0;
@@ -50,9 +57,9 @@ Block* free_tree_insert(Block* root, Block* insert_block) {
         return insert_block;
     }
     if (insert_block->size < root->size) {
-        root->left = insert(root->left, insert_block);
+        root->left = free_tree_insert(root->left, insert_block);
     } else if (insert_block->size > root->size) {
-        root->right = insert(root->right, insert_block);
+        root->right = free_tree_insert(root->right, insert_block);
     } else {
         Block* temp_d = root;
         while (temp_d->depth!=NULL){
@@ -142,11 +149,4 @@ Block* free_tree_delete(Block* root, Block* picked) {
         return left_rotation(root);
     }
     return root;
-}
-
-Block* findMin(Block* node) {
-    while (node->left != NULL) {
-        node = node->left;
-    }
-    return node;
 }
