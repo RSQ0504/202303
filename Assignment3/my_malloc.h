@@ -18,7 +18,6 @@ struct Block_mem
     // for tree
     Block* right;
     Block* left;
-    Block* parent
     int height;
 
     // store the same size block in the same position in tree

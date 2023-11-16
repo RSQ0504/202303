@@ -26,12 +26,6 @@ Block* right_rotation(Block* y) {
     x->right = y;
     y->left = T2;
 
-    if (T2 != NULL)
-        T2->parent = y;
-
-    x->parent = y->parent;
-    y->parent = x;
-
     y->height = 1 + fmax(get_height(y->left), get_height(y->right));
     x->height = 1 + fmax(get_height(x->left), get_height(x->right));
 
@@ -45,12 +39,6 @@ Block* left_rotation(Block* x) {
     y->left = x;
     x->right = T2;
 
-    if (T2 != NULL)
-        T2->parent = x;
-
-    y->parent = x->parent;
-    x->parent = y;
-
     x->height = 1 + fmax(get_height(x->left), get_height(x->right));
     y->height = 1 + fmax(get_height(y->left), get_height(y->right));
 
@@ -63,10 +51,8 @@ Block* free_tree_insert(Block* root, Block* insert_block) {
     }
     if (insert_block->size < root->size) {
         root->left = insert(root->left, insert_block);
-        root->left->parent = root;
     } else if (insert_block->size > root->size) {
         root->right = insert(root->right, insert_block);
-        root->right->parent = root;
     } else {
         Block* temp_d = root;
         while (temp_d->depth!=NULL){
