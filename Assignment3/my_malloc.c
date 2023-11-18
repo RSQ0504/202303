@@ -236,6 +236,8 @@ void mem_init(){
 }
 
 void free_block(Block* curr_free){
+    curr_free->free = true;
+
     if(curr_free->prev!=NULL){
         if (curr_free->prev->free){
             Block* prev_block = curr_free->prev;
@@ -243,7 +245,6 @@ void free_block(Block* curr_free){
 
             curr_free->start = prev_block->start;
             curr_free->size = curr_free->size + prev_block->size;
-            curr_free->free = true;
 
             curr_free->prev = prev_block->prev;
             if (prev_block->prev!=NULL) {prev_block->prev->next = curr_free;}
@@ -256,7 +257,6 @@ void free_block(Block* curr_free){
             curr_root = free_tree_delete(curr_root,next_block);
             
             curr_free->size = curr_free->size + next_block->size;
-            curr_free->free = true;
 
             curr_free->next = next_block->next;
             if (next_block->next!=NULL) {next_block->next->prev = curr_free;}
@@ -269,6 +269,43 @@ void free_block(Block* curr_free){
 
 void* my_malloc(size_t size){
     // TODO
+    Block* result = NULL;
+    Block* temp_root = curr_root;
+    while (temp_root) {
+        if (temp_root->size == size) {
+            result = temp_root;
+        } else if (temp_root->size > size) {
+            result = temp_root;
+            temp_root = temp_root->left;
+        } else {
+            temp_root = temp_root->right;
+        }
+    }
+
+    if (result == NULL){
+        printf("malloc failed, there is no free block");
+        return result;
+    }
+    curr_root = free_tree_delete(curr_root, result);
+    result->free = false;
+
+
+    if (result->size>size && result->size - size > 4){
+        Block* new_block = (Block*)malloc(sizeof(Block));
+        new_block->start = result->start + size;
+        new_block->size = result->size - size;
+        new_block->free = true;
+
+        result->size = size;
+
+        new_block->prev = result;
+        new_block->next = result->next;
+        if(result->next!=NULL) {result->next->prev = new_block;}
+        result->next = new_block;
+
+        free_block(new_block);
+    }
+    return result->start;
 }
 
 void my_free(void *ptr){
