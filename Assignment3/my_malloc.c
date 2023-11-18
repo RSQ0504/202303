@@ -234,3 +234,42 @@ void mem_init(){
 
     curr_root = free_tree_insert(curr_root,new_block);
 }
+
+void free_block(Block* curr_free){
+    if(curr_free->prev!=NULL){
+        if (curr_free->prev->free){
+            Block* prev_block = curr_free->prev;
+            curr_root = free_tree_delete(curr_root,prev_block);
+
+            curr_free->start = prev_block->start;
+            curr_free->size = curr_free->size + prev_block->size;
+            curr_free->free = true;
+
+            curr_free->prev = prev_block->prev;
+            if (prev_block->prev!=NULL) {prev_block->prev->next = curr_free;}
+            free(prev_block);
+        }
+    }
+    if(curr_free->next!=NULL){
+        if (curr_free->next->free){
+            Block* next_block = curr_free->next;
+            curr_root = free_tree_delete(curr_root,next_block);
+            
+            curr_free->size = curr_free->size + next_block->size;
+            curr_free->free = true;
+
+            curr_free->next = next_block->next;
+            if (next_block->next!=NULL) {next_block->next->prev = curr_free;}
+            free(next_block);
+        }
+    }
+    curr_root = free_tree_insert(curr_root,curr_free);
+}
+
+void* my_malloc(size_t size){
+    // TODO
+}
+
+void my_free(void *ptr){
+    //TODO
+}

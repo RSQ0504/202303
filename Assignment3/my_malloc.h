@@ -52,4 +52,6 @@ void mem_init();
 
 void* my_malloc(size_t size);
 
+void free_block(Block* curr_free);
+
 void my_free(void *ptr);
