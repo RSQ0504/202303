@@ -5,6 +5,8 @@
 #include "my_malloc.h"
 
 Block* curr_root = NULL;
+Block* curr_block_in_memory = NULL;
+Block* head_block_in_memory = NULL;
 
 
 int get_height(Block* node) {
@@ -216,4 +218,17 @@ void printTree(Block *root, int level) {
         printf("%zu\n", root->size);
         printTree(root->left, level + 1);
     }
+}
+
+void mem_init(){
+    void* memory = (void*)malloc(INITIAL_BLOCK_SIZE);
+    Block* new_block = (Block*)malloc(sizeof(Block));
+    new_block->start = memory;
+    new_block->size = INITIAL_BLOCK_SIZE;
+    new_block->free = true;
+
+    head_block_in_memory = new_block;
+    curr_block_in_memory = new_block;
+
+    curr_root = free_tree_insert(curr_root,new_block);
 }

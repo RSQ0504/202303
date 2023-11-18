@@ -48,7 +48,7 @@ Block* free_tree_delete(Block* root, Block* picked);
 void printDotFormat(Block *root);
 void printTree(Block *root, int level);
 
-void* mem_init();
+void mem_init();
 
 void* my_malloc(size_t size);
 
