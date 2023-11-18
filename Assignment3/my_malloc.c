@@ -226,6 +226,8 @@ void mem_init(){
     new_block->start = memory;
     new_block->size = INITIAL_BLOCK_SIZE;
     new_block->free = true;
+    new_block->prev = NULL;
+    new_block->next = NULL;
 
     head_block_in_memory = new_block;
     curr_block_in_memory = new_block;
