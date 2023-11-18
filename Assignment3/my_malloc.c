@@ -264,15 +264,6 @@ void free_block(Block* curr_free){
         }
     }
 
-    if(curr_free->next!=NULL){
-        curr_free->next->prev = curr_free->prev;
-    }
-    if(curr_free->prev!=NULL){
-        curr_free->prev->next = curr_free->next;
-    }
-
-    curr_free->next = NULL;
-    curr_free->prev = NULL;
     curr_root = free_tree_insert(curr_root,curr_free);
 }
 
