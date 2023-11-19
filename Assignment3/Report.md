@@ -24,7 +24,7 @@
 
 ##### **` Block* prev;`, `Block* next`: It is Used to check whether adjacent blocks are free, and merge them if they are when we invoke my_free function.**
 
-##### **`Block* free_curr_root`, `Block* used_curr_root`: This two global varible in .c file is stored the roots of two tree (free block tree and used block tree). 
+##### `Block* free_curr_root`, `Block* used_curr_root`: This two global varible in .c file is stored the roots of two tree (free block tree and used block tree). 
 
 ```C
 typedef struct Block_mem Block;
