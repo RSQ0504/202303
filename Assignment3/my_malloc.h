@@ -13,7 +13,7 @@ struct Block_mem
 
     bool free;
 
-    // for tree
+    // for AVL tree
     Block* right;
     Block* left;
     int height;
@@ -22,7 +22,7 @@ struct Block_mem
     // by creating a 3D depth
     Block* depth;
 
-    //用来检查相邻的block是否是free的,如果是就合并
+    //Used to check whether adjacent blocks are free, and merge them if they are
     Block* prev;
     Block* next;
 };
