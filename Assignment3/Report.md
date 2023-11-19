@@ -16,7 +16,7 @@
 
 ##### I split the whole memory into several blocks which can support variable number of tasks and form them into `struct`.
 
-##### There are two AVL tree. One is for storing free blocks in memory where its key is `size_t size`. Another is for storing used blocks in memory where its key is `void* start`. Each block can only store exactly in one tree (either tree for free blocks or tree for used blocks).
+##### There are two AVL tree. One is for storing free blocks in memory where its key is `size_t size`. Another is for storing used blocks in memory where its key is `void* start`. Each block can only be stored exactly in one tree (either tree for free blocks or tree for used blocks).
 
 ##### **`bool free`: This variable recodes the status which is to determine whether the block should be in the used block tree or the free block tree.**
 
