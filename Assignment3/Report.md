@@ -53,7 +53,7 @@ struct Block_mem
 ### my_allocate: `void* my_malloc(size_t size);`
 
 * **Using AVL Tree Search to find best block which is free and have the smallest size bigger thant the size that is needed, remove this block from free block tree.**
-* **`if (result->size>required_size && result->size - required_size > 4)` if the block size is greater than required, I will split the block into two blocks. The first block have `size = required_size`  and the second block have `size = result->size - required_size`. **
+* **`if (result->size>required_size && result->size - required_size > 4)` if the block size is greater than required, I will split the block into two blocks. The first block has `size = required_size`  and the second block has `size = result->size - required_size`. **
 * **Insert second block (if existed) into free block tree after merging adjacent free blocks and insert first block into used block tree.**
 * **Return the first block’s `void* start` **
 *  **<span style="color:red;">Time complexity: O(log n)</span>**
