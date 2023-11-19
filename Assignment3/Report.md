@@ -2,7 +2,7 @@
 
 ### Team member: Hanxi Chen, Rongsheng Qian
 
-## Overall: 
+## **Abstract**: 
 
 ##### In this assignment, we use AVL Tree to manage the memory blocks when we my_malloc or my_free memory. In order to reduce the fragmentation we use AVL tree to find the most suitable memory block (will be explained below). <span style="color:red;">AVL Tree managment </span> is used both in my_malloc and my_free. So the time complexity of these two functions is in<span style="color:red;"> O(log n) </span>with the <span style="color:red;">low fragmentation </span>(as low as using best fit algorithm). We have a defined constant in `my_malloc.h` file for the size of the initial memory block.<span style="color:red;">`#define INITIAL_BLOCK_SIZE 4096`</span>
 
