@@ -37,8 +37,10 @@ Block* right_rotation(Block* y);
 Block* left_rotation(Block* x);
 
 Block* free_tree_insert(Block* root, Block* insert);
+Block* used_tree_insert(Block* root, Block* insert_block);
 
 Block* free_tree_delete(Block* root, Block* picked);
+Block* used_tree_delete(Block* root, Block* picked);
 
 void printDotFormat(Block *root);
 void printTree(Block *root, int level);

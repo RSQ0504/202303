@@ -3,7 +3,8 @@
 #include <math.h>
 #include "my_malloc.h"
 
-Block* curr_root = NULL;
+Block* free_curr_root = NULL;
+Block* used_curr_root = NULL;
 Block* head_block_in_memory = NULL;
 
 
@@ -195,6 +196,134 @@ Block* free_tree_delete(Block* root, Block* picked) {
     return root;
 }
 
+Block* used_tree_insert(Block* root, Block* insert_block) {
+    if (root == NULL) {
+        insert_block->left = NULL;
+        insert_block->right = NULL;
+        insert_block->height = 1;
+        insert_block->free = false;
+        insert_block->depth = NULL;
+        return insert_block;
+    }
+    if (insert_block->start < root->start) {
+        root->left = used_tree_insert(root->left, insert_block);
+    } else if (insert_block->start > root->start) {
+        root->right = used_tree_insert(root->right, insert_block);
+    } else {
+        return root;
+    }
+
+    root->height = 1 + fmax(get_height(root->left), get_height(root->right));
+
+    int balance = get_balance(root);
+    if (balance > 1 && insert_block->start < root->left->start) {
+        return right_rotation(root);
+    }
+    if (balance < -1 && insert_block->start > root->right->start) {
+        return left_rotation(root);
+    }
+    if (balance > 1 && insert_block->start > root->left->start) {
+        root->left = left_rotation(root->left);
+        return right_rotation(root);
+    }
+    if (balance < -1 && insert_block->start < root->right->start) {
+        root->right = right_rotation(root->right);
+        return left_rotation(root);
+    }
+    return root;
+}
+
+Block* used_tree_delete(Block* root, Block* picked) {
+    if (root == NULL) {
+        return NULL;
+    }
+    if (picked->start < root->start) {
+        root->left = used_tree_delete(root->left, picked);
+    } else if (picked->start > root->start) {
+        root->right = used_tree_delete(root->right, picked);
+    } else {
+        // Case 1: Node with one child or no child
+        if (root->left == NULL || root->right == NULL) {
+            Block* temp = (root->left != NULL) ? root->left : root->right;
+            // No child case
+            if (temp == NULL) {
+                root->depth = NULL;
+                root->free = true;
+                root->left = NULL;
+                root->right = NULL;
+                root->height = -1;
+                root = NULL;
+            } else {
+                // One child case
+                root->depth = NULL;
+                root->free = true;
+                root->left = NULL;
+                root->right = NULL;
+                root->height = -1;
+                root = temp;
+            }
+        } else {
+            // Case 2: Node with two children
+            Block* temp = root->right;
+            Block* prev = root;
+
+            while (temp->left != NULL) {
+                prev = temp;
+                temp = temp->left;
+            }
+
+            Block* new_malloc = (Block*)malloc(sizeof(Block));
+            new_malloc->height = temp->height;
+            new_malloc->right = temp->right;
+            new_malloc->left = temp->left;
+            new_malloc->start = temp->start;
+            new_malloc->depth = NULL;
+            if (prev == root){
+                root->right = new_malloc;
+            }else{
+                prev->left = new_malloc;
+            }
+
+            temp->height = root->height;
+            temp->left = root->left;
+            temp->right = root->right;
+
+            root->depth = NULL;
+            root->free = true;
+            root->left = NULL;
+            root->right = NULL;
+            root->height = -1;
+            root = temp;
+
+            root->right = used_tree_delete(root->right, new_malloc);
+            free(new_malloc);
+        }
+    }
+
+    if (root == NULL) {
+        return NULL;
+    }
+
+    root->height = 1 + fmax(get_height(root->left), get_height(root->right));
+
+    int balance = get_balance(root);
+    if (balance > 1 && get_balance(root->left) >= 0) {
+        return right_rotation(root);
+    }
+    if (balance > 1 && get_balance(root->left) < 0) {
+        root->left = left_rotation(root->left);
+        return right_rotation(root);
+    }
+    if (balance < -1 && get_balance(root->right) <= 0) {
+        return left_rotation(root);
+    }
+    if (balance < -1 && get_balance(root->right) > 0) {
+        root->right = right_rotation(root->right);
+        return left_rotation(root);
+    }
+    return root;
+}
+
 void printDotFormat(Block *root) {
     if (root != NULL) {
         if (root->left != NULL) {
@@ -235,7 +364,7 @@ void mem_init() {
     new_block->next = NULL;
 
     head_block_in_memory = new_block;
-    curr_root = free_tree_insert(curr_root, new_block);
+    free_curr_root = free_tree_insert(free_curr_root, new_block);
 }
 
 void free_block(Block* curr_free){
@@ -244,7 +373,7 @@ void free_block(Block* curr_free){
     if(curr_free->prev!=NULL){
         if (curr_free->prev->free){
             Block* prev_block = curr_free->prev;
-            curr_root = free_tree_delete(curr_root,prev_block);
+            free_curr_root = free_tree_delete(free_curr_root,prev_block);
 
             curr_free->start = prev_block->start;
             curr_free->size = curr_free->size + prev_block->size;
@@ -258,7 +387,7 @@ void free_block(Block* curr_free){
     if(curr_free->next!=NULL){
         if (curr_free->next->free){
             Block* next_block = curr_free->next;
-            curr_root = free_tree_delete(curr_root,next_block);
+            free_curr_root = free_tree_delete(free_curr_root,next_block);
             
             curr_free->size = curr_free->size + next_block->size;
 
@@ -268,12 +397,12 @@ void free_block(Block* curr_free){
         }
     }
 
-    curr_root = free_tree_insert(curr_root,curr_free);
+    free_curr_root = free_tree_insert(free_curr_root,curr_free);
 }
 
 void* my_malloc(size_t size){
     Block* result = NULL;
-    Block* temp_root = curr_root;
+    Block* temp_root = free_curr_root;
     while (temp_root) {
         if (temp_root->size == size) {
             result = temp_root;
@@ -289,7 +418,7 @@ void* my_malloc(size_t size){
         printf("malloc failed, there is no free block");
         return result;
     }
-    curr_root = free_tree_delete(curr_root, result);
+    free_curr_root = free_tree_delete(free_curr_root, result);
     result->free = false;
 
 
@@ -309,22 +438,31 @@ void* my_malloc(size_t size){
         free_block(new_block);
     }
     //printf("%zu\n",result->size);
+    used_curr_root = used_tree_insert(used_curr_root,result);
+    // printf("\n");
+    // printDotFormat(used_curr_root);
     return result->start;
 }
 
 void my_free(void *ptr) {
     if (ptr == NULL) return;
 
-    Block* block_to_free = head_block_in_memory;
-    //printf("%zu\n",block_to_free->size);
+    Block* block_to_free = used_curr_root;
     while (block_to_free != NULL && block_to_free->start != ptr) {
-        block_to_free = block_to_free->next;
+        if (ptr < block_to_free->start) {
+            block_to_free = block_to_free->left;
+        } else {
+            block_to_free = block_to_free->right;
+        }
     }
-
+    //printf("%zu\n",block_to_free->size);
+    
     if (block_to_free == NULL) {
         printf("Error: Attempted to free a non-allocated block\n");
         return;
     }
-
+    used_curr_root = used_tree_delete(used_curr_root,block_to_free);
+    // printf("\n");
+    // printDotFormat(used_curr_root);
     free_block(block_to_free);
 }
