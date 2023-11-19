@@ -8,6 +8,7 @@ src = mem_test.c my_malloc.c
 # Object files
 obj = $(src:.c=.o)
 
+# Executable file name
 exe = program
 
 # Compile object files
@@ -16,8 +17,9 @@ exe = program
 
 # Link into the executable
 $(exe): $(obj)
-	$(CC) $(CFLAGS) $^ -o $@
+	$(CC) $(CFLAGS) $^ -o $@ -lm
 
+# Default target
 all: $(exe)
 
 # Clean up generated files
