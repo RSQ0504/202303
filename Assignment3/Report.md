@@ -18,7 +18,7 @@
 
 ##### There are two AVL tree. One is for storing free blocks in memory where its key is `size_t size`. Another is for storing used blocks in memory where its key is `void* start`. Each block can only be stored exactly in one tree (either tree for free blocks or tree for used blocks).
 
-##### **`bool free`: This variable recordes the status which is to determine whether the block should be in the used block tree or the free block tree.**
+##### **`bool free`: This variable records the status which is to determine whether the block should be in the used block tree or the free block tree.**
 
 ##### **`Block* depth`: Traditional AVL tree doesn’t support duplicate keys. However it is possible to have free blocks with the same size. So we invent this varible to allow blocks with the same size store in the same position in the tree by creating a 3D tree, which is similar with `pop` in `stack`.**
 
