@@ -1,11 +1,9 @@
 #include <stdio.h>
 #include <stdlib.h>
 #include <math.h>
-
 #include "my_malloc.h"
 
 Block* curr_root = NULL;
-Block* curr_block_in_memory = NULL;
 Block* head_block_in_memory = NULL;
 
 
@@ -220,9 +218,16 @@ void printTree(Block *root, int level) {
     }
 }
 
-void mem_init(){
+void mem_init() {
     void* memory = (void*)malloc(INITIAL_BLOCK_SIZE);
+    if (!memory) return;
+
     Block* new_block = (Block*)malloc(sizeof(Block));
+    if (!new_block) {
+        free(memory);
+        return;
+    }
+
     new_block->start = memory;
     new_block->size = INITIAL_BLOCK_SIZE;
     new_block->free = true;
@@ -230,9 +235,7 @@ void mem_init(){
     new_block->next = NULL;
 
     head_block_in_memory = new_block;
-    curr_block_in_memory = new_block;
-
-    curr_root = free_tree_insert(curr_root,new_block);
+    curr_root = free_tree_insert(curr_root, new_block);
 }
 
 void free_block(Block* curr_free){
@@ -248,6 +251,7 @@ void free_block(Block* curr_free){
 
             curr_free->prev = prev_block->prev;
             if (prev_block->prev!=NULL) {prev_block->prev->next = curr_free;}
+            if (prev_block == head_block_in_memory){head_block_in_memory = curr_free;}
             free(prev_block);
         }
     }
@@ -268,7 +272,6 @@ void free_block(Block* curr_free){
 }
 
 void* my_malloc(size_t size){
-    // TODO
     Block* result = NULL;
     Block* temp_root = curr_root;
     while (temp_root) {
@@ -305,9 +308,23 @@ void* my_malloc(size_t size){
 
         free_block(new_block);
     }
+    //printf("%zu\n",result->size);
     return result->start;
 }
 
-void my_free(void *ptr){
-    //TODO
+void my_free(void *ptr) {
+    if (ptr == NULL) return;
+
+    Block* block_to_free = head_block_in_memory;
+    //printf("%zu\n",block_to_free->size);
+    while (block_to_free != NULL && block_to_free->start != ptr) {
+        block_to_free = block_to_free->next;
+    }
+
+    if (block_to_free == NULL) {
+        printf("Error: Attempted to free a non-allocated block\n");
+        return;
+    }
+
+    free_block(block_to_free);
 }
