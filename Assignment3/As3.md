@@ -75,6 +75,18 @@ GROUP BY dept;
 
 ![3.1](/Users/davidqian/Desktop/CMPT 354/354_Assignment/Assignment3/Cache/3.1.png)
 
+
+
+
+
+
+
+
+
+
+
+
+
 ### 2. Compute the names of the employees who work in a department that sells some item in black color
 
 ```sql
@@ -103,6 +115,8 @@ HAVING AVG(salary) > (
 ```
 
 ![3.3](/Users/davidqian/Desktop/CMPT 354/354_Assignment/Assignment3/Cache/3.3.png)
+
+
 
 ### 4. Find the number of the departments that have a smaller average salary than that of "Stationery" department.
 
@@ -133,6 +147,16 @@ HAVING MIN(salary) >= 7000;
 ```
 
 ![3.5](/Users/davidqian/Desktop/CMPT 354/354_Assignment/Assignment3/Cache/3.5.png)
+
+
+
+
+
+
+
+
+
+
 
 ### 6. Which departments sell all items sold by “Cosmetics” department
 
