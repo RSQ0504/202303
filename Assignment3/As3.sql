@@ -46,8 +46,8 @@
 -- ('ink', 'red'),
 -- ('ink', 'blue');
 
--- -- 3.1
--- SELECT dept, MAX(salary) AS max_salary
+-- -- 1.3.1
+-- SELECT dept, MAX(salary)
 -- FROM Employee
 -- WHERE dept IN (
 --         SELECT dept
@@ -57,14 +57,14 @@
 --     )
 -- GROUP BY dept;
 
--- -- 3.2
+-- -- 1.3.2
 -- SELECT DISTINCT E.name
 -- FROM Employee AS E
 -- JOIN Sales AS S ON E.dept = S.dept
 -- JOIN Types AS T ON S.item = T.item
 -- WHERE T.color = 'Black';
 
--- -- 3.3
+-- -- 1.3.3
 -- SELECT dept, AVG(salary)
 -- FROM Employee
 -- GROUP BY dept
@@ -74,12 +74,35 @@
 --         WHERE dept = 'Stationery'
 --     );
 
--- 3.4
-SELECT COUNT(dept)
-FROM Employee
-GROUP BY dept
-HAVING AVG(salary) > (
-        SELECT AVG(salary)
-        FROM Employee
-        WHERE dept = 'Stationery'
-    );
+-- -- 1.3.4
+-- SELECT COUNT(DISTINCT dept)
+-- FROM Employee
+-- WHERE dept IN (SELECT dept
+--                 FROM Employee
+--                 GROUP BY dept
+--                 HAVING AVG(salary) < (
+--                         SELECT AVG(salary)
+--                         FROM Employee
+--                         WHERE dept = 'Stationery'
+--                     ));
+
+-- -- 1.3.5
+-- SELECT dept
+-- FROM Employee
+-- GROUP BY dept
+-- HAVING MIN(salary) >= 7000;
+
+-- -- 1.3.6
+-- SELECT dept
+-- FROM Sales
+-- WHERE item IN (
+--     SELECT item
+--     FROM Sales
+--     WHERE dept = 'Cosmetics'
+-- )
+-- GROUP BY dept
+-- HAVING COUNT(DISTINCT item) = (
+--     SELECT COUNT(DISTINCT item)
+--     FROM Sales
+--     WHERE dept = 'Cosmetics'
+-- );
