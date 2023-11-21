@@ -73,3 +73,13 @@
 --         FROM Employee
 --         WHERE dept = 'Stationery'
 --     );
+
+-- 3.4
+SELECT COUNT(dept)
+FROM Employee
+GROUP BY dept
+HAVING AVG(salary) > (
+        SELECT AVG(salary)
+        FROM Employee
+        WHERE dept = 'Stationery'
+    );
