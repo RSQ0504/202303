@@ -93,9 +93,15 @@ GROUP BY dept;
 -- 1.3.2
 SELECT DISTINCT E.name
 FROM Employee AS E
-JOIN Sales AS S ON E.dept = S.dept
-JOIN Types AS T ON S.item = T.item
-WHERE T.color = 'Black';
+WHERE E.dept IN (
+    SELECT S.dept
+    FROM Sales AS S
+    WHERE S.item IN (
+        SELECT T.item
+        FROM Types AS T
+        WHERE T.color = 'Black'
+    )
+);
 ```
 
 ![3.2](/Users/davidqian/Desktop/CMPT 354/354_Assignment/Assignment3/Cache/3.2.png)
