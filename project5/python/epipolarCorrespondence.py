@@ -1,6 +1,16 @@
 import numpy as np
 import cv2
 
+def normalized_cross_correlation(window1, window2):
+    """
+    Calculate normalized cross-correlation between two windows.
+    """
+    mean1 = np.mean(window1)
+    mean2 = np.mean(window2)
+    numerator = np.sum((window1 - mean1) * (window2 - mean2))
+    denominator = np.sqrt(np.sum((window1 - mean1)**2) * np.sum((window2 - mean2)**2))
+    return numerator / denominator if denominator != 0 else 0
+
 def epipolarCorrespondence(im1, im2, F, pts1):
     """
     Args:
@@ -18,21 +28,23 @@ def epipolarCorrespondence(im1, im2, F, pts1):
         point = np.array([pts1[i, 0], pts1[i, 1], 1])
         #print(point)
         epipolar_line = np.dot(F, point)
-        best_score = float('inf')
+        best_score = -float('inf')
         best_point = np.zeros(2, dtype=int)
         window = im1[int(pts1[i, 1]) - int(window_size / 2): int(pts1[i, 1]) + int(window_size / 2 + 1),
                     int(pts1[i, 0]) - int(window_size / 2):int(pts1[i, 0]) + int(window_size / 2 + 1)]
 
-        for j in range(int(pts1[i, 1]) - int(window_size / 2), int(pts1[i, 1]) + int(window_size / 2 + 1)):
+        for j in range(im2.shape[0]):
             x_candidate = int(((-epipolar_line[1] * j - epipolar_line[2]) / epipolar_line[0]))
+            if x_candidate <= 0:
+                continue
             temp_window = im2[j - int(window_size / 2):j + int(window_size / 2) + 1, 
                                 x_candidate - int(window_size / 2):x_candidate + int(window_size / 2) + 1]
             #print(window.shape,temp_window.shape)
             if window.shape == temp_window.shape:
-                ssd_score = np.sum((window - temp_window) ** 2)
+                score = normalized_cross_correlation(window, temp_window)
                 #print(ssd_score)
-                if ssd_score < best_score:
-                    best_score = ssd_score
+                if score > best_score:
+                    best_score = score
                     best_point = np.array([x_candidate, j])
                     #print(best_point)
 
