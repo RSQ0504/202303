@@ -36,26 +36,27 @@ def eightpoint(pts1, pts2, M):
     
     return F
 
-from displayEpipolarF import displayEpipolarF
-import cv2
-import os
+if __name__ == "__main__":
+    from displayEpipolarF import displayEpipolarF
+    import cv2
+    import os
 
-current_directory = os.path.dirname(os.path.abspath(__file__))
-relative_path = os.path.join('..', 'data', 'im1.png')
-image_path = os.path.abspath(os.path.join(current_directory, relative_path))
+    current_directory = os.path.dirname(os.path.abspath(__file__))
+    relative_path = os.path.join('..', 'data', 'im1.png')
+    image_path = os.path.abspath(os.path.join(current_directory, relative_path))
 
-I1 = cv2.imread(image_path)
+    I1 = cv2.imread(image_path)
 
-relative_path = os.path.join('..', 'data', 'im2.png')
-image_path = os.path.abspath(os.path.join(current_directory, relative_path))
-I2 = cv2.imread(image_path)
+    relative_path = os.path.join('..', 'data', 'im2.png')
+    image_path = os.path.abspath(os.path.join(current_directory, relative_path))
+    I2 = cv2.imread(image_path)
 
-correspondence = np.load('project5/data/someCorresp.npy', allow_pickle=True).item()
+    correspondence = np.load('project5/data/someCorresp.npy', allow_pickle=True).item()
 
-pts1 = correspondence['pts1']
-pts2 = correspondence['pts2']
+    pts1 = correspondence['pts1']
+    pts2 = correspondence['pts2']
 
-M = max(I1.shape[0],I1.shape[1])
+    M = max(I1.shape[0],I1.shape[1])
 
-F = eightpoint(pts1, pts2, M)
-displayEpipolarF(I1,I2,F)
+    F = eightpoint(pts1, pts2, M)
+    displayEpipolarF(I1,I2,F)

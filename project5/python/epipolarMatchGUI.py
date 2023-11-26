@@ -74,3 +74,28 @@ def epipolarMatchGUI(I1, I2, F):
         coordsIM2.append([x2[0], y2[0]])
 
     return np.array(coordsIM1), np.array(coordsIM2)
+
+
+if __name__ == "__main__":
+    from eightpoint import eightpoint
+    import cv2
+    import os
+
+    current_directory = os.path.dirname(os.path.abspath(__file__))
+    relative_path = os.path.join('..', 'data', 'im1.png')
+    image_path = os.path.abspath(os.path.join(current_directory, relative_path))
+
+    im1 = cv2.imread(image_path)
+
+    relative_path = os.path.join('..', 'data', 'im2.png')
+    image_path = os.path.abspath(os.path.join(current_directory, relative_path))
+    im2 = cv2.imread(image_path)
+
+    correspondence = np.load('project5/data/someCorresp.npy', allow_pickle=True).item()
+
+    pts1 = correspondence['pts1']
+    pts2 = correspondence['pts2']
+
+    M = max(im1.shape[0],im1.shape[1])
+    F = eightpoint(pts1, pts2, M)
+    epipolarMatchGUI(im1, im2, F)
