@@ -30,6 +30,7 @@ def eightpoint(pts1, pts2, M):
 
     F = refineF(F, pts1, pts2)
     
+    # 齐次坐标, 深度信息
     T = np.array([[1/M, 0, 0], [0, 1/M, 0], [0, 0, 1]])
     F = np.dot(T.T, np.dot(F, T))
     
