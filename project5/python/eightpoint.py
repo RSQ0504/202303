@@ -16,23 +16,18 @@ def eightpoint(pts1, pts2, M):
     pts1 = pts1 / M
     pts2 = pts2 / M
 
-    # Construct the matrix A
     A = np.column_stack((pts1[:, 0] * pts2[:, 0], pts1[:, 0] * pts2[:, 1], pts1[:, 0], pts1[:, 1] * pts2[:, 0],
                          pts1[:, 1] * pts2[:, 1], pts1[:, 1], pts2[:, 0], pts2[:, 1], np.ones(pts1.shape[0])))
 
-    # Perform SVD on A
     _, _, V = np.linalg.svd(A)
 
-    # Extract the fundamental matrix from the last column of V
     F = V[-1, :].reshape(3, 3)
 
-    # Enforce the rank-2 constraint on F
     U, S, V = np.linalg.svd(F)
     S[2] = 0
     # print(S)
     F = np.dot(U, np.dot(np.diag(S), V))
 
-    # Refine the fundamental matrix using the given correspondences
     F = refineF(F, pts1, pts2)
     
     T = np.array([[1/M, 0, 0], [0, 1/M, 0], [0, 0, 1]])
