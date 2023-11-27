@@ -33,11 +33,11 @@ def epipolarCorrespondence(im1, im2, F, pts1):
         window = im1[int(pts1[i, 1]) - int(window_size / 2): int(pts1[i, 1]) + int(window_size / 2 + 1),
                     int(pts1[i, 0]) - int(window_size / 2):int(pts1[i, 0]) + int(window_size / 2 + 1)]
 
-        for j in range(im2.shape[0]):
+        for j in np.arange(0,im2.shape[0],0.1):
             x_candidate = float(((-epipolar_line[1] * j - epipolar_line[2]) / epipolar_line[0]))
             if x_candidate <= 0 or x_candidate >im2.shape[1]:
                 continue
-            temp_window = im2[j - int(window_size / 2):j + int(window_size / 2) + 1, 
+            temp_window = im2[int(j) - int(window_size / 2):int(j) + int(window_size / 2) + 1, 
                                 int(x_candidate) - int(window_size / 2):int(x_candidate) + int(window_size / 2) + 1]
             #print(window.shape,temp_window.shape)
             if window.shape == temp_window.shape:
@@ -48,7 +48,7 @@ def epipolarCorrespondence(im1, im2, F, pts1):
                     best_point = np.array([x_candidate, j])
                     #print(best_point)
         pts2[i, :] = best_point
-
+        print(point,best_point)
     return pts2
 
 if __name__ == "__main__":
