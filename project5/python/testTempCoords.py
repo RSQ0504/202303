@@ -66,18 +66,21 @@ ax.set_zlabel('Z')
 
 plt.show()
 
-result_points = np.hstack((result_points, np.ones((result_points.shape[0], 1))))
-pts1_reproj = np.dot(P1, result_points.T).T
-pts2_reproj = np.dot(P2, result_points.T).T
+np.save('../results/extrinsics', {'R1': R1, 't1': t1, 'R2': R2, 't2': t2})
+
+pts = np.load('../data/someCorresp.npy', allow_pickle=True).tolist()
+pts1 = pts['pts1']
+pts2 = pts['pts2']
+points = triangulate(P1, pts1, P2, pts2)
+points = np.hstack((points, np.ones((points.shape[0], 1))))
+pts1_reproj = np.dot(P1, points.T).T
+pts2_reproj = np.dot(P2, points.T).T
 
 pts1_reproj /= pts1_reproj[:, 2][:, np.newaxis]
 pts2_reproj /= pts2_reproj[:, 2][:, np.newaxis]
 
-
 error1 = np.sqrt(np.mean(np.sum((pts1 - pts1_reproj[:, :2])**2, axis=1)))
 error2 = np.sqrt(np.mean(np.sum((pts2 - pts2_reproj[:, :2])**2, axis=1)))
 
-
 error = (error1 + error2) / 2.0
 print(error)
-np.save('../results/extrinsics', {'R1': R1, 't1': t1, 'R2': R2, 't2': t2})
