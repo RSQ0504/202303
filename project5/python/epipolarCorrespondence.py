@@ -21,7 +21,7 @@ def epipolarCorrespondence(im1, im2, F, pts1):
     Returns:
         pts2:   coordinates of points in image 2
     """
-    window_size = 5
+    window_size = 15
     pts2 = np.zeros_like(pts1)
     
     for i in range(pts1.shape[0]):
