@@ -51,6 +51,8 @@ for i in range(P2_possible_e.shape[-1]):
     if front_count > best:
         best = front_count
         P2 = temp_P2
+        R2 = temp_p2_e[:,:-1]
+        t2 = temp_p2_e[:,-1].reshape(-1,1)
         result_points = points
 
 fig = plt.figure()
