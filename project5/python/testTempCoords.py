@@ -25,6 +25,9 @@ R1, t1 = np.eye(3), np.zeros((3, 1))
 R2, t2 = np.eye(3), np.zeros((3, 1))
 
 F = eightpoint(pts1, pts2, M)
+
+pts = np.load('../data/templeCoords.npy', allow_pickle=True).tolist()
+pts1 = pts['pts1']
 pts2 = epipolarCorrespondence(img1, img2, F, pts1)
 intrinsics = np.load('../data/intrinsics.npy', allow_pickle=True).tolist()
 k1 = intrinsics['K1']
