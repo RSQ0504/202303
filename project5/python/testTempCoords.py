@@ -19,9 +19,19 @@ pts1 = pts['pts1']
 pts2 = pts['pts2']
 M = pts['M']
 
+
 # write your code here
 R1, t1 = np.eye(3), np.zeros((3, 1))
 R2, t2 = np.eye(3), np.zeros((3, 1))
+
+F = eightpoint(pts1, pts2, M)
+pts2 = epipolarCorrespondence(img1, img2, F, pts1)
+intrinsics = np.load('../data/intrinsics.npy', allow_pickle=True).tolist()
+k1 = intrinsics['K1']
+k2 = intrinsics['K2']
+
+E = essentialMatrix(F, k1, k2)
+print(E)
 
 # save extrinsic parameters for dense reconstruction
 np.save('../results/extrinsics', {'R1': R1, 't1': t1, 'R2': R2, 't2': t2})

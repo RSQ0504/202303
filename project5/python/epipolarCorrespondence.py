@@ -48,7 +48,7 @@ def epipolarCorrespondence(im1, im2, F, pts1):
                     best_point = np.array([x_candidate, j])
                     #print(best_point)
         pts2[i, :] = best_point
-        print(point,best_point)
+        #print(point,best_point)
     return pts2
 
 if __name__ == "__main__":
