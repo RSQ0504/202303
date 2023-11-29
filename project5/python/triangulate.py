@@ -16,13 +16,13 @@ def triangulate(P1, pts1, P2, pts2):
     pts3d = np.zeros((num_points, 3))
 
     for i in range(num_points):
-        pt1 = np.array([pts1[i, 0], pts1[i, 1], 1])
-        pt2 = np.array([pts2[i, 0], pts2[i, 1], 1])
+        x1, y1 = pts1[i]
+        x2, y2 = pts2[i]
 
-        A = np.vstack((pt1[0] * P1[2] - P1[0],
-                       pt1[1] * P1[2] - P1[1],
-                       pt2[0] * P2[2] - P2[0],
-                       pt2[1] * P2[2] - P2[1]))
+        A = np.vstack((x1 * P1[2] - P1[0],
+                       y1 * P1[2] - P1[1],
+                       x2 * P2[2] - P2[0],
+                       y2 * P2[2] - P2[1]))
 
         _, _, V = np.linalg.svd(A)
 
