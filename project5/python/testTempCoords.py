@@ -31,7 +31,34 @@ k1 = intrinsics['K1']
 k2 = intrinsics['K2']
 
 E = essentialMatrix(F, k1, k2)
-print(E)
 
+P1 = np.dot(k1,np.hstack((np.eye(3), np.zeros((3, 1)))))
+
+P2_possible_e = camera2(E)
+best = -1
+
+for i in range(P2_possible_e.shape[-1]):
+    temp_p2_e = P2_possible_e[:,:,i]
+    temp_P2 = np.dot(k2,temp_p2_e)
+    points = triangulate(P1, pts1, temp_P2, pts2)
+    front_count = 0
+    for point in points:
+        if point[-1]>0:
+            front_count += 1
+    if front_count > best:
+        best = front_count
+        P2 = temp_P2
+        result_points = points
+
+fig = plt.figure()
+ax = fig.add_subplot(111, projection='3d')
+
+ax.scatter(result_points[:, 0], result_points[:, 1], result_points[:, 2])
+
+ax.set_xlabel('X')
+ax.set_ylabel('Y')
+ax.set_zlabel('Z')
+
+plt.show()
 # save extrinsic parameters for dense reconstruction
 np.save('../results/extrinsics', {'R1': R1, 't1': t1, 'R2': R2, 't2': t2})
