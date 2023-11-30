@@ -29,7 +29,6 @@ def estimate_params(P):
     K = R
     R = Q
 
-    # 3. Compute the translation by t = −Rc
     t = -np.dot(R, c.reshape(-1, 1))
 
     return K, R, t
