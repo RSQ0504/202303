@@ -16,8 +16,8 @@ def eightpoint(pts1, pts2, M):
     pts1 = pts1 / M
     pts2 = pts2 / M
 
-    A = np.column_stack((pts1[:, 0] * pts2[:, 0], pts1[:, 0] * pts2[:, 1], pts1[:, 0], pts1[:, 1] * pts2[:, 0],
-                         pts1[:, 1] * pts2[:, 1], pts1[:, 1], pts2[:, 0], pts2[:, 1], np.ones(pts1.shape[0])))
+    A = np.column_stack((pts2[:, 0] * pts1[:, 0], pts2[:, 0] * pts1[:, 1], pts2[:, 0], pts2[:, 1] * pts1[:, 0],
+                         pts2[:, 1] * pts1[:, 1], pts2[:, 1], pts1[:, 0], pts1[:, 1], np.ones(pts1.shape[0])))
 
     _, _, V = np.linalg.svd(A)
 

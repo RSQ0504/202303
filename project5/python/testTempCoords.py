@@ -17,7 +17,7 @@ img2 = cv2.imread('../data/im2.png')
 pts = np.load('../data/someCorresp.npy', allow_pickle=True).tolist()
 pts1 = pts['pts1']
 pts2 = pts['pts2']
-M = pts['M']
+M = max(img1.shape[0],img1.shape[1])
 
 
 # write your code here
