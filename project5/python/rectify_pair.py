@@ -13,7 +13,7 @@ def rectify_pair(K1, K2, R1, R2, t1, t2):
     c1 = np.dot(-np.linalg.inv(np.dot(K1, R1)), (np.dot(K1, t1)))
     c2 = np.dot(-np.linalg.inv(np.dot(K2, R2)), (np.dot(K2, t2)))
 
-    r1 = np.abs(c1 - c2) / np.linalg.norm(c1 - c2)
+    r1 = (np.abs(c1 - c2) / np.linalg.norm(c1 - c2)).reshape((-1))
 
     r21 = np.cross(R1[2, :], r1)
     r21 = r21 / np.linalg.norm(r21)
