@@ -71,21 +71,30 @@ def ComputeConsistency(I0, I1, X):
     X = np.vstack((X, np.ones((1, num_points))))
     #print(I0["P"].shape,X.shape)
     projected_coords_I0 = I0["P"] @ X
-    #print(I0["mat"].shape)
-    C0 = np.zeros((num_points, 3))
-    for i in range(num_points):
-        x, y = projected_coords_I0[:2, i] / projected_coords_I0[2, i]
-        C0[i] = I0["mat"][int(y), int(x)]
-        #print(I0["mat"][255,410])
-
     projected_coords_I1 = I1["P"] @ X
-
+    #print(I0["mat"].shape)
+    
+    C0 = np.zeros((num_points, 3))
     C1 = np.zeros((num_points, 3))
+    
     for i in range(num_points):
-        x, y = projected_coords_I1[:2, i] / projected_coords_I1[2, i]
-        #print(x,y)
-        C1[i] = I1["mat"][int(y),int(x)]
-        
+        x0, y0 = projected_coords_I0[:2, i] / projected_coords_I0[2, i]
+        x1, y1 = projected_coords_I1[:2, i] / projected_coords_I1[2, i]
+        try:
+            C0[i] = I0["mat"][int(y0), int(x0)]
+        except Exception as e:
+            C0[i] = [0,0,0]
+            print(X[:,i])
+            print(projected_coords_I0[:, i])
+            print(y0,x0)
+            
+        try:
+            C1[i] = I1["mat"][int(y1),int(x1)]
+        except Exception as e:
+            C1[i] = [0,0,0]
+            print(X[:,i])
+            print(projected_coords_I1[:, i])
+            print(y1,x1)
         
     return NormalizedCrossCorrelation(C0, C1)
 
@@ -177,7 +186,7 @@ if __name__ == "__main__":
     min_depth = np.min(depth_values)
     max_depth = np.max(depth_values)
 
-    depth_step = 0.5
+    depth_step = 0.05
     d = DepthmapAlgorithm(images[0], images[1], images[2], images[3], min_depth, max_depth, depth_step, S=5, consistency_threshold=0.7)
     
     gray_image = cv2.cvtColor(images[0]["mat"] , cv2.COLOR_RGB2GRAY)
