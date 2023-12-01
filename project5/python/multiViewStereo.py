@@ -84,17 +84,17 @@ def ComputeConsistency(I0, I1, X):
             C0[i] = I0["mat"][int(y0), int(x0)]
         except Exception as e:
             C0[i] = [0,0,0]
-            print(X[:,i])
-            print(projected_coords_I0[:, i])
-            print(y0,x0)
+            # print(X[:,i])
+            # print(projected_coords_I0[:, i])
+            # print(y0,x0)
             
         try:
             C1[i] = I1["mat"][int(y1),int(x1)]
         except Exception as e:
             C1[i] = [0,0,0]
-            print(X[:,i])
-            print(projected_coords_I1[:, i])
-            print(y1,x1)
+            # print(X[:,i])
+            # print(projected_coords_I1[:, i])
+            # print(y1,x1)
         
     return NormalizedCrossCorrelation(C0, C1)
 
