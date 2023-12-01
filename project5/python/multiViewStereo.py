@@ -76,6 +76,7 @@ def ComputeConsistency(I0, I1, X):
     for i in range(num_points):
         x, y = projected_coords_I0[:2, i] / projected_coords_I0[2, i]
         C0[i] = I0["mat"][int(y), int(x)]
+        #print(I0["mat"][255,410])
 
     projected_coords_I1 = I1["P"] @ X
 
@@ -84,6 +85,7 @@ def ComputeConsistency(I0, I1, X):
         x, y = projected_coords_I1[:2, i] / projected_coords_I1[2, i]
         #print(x,y)
         C1[i] = I1["mat"][int(y),int(x)]
+        
         
     return NormalizedCrossCorrelation(C0, C1)
 
@@ -136,7 +138,8 @@ if __name__ == "__main__":
     images = []
     for index, img in enumerate(result):
         I = {}
-        I["mat"] = cv2.imread(os.path.join("../data",img))
+        temp_img = cv2.imread(os.path.join("../data",img))
+        I["mat"] = cv2.cvtColor(temp_img, cv2.COLOR_BGR2RGB)
         I["P"] = result[img]["P"]
         images.append(I)
     min_point = np.array([-0.023121, -0.038009, -0.091940])
@@ -160,14 +163,14 @@ if __name__ == "__main__":
         projected[:,i] = projected_points[:2, i] / projected_points[2, i]
         print(projected[:,i])
         
-    color = (0, 0, 255)
+    color = (255, 0, 0)
     radius = 5
     thickness = -1
     for i in range(projected.shape[1]):
         point_coordinates = (int(projected[0, i]), int(projected[1, i]))
         result_img = cv2.circle(images[0]["mat"], point_coordinates, radius, color, thickness)
 
-    plt.imshow(cv2.cvtColor(result_img, cv2.COLOR_BGR2RGB))
+    plt.imshow(result_img)
     plt.title('Image with Points')
     plt.show()
 
