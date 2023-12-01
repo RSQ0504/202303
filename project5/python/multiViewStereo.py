@@ -177,8 +177,9 @@ if __name__ == "__main__":
     depth_step = 0.5
     d = DepthmapAlgorithm(images[0], images[1], images[2], images[3], min_depth, max_depth, depth_step, S=5, consistency_threshold=0.7)
     
+    gray_image = cv2.cvtColor(images[0]["mat"] , cv2.COLOR_RGB2GRAY)
     plt.figure()
-    plt.imshow(d * (images[0]["mat"] > 40), cmap='gray')
+    plt.imshow(d * (gray_image > 40), cmap='gray')
     plt.axis('image')
     plt.title('Depth Map')
     plt.savefig('../results/3_5.png', dpi=300)
