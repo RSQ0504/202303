@@ -1,4 +1,8 @@
 import numpy as np
+import cv2
+import tqdm
+import os
+import matplotlib.pyplot as plt
 
 def get_camera_parameters(file_path):
     with open(file_path, 'r') as file:
@@ -31,7 +35,7 @@ def Get3dCoord(q, I0, d):
 
     q_new = np.array([d*x, d*y, d])
 
-    P_inverse = np.linalg.pinv(I0["P"]) 
+    P_inverse = np.linalg.pinv(I0["P"][:,:-1]) 
     p_3d = P_inverse @ (q_new - I0["P"][:,-1])
 
     return p_3d
@@ -65,19 +69,110 @@ def ComputeConsistency(I0, I1, X):
     num_points = X.shape[1]
 
     X = np.vstack((X, np.ones((1, num_points))))
-    
+    #print(I0["P"].shape,X.shape)
     projected_coords_I0 = I0["P"] @ X
-
+    #print(I0["mat"].shape)
     C0 = np.zeros((num_points, 3))
     for i in range(num_points):
         x, y = projected_coords_I0[:2, i] / projected_coords_I0[2, i]
-        C0[i] = I0["mat"][x,y]
+        C0[i] = I0["mat"][int(y), int(x)]
 
     projected_coords_I1 = I1["P"] @ X
 
     C1 = np.zeros((num_points, 3))
     for i in range(num_points):
         x, y = projected_coords_I1[:2, i] / projected_coords_I1[2, i]
-        C1[i] = I1["mat"][x,y]
+        #print(x,y)
+        C1[i] = I1["mat"][int(y),int(x)]
         
     return NormalizedCrossCorrelation(C0, C1)
+
+def DepthmapAlgorithm(I0, I1, I2, I3, min_depth, max_depth, depth_step, S=5, consistency_threshold=0.7):
+    height, width, _ = I0["mat"].shape
+    best_depthmap = np.zeros((height, width))
+    
+    for y in tqdm.tqdm(range(height)):
+        for x in range(width):
+            if np.all(I0["mat"][y, x] < [10, 10, 10]):
+                continue
+
+            best_consistency_score = -np.inf
+            best_depth = None
+
+            for d in np.arange(min_depth, max_depth, depth_step):
+                # Compute 3D coordinates using Get3dCoord
+                X = [] 
+                for qx in range(max(0, x - S//2),min(width, x + S//2 + 1)): 
+                    for qy in range(max(0, y - S//2), min(height, y + S//2 + 1)):
+                        #print(Get3dCoord((qx, qy), I0, d).shape)
+                        #print(Get3dCoord((qx, qy), I0, d))
+                        # print(qx,qy)
+                        # print(Get3dCoord((qx, qy), I0, d))
+                        if X == []:
+                            X = Get3dCoord((qx, qy), I0, d)
+                        else:
+                            X = np.column_stack((X,Get3dCoord((qx, qy), I0, d)))
+
+                score01 = ComputeConsistency(I0, I1, X)
+                score02 = ComputeConsistency(I0, I2, X)
+                score03 = ComputeConsistency(I0, I3, X)
+
+                avg_consistency_score = np.mean([score01, score02, score03])
+
+                # Update best depth if the consistency score is higher
+                if avg_consistency_score > best_consistency_score:
+                    best_consistency_score = avg_consistency_score
+                    best_depth = d
+
+            # Set the depth with the best consistency score for the pixel
+            if best_consistency_score >= consistency_threshold:
+                best_depthmap[y, x] = best_depth
+
+    return best_depthmap
+
+if __name__ == "__main__":
+    result = get_camera_parameters("../data/templeR_par.txt")
+    num_ims = len(result)
+    images = []
+    for index, img in enumerate(result):
+        I = {}
+        I["mat"] = cv2.imread(os.path.join("../data",img))
+        I["P"] = result[img]["P"]
+        images.append(I)
+    min_point = np.array([-0.023121, -0.038009, -0.091940])
+    max_point = np.array([0.078626, 0.121636, -0.017395])
+
+    corners_3d = np.array([
+        [min_point[0], min_point[1], min_point[2]],
+        [min_point[0], min_point[1], max_point[2]],
+        [min_point[0], max_point[1], min_point[2]],
+        [min_point[0], max_point[1], max_point[2]],
+        [max_point[0], min_point[1], min_point[2]],
+        [max_point[0], min_point[1], max_point[2]],
+        [max_point[0], max_point[1], min_point[2]],
+        [max_point[0], max_point[1], max_point[2]],
+    ])
+
+    projected_points = np.dot(images[0]["P"], np.column_stack((corners_3d, np.ones((8, 1)))).T)
+    depth_values = projected_points[-1, :]
+    projected = np.zeros((2,projected_points.shape[1]))
+    for i in range(projected_points.shape[1]):
+        projected[:,i] = projected_points[:2, i] / projected_points[2, i]
+        print(projected[:,i])
+        
+    color = (0, 0, 255)
+    radius = 5
+    thickness = -1
+    for i in range(projected.shape[1]):
+        point_coordinates = (int(projected[0, i]), int(projected[1, i]))
+        result_img = cv2.circle(images[0]["mat"], point_coordinates, radius, color, thickness)
+
+    plt.imshow(cv2.cvtColor(result_img, cv2.COLOR_BGR2RGB))
+    plt.title('Image with Points')
+    plt.show()
+
+    min_depth = np.min(depth_values)
+    max_depth = np.max(depth_values)
+
+    depth_step = 0.5
+    DepthmapAlgorithm(images[0], images[1], images[2], images[3], min_depth, max_depth, depth_step, S=5, consistency_threshold=0.7)
