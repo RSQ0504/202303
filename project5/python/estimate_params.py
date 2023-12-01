@@ -28,10 +28,14 @@ def estimate_params(P):
 
     K = R
     R = Q
-    K[K < 0] = -K[K < 0]
+    
     '''
     modify R corresponding to the changing of K
     '''
+    D = np.diag(np.sign(np.diag(K)))
+    K = np.dot(K,D)
+    R = np.dot(D,R)
+    K = K / K[-1, -1]
     
     t = -np.dot(R, c.reshape(-1, 1))
 
