@@ -35,7 +35,7 @@ def Get3dCoord(q, I0, d):
 
     q_new = np.array([d*x, d*y, d])
 
-    P_inverse = np.linalg.pinv(I0["P"][:,:-1]) 
+    P_inverse = np.linalg.inv(I0["P"][:,:-1]) 
     p_3d = P_inverse @ (q_new - I0["P"][:,-1])
 
     return p_3d
@@ -104,7 +104,7 @@ def DepthmapAlgorithm(I0, I1, I2, I3, min_depth, max_depth, depth_step, S=5, con
     
     for y in tqdm.tqdm(range(height)):
         for x in range(width):
-            if np.all(I0["mat"][y, x] < [10, 10, 10]):
+            if np.all(I0["mat"][y, x] < [30, 30, 30]):
                 continue
 
             best_consistency_score = -np.inf
@@ -186,7 +186,7 @@ if __name__ == "__main__":
     min_depth = np.min(depth_values)
     max_depth = np.max(depth_values)
 
-    depth_step = 0.05
+    depth_step = (max_depth-min_depth)/10
     d = DepthmapAlgorithm(images[0], images[1], images[2], images[3], min_depth, max_depth, depth_step, S=5, consistency_threshold=0.7)
     
     gray_image = cv2.cvtColor(images[0]["mat"] , cv2.COLOR_RGB2GRAY)
