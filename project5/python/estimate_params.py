@@ -33,6 +33,8 @@ def estimate_params(P):
     D = np.diag(np.sign(np.diag(K)))
     K = np.dot(K,D)
     R = np.dot(D,R)
+    if (abs(np.linalg.det(R) + 1) < 1e-4):
+        R = -R
     K = K / K[-1, -1]
     
     t = -np.dot(R, c.reshape(-1, 1))
