@@ -28,7 +28,11 @@ def estimate_params(P):
 
     K = R
     R = Q
-
+    K[K < 0] = -K[K < 0]
+    '''
+    modify R corresponding to the changing of K
+    '''
+    
     t = -np.dot(R, c.reshape(-1, 1))
 
     return K, R, t
