@@ -13,6 +13,17 @@ bool isUnique(int track, int* tracks, int count) {
     }
     return true;
 }
+void print_info(T* t, int size){
+    for(int i = 0; i < size; i++){
+            printf("%d ",t->result[i]);
+        }
+    printf("\n");
+    printf("The total number of tracks traversed by the r/w arm for each algorithm: %d\n",t->number_of_tracks_traversed);
+    stat_delay(t, size);
+    printf("\n");
+    printf("\n");
+    printf("\n");
+}
 
 int main(int argCount, char** args) {
     int num_tracks = 0;
@@ -75,24 +86,13 @@ int main(int argCount, char** args) {
 
     T* track_SSTF = SSTF(track_raw,num_tracks);
     printf("track_SSTF: ");
-    for(int i = 0; i < num_tracks; i++){
-            printf("%d ",track_SSTF->result[i]);
-        }
-    printf("\n");
-    printf("The total number of tracks traversed by the r/w arm for each algorithm: %d\n",track_SSTF->number_of_tracks_traversed);
-    stat_delay(track_SSTF, num_tracks);
-    printf("\n");
-    printf("\n");
-    printf("\n");
+    print_info(track_SSTF,num_tracks);
 
     T* track_SCAN = SCAN(track_raw,num_tracks);
     printf("track_SCAN: ");
-    for(int i = 0; i < num_tracks; i++){
-            printf("%d ",track_SCAN->result[i]);
-        }
-    printf("\n");
-    printf("The total number of tracks traversed by the r/w arm for each algorithm: %d\n",track_SCAN->number_of_tracks_traversed);
+    print_info(track_SCAN,num_tracks);
 
+    
     free(track_raw);
     free(track_FCFS);
     free_T(track_SSTF);
