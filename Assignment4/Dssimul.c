@@ -28,20 +28,20 @@ int* SSTF(int* raw, int size) {
 
     for (int i = 1; i < size; i++) {
         int min_distance = 999999;
-        int min_distance_index = -1;
+        int index = -1;
 
         for (int j = 0; j < size; j++) {
             if (!visited[j]) {
                 int distance = abs(raw[j] - current_track);
                 if (distance < min_distance) {
                     min_distance = distance;
-                    min_distance_index = j;
+                    index = j;
                 }
             }
         }
 
-        visited[min_distance_index] = 1;
-        current_track = raw[min_distance_index];
+        visited[index] = 1;
+        current_track = raw[index];
         result[i] = current_track;
     }
 
