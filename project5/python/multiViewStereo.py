@@ -36,7 +36,7 @@ def Get3dCoord(q, I0, d):
     q_new = np.array([d*x, d*y, d])
 
     P_inverse = np.linalg.inv(I0["P"][:,:-1]) 
-    p_3d = P_inverse @ (q_new - I0["P"][:,-1])
+    p_3d = np.dot(P_inverse, (q_new - I0["P"][:,-1]))
 
     return p_3d
 
@@ -70,8 +70,8 @@ def ComputeConsistency(I0, I1, X):
 
     X = np.vstack((X, np.ones((1, num_points))))
     #print(I0["P"].shape,X.shape)
-    projected_coords_I0 = I0["P"] @ X
-    projected_coords_I1 = I1["P"] @ X
+    projected_coords_I0 = np.dot(I0["P"], X)
+    projected_coords_I1 = np.dot(I1["P"], X)
     #print(I0["mat"].shape)
     
     C0 = np.zeros((num_points, 3))
@@ -82,16 +82,17 @@ def ComputeConsistency(I0, I1, X):
         x1, y1 = projected_coords_I1[:2, i] / projected_coords_I1[2, i]
         try:
             C0[i] = I0["mat"][int(y0), int(x0)]
-        except Exception as e:
-            C0[i] = [0,0,0]
-            # print(X[:,i])
-            # print(projected_coords_I0[:, i])
-            # print(y0,x0)
+        # except Exception as e:
+        #     C0[i] = [0,0,0]
+        #     # print(X[:,i])
+        #     # print(projected_coords_I0[:, i])
+        #     # print(y0,x0)
             
-        try:
+        # try:
             C1[i] = I1["mat"][int(y1),int(x1)]
         except Exception as e:
-            C1[i] = [0,0,0]
+            return -np.inf
+            # C1[i] = [0,0,0]
             # print(X[:,i])
             # print(projected_coords_I1[:, i])
             # print(y1,x1)
@@ -127,7 +128,8 @@ def DepthmapAlgorithm(I0, I1, I2, I3, min_depth, max_depth, depth_step, S=5, con
                 score01 = ComputeConsistency(I0, I1, X)
                 score02 = ComputeConsistency(I0, I2, X)
                 score03 = ComputeConsistency(I0, I3, X)
-
+                if score01 == -np.inf or score02 ==-np.inf or score03 == -np.inf:
+                    continue
                 avg_consistency_score = np.mean([score01, score02, score03])
 
                 # Update best depth if the consistency score is higher
@@ -186,10 +188,11 @@ if __name__ == "__main__":
     min_depth = np.min(depth_values)
     max_depth = np.max(depth_values)
 
-    depth_step = (max_depth-min_depth)/10
+    depth_step = (max_depth-min_depth)/25
     d = DepthmapAlgorithm(images[0], images[1], images[2], images[3], min_depth, max_depth, depth_step, S=5, consistency_threshold=0.7)
     
     gray_image = cv2.cvtColor(images[0]["mat"] , cv2.COLOR_RGB2GRAY)
+
     plt.figure()
     plt.imshow(d * (gray_image > 40), cmap='gray')
     plt.axis('image')
