@@ -183,8 +183,8 @@ if __name__ == "__main__":
 
     plt.imshow(result_img)
     plt.title('Image with Points')
-    plt.show()
-
+    plt.savefig('../results/3_5_1.png', dpi=300)
+    
     min_depth = np.min(depth_values)
     max_depth = np.max(depth_values)
 
