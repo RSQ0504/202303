@@ -54,6 +54,8 @@ int main(int argCount, char** args) {
             printf("%d ",track_raw[i]);
         }
     printf("\n");
+    printf("\n");
+    printf("\n");
 
     int* track_FCFS = FCFS(track_raw,num_tracks);
     printf("track_FCFS: ");
@@ -61,16 +63,23 @@ int main(int argCount, char** args) {
             printf("%d ",track_FCFS[i]);
         }
     printf("\n");
+    printf("\n");
+    printf("\n");
 
-    int* track_SSTF = SSTF(track_raw,num_tracks);
+    T* track_SSTF = SSTF(track_raw,num_tracks);
     printf("track_SSTF: ");
     for(int i = 0; i < num_tracks; i++){
-            printf("%d ",track_SSTF[i]);
+            printf("%d ",track_SSTF->result[i]);
         }
+    printf("\n");
+    stat_delay(track_SSTF, num_tracks);
+    printf("\n");
+    printf("\n");
     printf("\n");
 
 
     free(track_raw);
     free(track_FCFS);
+    free_T(track_SSTF);
     return 0;
 }
