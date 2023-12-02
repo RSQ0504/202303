@@ -76,6 +76,7 @@ int main(int argCount, char** args) {
             printf("%d ",track_SSTF->result[i]);
         }
     printf("\n");
+    printf("The total number of tracks traversed by the r/w arm for each algorithm: %d\n",track_SSTF->number_of_tracks_traversed);
     stat_delay(track_SSTF, num_tracks);
     printf("\n");
     printf("\n");

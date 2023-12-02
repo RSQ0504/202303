@@ -8,6 +8,7 @@ struct Tuple
 {
     int* result;
     int* delay;
+    int number_of_tracks_traversed;
 };
 
 void free_T(T* t);

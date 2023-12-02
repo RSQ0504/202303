@@ -44,6 +44,7 @@ int* FCFS(int* raw, int size){
 
 T* SSTF(int* raw, int size) {
     T* tuple = (T*)malloc(sizeof(T));
+    tuple->number_of_tracks_traversed = 0;
     tuple->result = (int *)malloc((size) * sizeof(int));
     tuple->delay = (int *)malloc((size) * sizeof(int));
 
@@ -73,7 +74,8 @@ T* SSTF(int* raw, int size) {
         visited[index] = 1;
         current_track = raw[index];
         tuple->result[i] = current_track;
-
+        tuple->number_of_tracks_traversed += abs(tuple->result[i] - tuple->result[i-1]);
+        // printf("%d ",tuple->number_of_tracks_traversed);
         if (i > index){
             tuple->delay[i] = i - index;
         }else{
