@@ -1,9 +1,18 @@
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
+#include <stdbool.h>
 #include <time.h>
 #include "Dssimul.h"
 
+bool isUnique(int track, int* tracks, int count) {
+    for (int i = 0; i < count; i++) {
+        if (tracks[i] == track) {
+            return false;
+        }
+    }
+    return true;
+}
 
 int main(int argCount, char** args) {
     int num_tracks = 0;
@@ -21,14 +30,17 @@ int main(int argCount, char** args) {
         track_raw[0] = atoi(strtok(args[1], ","));
         for(int i = 1; i < num_tracks; i++){
             value = strtok(NULL, ",");
-            // printf("%d\n", atoi(value));
             track_raw[i] = atoi(value);
         }
     } else {
         num_tracks = 50;
         track_raw = (int *)malloc((num_tracks) * sizeof(int));
-        for (int i = 0; i < num_tracks; ++i) {
-            track_raw[i] = rand() % 200;
+        for (int i = 0; i < num_tracks; i++) {
+            int track = rand() % 200;
+            while(!isUnique(track, track_raw, i)){
+                track = rand() % 200;
+            }
+            track_raw[i] = track;
         }
     }
     if (num_tracks<3) {
@@ -49,7 +61,7 @@ int main(int argCount, char** args) {
         }
     printf("\n");
 
-    
+
     free(track_raw);
     free(track_FCFS);
     return 0;
