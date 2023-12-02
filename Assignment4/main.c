@@ -54,10 +54,18 @@ int main(int argCount, char** args) {
             printf("%d ",track_raw[i]);
         }
     printf("\n");
+
     int* track_FCFS = FCFS(track_raw,num_tracks);
     printf("track_FCFS: ");
     for(int i = 0; i < num_tracks; i++){
             printf("%d ",track_FCFS[i]);
+        }
+    printf("\n");
+
+    int* track_SSTF = SSTF(track_raw,num_tracks);
+    printf("track_SSTF: ");
+    for(int i = 0; i < num_tracks; i++){
+            printf("%d ",track_SSTF[i]);
         }
     printf("\n");
 

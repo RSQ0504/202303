@@ -12,3 +12,38 @@ int* FCFS(int* raw, int size){
     }
     return result;
 }
+
+int* SSTF(int* raw, int size) {
+    int* result = (int *)malloc((size) * sizeof(int));
+
+    int visited[size];
+    for (int i = 0; i < size; i++) {
+        visited[i] = 0;
+    }
+
+    int current_track = raw[0];
+    result[0] = current_track;
+    visited[0] = 1;
+
+
+    for (int i = 1; i < size; i++) {
+        int min_distance = 999999;
+        int min_distance_index = -1;
+
+        for (int j = 0; j < size; j++) {
+            if (!visited[j]) {
+                int distance = abs(raw[j] - current_track);
+                if (distance < min_distance) {
+                    min_distance = distance;
+                    min_distance_index = j;
+                }
+            }
+        }
+
+        visited[min_distance_index] = 1;
+        current_track = raw[min_distance_index];
+        result[i] = current_track;
+    }
+
+    return result;
+}
