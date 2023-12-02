@@ -31,6 +31,10 @@ int main(int argCount, char** args) {
         for(int i = 1; i < num_tracks; i++){
             value = strtok(NULL, ",");
             track_raw[i] = atoi(value);
+            if (track_raw[i]>199){
+                fprintf(stderr, "Error: Invalid input. input %d is greater than 199.\n",track_raw[i]);
+                return 1;
+            }
         }
     } else {
         num_tracks = 50;
