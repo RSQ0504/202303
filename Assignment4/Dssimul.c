@@ -127,5 +127,18 @@ T* SCAN(int* raw, int size) {
         tuple->result[result_index] = temp_raw[i];
         tuple->number_of_tracks_traversed += abs(tuple->result[result_index] - tuple->result[result_index-1]);
     }
+
+    for (int i = 0; i < size; i++){
+        for(int j = 0; j < size; j++){
+            if(tuple->result[i] == raw[j]){
+                if(i>j){
+                    tuple->delay[i] = i - j;
+                }else{
+                    tuple->delay[i] = 0; // NO delays
+                }
+                break;
+            }
+        }
+    }
     return tuple;
 }
