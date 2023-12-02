@@ -85,3 +85,47 @@ T* SSTF(int* raw, int size) {
 
     return tuple;
 }
+
+T* SCAN(int* raw, int size) {
+    T* tuple = (T*)malloc(sizeof(T));
+    tuple->number_of_tracks_traversed = 0;
+    tuple->result = (int *)malloc((size) * sizeof(int));
+    tuple->delay = (int *)malloc((size) * sizeof(int));
+
+    int temp_raw[size];
+    int start_index = 0;
+    for (int i = 0; i < size; i++) {
+        temp_raw[i] = raw[i];
+    }
+    for (int i = 0; i < size - 1; i++) {
+        for (int j = 0; j < size - i - 1; j++) {
+            if (temp_raw[j] > temp_raw[j + 1]) {
+                if (j == start_index){
+                    start_index++;
+                }
+                int temp = temp_raw[j];
+                temp_raw[j] = temp_raw[j + 1];
+                temp_raw[j + 1] = temp;
+            }
+        }
+    }
+
+    int current_track = temp_raw[start_index];
+    int result_index = 0;
+    tuple->result[result_index] = current_track;
+
+    for (int i = start_index - 1; i >= 0; i--) {
+        result_index ++;
+        tuple->result[result_index] = temp_raw[i];
+        tuple->number_of_tracks_traversed += abs(tuple->result[result_index] - tuple->result[result_index-1]);
+    }
+
+    tuple->number_of_tracks_traversed += 2 * tuple->result[result_index];
+
+    for (int i = start_index+1; i < size; i++) {
+        result_index ++;
+        tuple->result[result_index] = temp_raw[i];
+        tuple->number_of_tracks_traversed += abs(tuple->result[result_index] - tuple->result[result_index-1]);
+    }
+    return tuple;
+}

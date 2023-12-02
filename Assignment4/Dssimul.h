@@ -18,3 +18,5 @@ void stat_delay(T* t,int size);
 int* FCFS(int* raw, int size);
 
 T* SSTF(int* raw, int size);
+
+T* SCAN(int* raw, int size);

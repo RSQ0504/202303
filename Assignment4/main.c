@@ -34,6 +34,9 @@ int main(int argCount, char** args) {
             if (track_raw[i]>199){
                 fprintf(stderr, "Error: Invalid input. input %d is greater than 199.\n",track_raw[i]);
                 return 1;
+            }else if(!isUnique(track_raw[i], track_raw, i)){
+                fprintf(stderr, "Error: Invalid input. input %d is duplicated.\n",track_raw[i]);
+                return 1;
             }
         }
     } else {
@@ -82,9 +85,17 @@ int main(int argCount, char** args) {
     printf("\n");
     printf("\n");
 
+    T* track_SCAN = SCAN(track_raw,num_tracks);
+    printf("track_SCAN: ");
+    for(int i = 0; i < num_tracks; i++){
+            printf("%d ",track_SCAN->result[i]);
+        }
+    printf("\n");
+    printf("The total number of tracks traversed by the r/w arm for each algorithm: %d\n",track_SCAN->number_of_tracks_traversed);
 
     free(track_raw);
     free(track_FCFS);
     free_T(track_SSTF);
+    free_T(track_SCAN);
     return 0;
 }
