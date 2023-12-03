@@ -4,20 +4,20 @@ import tqdm
 import os
 import matplotlib.pyplot as plt
 
-def depth_2_3d(depthmap,P):
+def depth_2_3d(depthmap,P,dot_3d):
     height, width = depthmap.shape
-    N = height * width
-    result = np.zeros((3,N))
-    inedx = 0
+    
     for y in range(height):
         for x in range(width):
             d = depthmap[y,x]
             temp_2d = np.array([d*x, d*y, d])
             P_inverse = np.linalg.inv(P[:,:-1]) 
-            p_3d = np.dot(P_inverse, (temp_2d - P[:,-1]))
-            result[:,index] = p_3d
-            index+=1
-    return result
+            p_3d = np.dot(P_inverse, (temp_2d - P[:,-1])).reshape((3, 1))
+            if dot_3d == []:
+                dot_3d = p_3d
+            else:
+                dot_3d = np.append(dot_3d, p_3d, axis=1)
+    return dot_3d
 
 def get_camera_parameters(file_path):
     with open(file_path, 'r') as file:
