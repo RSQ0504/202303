@@ -7,9 +7,11 @@ import matplotlib.pyplot as plt
 def depth_2_3d(depthmap,P,dot_3d):
     height, width = depthmap.shape
     
-    for y in range(height):
+    for y in tqdm.tqdm(range(height)):
         for x in range(width):
             d = depthmap[y,x]
+            if d == 0:
+                continue
             temp_2d = np.array([d*x, d*y, d])
             P_inverse = np.linalg.inv(P[:,:-1]) 
             p_3d = np.dot(P_inverse, (temp_2d - P[:,-1])).reshape((3, 1))
@@ -17,6 +19,7 @@ def depth_2_3d(depthmap,P,dot_3d):
                 dot_3d = p_3d
             else:
                 dot_3d = np.append(dot_3d, p_3d, axis=1)
+            # print(dot_3d.shape)
     return dot_3d
 
 def get_camera_parameters(file_path):
@@ -204,8 +207,9 @@ if __name__ == "__main__":
     max_depth = np.max(depth_values)
 
     depth_step = (max_depth-min_depth)/50
-    d = DepthmapAlgorithm(images[0], images[1], images[2], images[3], min_depth, max_depth, depth_step, S=3, consistency_threshold=0.5)
-    np.save('../results/my_dmap.npy', d)
+    # d = DepthmapAlgorithm(images[0], images[1], images[2], images[3], min_depth, max_depth, depth_step, S=3, consistency_threshold=0.5)
+    # np.save('../results/my_dmap.npy', d)
+    d = np.load("../results/my_dmap.npy")
     gray_image = cv2.cvtColor(images[0]["mat"] , cv2.COLOR_RGB2GRAY)
 
     plt.figure()
@@ -213,3 +217,7 @@ if __name__ == "__main__":
     plt.axis('image')
     plt.title('Depth Map')
     plt.savefig('../results/3_5.png', dpi=300)
+    
+    dot_3d = []
+    dot_3d = depth_2_3d(d,images[0]["P"],dot_3d)
+    print(dot_3d.shape)
