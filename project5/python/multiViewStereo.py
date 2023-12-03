@@ -3,6 +3,7 @@ import cv2
 import tqdm
 import os
 import matplotlib.pyplot as plt
+import multiprocessing
 
 def save_points_to_obj(points, filename):
     directory = os.path.dirname(filename)
@@ -131,7 +132,7 @@ def DepthmapAlgorithm(I0, I1, I2, I3, min_depth, max_depth, depth_step, S=5, con
     height, width, _ = I0["mat"].shape
     best_depthmap = np.zeros((height, width))
     
-    for y in tqdm.tqdm(range(height)):
+    for y in range(height):
         for x in range(width):
             if np.all(I0["mat"][y, x] < [30, 30, 30]):
                 continue
@@ -170,6 +171,12 @@ def DepthmapAlgorithm(I0, I1, I2, I3, min_depth, max_depth, depth_step, S=5, con
                 best_depthmap[y, x] = best_depth
 
     return best_depthmap
+
+def generate_depthmap(args):
+    idx, img1, img2, img3, img4, min_depth, max_depth, depth_step, S, consistency_threshold = args
+    dmap = DepthmapAlgorithm(img1, img2, img3, img4, min_depth, max_depth, depth_step, S=S, consistency_threshold=consistency_threshold)
+    np.save(f'../results/my_dmap{idx}.npy', dmap)
+    
 
 if __name__ == "__main__":
     result = get_camera_parameters("../data/templeR_par.txt")
@@ -215,22 +222,47 @@ if __name__ == "__main__":
     
     min_depth = np.min(depth_values)
     max_depth = np.max(depth_values)
-
     depth_step = (max_depth-min_depth)/50
-    d = DepthmapAlgorithm(images[0], images[1], images[2], images[3], min_depth, max_depth, depth_step, S=3, consistency_threshold=0.5)
-    np.save('../results/my_dmap.npy', d)
+    S = 3
+    consistency_threshold = 0.5
+
+    args_list = [
+        (1, images[0], images[1], images[2], images[3], min_depth, max_depth, depth_step, S, consistency_threshold),
+        (2, images[1], images[0], images[2], images[3], min_depth, max_depth, depth_step, S, consistency_threshold),
+        (3, images[2], images[1], images[0], images[3], min_depth, max_depth, depth_step, S, consistency_threshold),
+    ]
     
+    with multiprocessing.Pool() as pool:
+        pool.map(generate_depthmap, args_list)
     
-    d = np.load("../results/my_dmap.npy")
+    d1 = np.load("../results/my_dmap1.npy")
+    d2 = np.load("../results/my_dmap2.npy")
+    d3 = np.load("../results/my_dmap3.npy")
+    
     gray_image = cv2.cvtColor(images[0]["mat"] , cv2.COLOR_RGB2GRAY)
+    d1 = d1 * (gray_image > 50)
+    d2 = d2 * (gray_image > 50)
+    d3 = d3 * (gray_image > 50)
 
     plt.figure()
-    plt.imshow(d * (gray_image > 40), cmap='gray')
+    plt.imshow(d1, cmap='gray')
     plt.axis('image')
     plt.title('Depth Map')
-    plt.savefig('../results/3_5.png', dpi=300)
+    plt.savefig('../results/3_5(1).png', dpi=300)
+    plt.figure()
+    plt.imshow(d2, cmap='gray')
+    plt.axis('image')
+    plt.title('Depth Map')
+    plt.savefig('../results/3_5(2).png', dpi=300)
+    plt.figure()
+    plt.imshow(d3, cmap='gray')
+    plt.axis('image')
+    plt.title('Depth Map')
+    plt.savefig('../results/3_5(3).png', dpi=300)
     
     dot_3d = []
-    dot_3d = depth_2_3d(d,images[0]["P"],dot_3d)
+    dot_3d = depth_2_3d(d1,images[0]["P"],dot_3d)
+    dot_3d = depth_2_3d(d2,images[1]["P"],dot_3d)
+    dot_3d = depth_2_3d(d3,images[2]["P"],dot_3d)
     print(dot_3d.shape)
     save_points_to_obj(dot_3d, '../results/output.obj')
