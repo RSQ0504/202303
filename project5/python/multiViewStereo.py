@@ -4,6 +4,16 @@ import tqdm
 import os
 import matplotlib.pyplot as plt
 
+def save_points_to_obj(points, filename):
+    directory = os.path.dirname(filename)
+    if not os.path.exists(directory):
+        os.makedirs(directory)
+    with open(filename, 'w') as obj_file:
+        for i in range(points.shape[1]):
+            x, y, z = points[:, i]
+            obj_file.write(f'v {x} {y} {z}\n')
+
+
 def depth_2_3d(depthmap,P,dot_3d):
     height, width = depthmap.shape
     
@@ -207,8 +217,10 @@ if __name__ == "__main__":
     max_depth = np.max(depth_values)
 
     depth_step = (max_depth-min_depth)/50
-    # d = DepthmapAlgorithm(images[0], images[1], images[2], images[3], min_depth, max_depth, depth_step, S=3, consistency_threshold=0.5)
-    # np.save('../results/my_dmap.npy', d)
+    d = DepthmapAlgorithm(images[0], images[1], images[2], images[3], min_depth, max_depth, depth_step, S=3, consistency_threshold=0.5)
+    np.save('../results/my_dmap.npy', d)
+    
+    
     d = np.load("../results/my_dmap.npy")
     gray_image = cv2.cvtColor(images[0]["mat"] , cv2.COLOR_RGB2GRAY)
 
@@ -221,3 +233,4 @@ if __name__ == "__main__":
     dot_3d = []
     dot_3d = depth_2_3d(d,images[0]["P"],dot_3d)
     print(dot_3d.shape)
+    save_points_to_obj(dot_3d, '../results/output.obj')
