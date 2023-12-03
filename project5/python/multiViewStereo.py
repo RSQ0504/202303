@@ -188,9 +188,9 @@ if __name__ == "__main__":
     min_depth = np.min(depth_values)
     max_depth = np.max(depth_values)
 
-    depth_step = (max_depth-min_depth)/25
+    depth_step = (max_depth-min_depth)/50
     d = DepthmapAlgorithm(images[0], images[1], images[2], images[3], min_depth, max_depth, depth_step, S=3, consistency_threshold=0.5)
-    
+    np.save('../results/my_dmap.npy', d)
     gray_image = cv2.cvtColor(images[0]["mat"] , cv2.COLOR_RGB2GRAY)
 
     plt.figure()
