@@ -4,6 +4,21 @@ import tqdm
 import os
 import matplotlib.pyplot as plt
 
+def depth_2_3d(depthmap,P):
+    height, width = depthmap.shape
+    N = height * width
+    result = np.zeros((3,N))
+    inedx = 0
+    for y in range(height):
+        for x in range(width):
+            d = depthmap[y,x]
+            temp_2d = np.array([d*x, d*y, d])
+            P_inverse = np.linalg.inv(P[:,:-1]) 
+            p_3d = np.dot(P_inverse, (temp_2d - P[:,-1]))
+            result[:,index] = p_3d
+            index+=1
+    return result
+
 def get_camera_parameters(file_path):
     with open(file_path, 'r') as file:
         lines = file.readlines()
