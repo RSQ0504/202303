@@ -51,7 +51,7 @@ if __name__ == "__main__":
     image_path = os.path.abspath(os.path.join(current_directory, relative_path))
     I2 = cv2.imread(image_path)
 
-    correspondence = np.load('project5/data/someCorresp.npy', allow_pickle=True).item()
+    correspondence = np.load('../data/someCorresp.npy', allow_pickle=True).item()
 
     pts1 = correspondence['pts1']
     pts2 = correspondence['pts2']
