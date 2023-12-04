@@ -83,4 +83,8 @@ error1 = np.sqrt(np.mean(np.sum((pts1 - pts1_reproj[:, :2])**2, axis=1)))
 error2 = np.sqrt(np.mean(np.sum((pts2 - pts2_reproj[:, :2])**2, axis=1)))
 
 error = (error1 + error2) / 2.0
+print("img1:")
+print(error1)
+print("img2:")
+print(error2)
 print(error)
