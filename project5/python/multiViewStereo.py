@@ -224,7 +224,7 @@ if __name__ == "__main__":
     max_depth = np.max(depth_values)
     depth_step = (max_depth-min_depth)/100
     S = 3
-    consistency_threshold = 0.8
+    consistency_threshold = 0.85
 
     args_list = [
         (1, images[0], images[1], images[3], images[4], min_depth, max_depth, depth_step, S, consistency_threshold),
