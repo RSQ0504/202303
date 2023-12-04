@@ -207,7 +207,7 @@ if __name__ == "__main__":
     projected = np.zeros((2,projected_points.shape[1]))
     for i in range(projected_points.shape[1]):
         projected[:,i] = projected_points[:2, i] / projected_points[2, i]
-        print(projected[:,i])
+        # print(projected[:,i])
         
     color = (255, 0, 0)
     radius = 5
@@ -224,12 +224,14 @@ if __name__ == "__main__":
     max_depth = np.max(depth_values)
     depth_step = (max_depth-min_depth)/50
     S = 3
-    consistency_threshold = 0.5
+    consistency_threshold = 0.6
 
     args_list = [
-        (1, images[0], images[1], images[2], images[3], min_depth, max_depth, depth_step, S, consistency_threshold),
-        (2, images[1], images[0], images[2], images[3], min_depth, max_depth, depth_step, S, consistency_threshold),
-        (3, images[2], images[1], images[0], images[3], min_depth, max_depth, depth_step, S, consistency_threshold),
+        (1, images[0], images[1], images[3], images[4], min_depth, max_depth, depth_step, S, consistency_threshold),
+        (2, images[1], images[2], images[3], images[4], min_depth, max_depth, depth_step, S, consistency_threshold),
+        (3, images[2], images[0], images[3], images[4], min_depth, max_depth, depth_step, S, consistency_threshold),
+        (4, images[3], images[4], images[0], images[1], min_depth, max_depth, depth_step, S, consistency_threshold),
+        (5, images[4], images[3], images[1], images[2], min_depth, max_depth, depth_step, S, consistency_threshold)
     ]
     
     with multiprocessing.Pool() as pool:
@@ -238,11 +240,16 @@ if __name__ == "__main__":
     d1 = np.load("../results/my_dmap1.npy")
     d2 = np.load("../results/my_dmap2.npy")
     d3 = np.load("../results/my_dmap3.npy")
+    d4 = np.load("../results/my_dmap4.npy")
+    d5 = np.load("../results/my_dmap5.npy")
     
     gray_image = cv2.cvtColor(images[0]["mat"] , cv2.COLOR_RGB2GRAY)
     d1 = d1 * (gray_image > 50)
     d2 = d2 * (gray_image > 50)
     d3 = d3 * (gray_image > 50)
+    d4 = d4 * (gray_image > 50)
+    d5 = d5 * (gray_image > 50)
+
 
     plt.figure()
     plt.imshow(d1, cmap='gray')
@@ -259,10 +266,21 @@ if __name__ == "__main__":
     plt.axis('image')
     plt.title('Depth Map')
     plt.savefig('../results/3_5(3).png', dpi=300)
+    plt.imshow(d4, cmap='gray')
+    plt.axis('image')
+    plt.title('Depth Map')
+    plt.savefig('../results/3_5(4).png', dpi=300)
+    plt.figure()
+    plt.imshow(d5, cmap='gray')
+    plt.axis('image')
+    plt.title('Depth Map')
+    plt.savefig('../results/3_5(5).png', dpi=300)
     
     dot_3d = []
     dot_3d = depth_2_3d(d1,images[0]["P"],dot_3d)
     dot_3d = depth_2_3d(d2,images[1]["P"],dot_3d)
     dot_3d = depth_2_3d(d3,images[2]["P"],dot_3d)
+    dot_3d = depth_2_3d(d4,images[3]["P"],dot_3d)
+    dot_3d = depth_2_3d(d5,images[4]["P"],dot_3d)
     print(dot_3d.shape)
     save_points_to_obj(dot_3d, '../results/output.obj')
