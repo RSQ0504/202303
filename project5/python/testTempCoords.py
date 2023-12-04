@@ -25,6 +25,7 @@ R1, t1 = np.eye(3), np.zeros((3, 1))
 R2, t2 = np.eye(3), np.zeros((3, 1))
 
 F = eightpoint(pts1, pts2, M)
+print(F)
 
 pts = np.load('../data/templeCoords.npy', allow_pickle=True).tolist()
 pts1 = pts['pts1']
@@ -34,6 +35,7 @@ k1 = intrinsics['K1']
 k2 = intrinsics['K2']
 
 E = essentialMatrix(F, k1, k2)
+print(E)
 
 P1 = np.dot(k1,np.hstack((np.eye(3), np.zeros((3, 1)))))
 

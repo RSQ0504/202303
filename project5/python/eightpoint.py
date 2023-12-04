@@ -59,4 +59,5 @@ if __name__ == "__main__":
     M = max(I1.shape[0],I1.shape[1])
 
     F = eightpoint(pts1, pts2, M)
+    print(F)
     displayEpipolarF(I1,I2,F)
