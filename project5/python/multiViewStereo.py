@@ -218,7 +218,79 @@ if __name__ == "__main__":
 
     plt.imshow(result_img)
     plt.title('Image with Points')
-    plt.savefig('../results/3_5_1.png', dpi=300)
+    plt.savefig('../results/3_5_1(1).png', dpi=300)
+
+    projected_points = np.dot(images[1]["P"], np.column_stack((corners_3d, np.ones((8, 1)))).T)
+    depth_values = projected_points[-1, :]
+    projected = np.zeros((2,projected_points.shape[1]))
+    for i in range(projected_points.shape[1]):
+        projected[:,i] = projected_points[:2, i] / projected_points[2, i]
+        # print(projected[:,i])
+        
+    color = (255, 0, 0)
+    radius = 5
+    thickness = -1
+    for i in range(projected.shape[1]):
+        point_coordinates = (int(projected[0, i]), int(projected[1, i]))
+        result_img = cv2.circle(images[1]["mat"], point_coordinates, radius, color, thickness)
+
+    plt.imshow(result_img)
+    plt.title('Image with Points')
+    plt.savefig('../results/3_5_1(2).png', dpi=300)
+
+    projected_points = np.dot(images[2]["P"], np.column_stack((corners_3d, np.ones((8, 1)))).T)
+    depth_values = projected_points[-1, :]
+    projected = np.zeros((2,projected_points.shape[1]))
+    for i in range(projected_points.shape[1]):
+        projected[:,i] = projected_points[:2, i] / projected_points[2, i]
+        # print(projected[:,i])
+        
+    color = (255, 0, 0)
+    radius = 5
+    thickness = -1
+    for i in range(projected.shape[1]):
+        point_coordinates = (int(projected[0, i]), int(projected[1, i]))
+        result_img = cv2.circle(images[2]["mat"], point_coordinates, radius, color, thickness)
+
+    plt.imshow(result_img)
+    plt.title('Image with Points')
+    plt.savefig('../results/3_5_1(3).png', dpi=300)
+
+    projected_points = np.dot(images[3]["P"], np.column_stack((corners_3d, np.ones((8, 1)))).T)
+    depth_values = projected_points[-1, :]
+    projected = np.zeros((2,projected_points.shape[1]))
+    for i in range(projected_points.shape[1]):
+        projected[:,i] = projected_points[:2, i] / projected_points[2, i]
+        # print(projected[:,i])
+        
+    color = (255, 0, 0)
+    radius = 5
+    thickness = -1
+    for i in range(projected.shape[1]):
+        point_coordinates = (int(projected[0, i]), int(projected[1, i]))
+        result_img = cv2.circle(images[3]["mat"], point_coordinates, radius, color, thickness)
+
+    plt.imshow(result_img)
+    plt.title('Image with Points')
+    plt.savefig('../results/3_5_1(4).png', dpi=300)
+
+    projected_points = np.dot(images[4]["P"], np.column_stack((corners_3d, np.ones((8, 1)))).T)
+    depth_values = projected_points[-1, :]
+    projected = np.zeros((2,projected_points.shape[1]))
+    for i in range(projected_points.shape[1]):
+        projected[:,i] = projected_points[:2, i] / projected_points[2, i]
+        # print(projected[:,i])
+        
+    color = (255, 0, 0)
+    radius = 5
+    thickness = -1
+    for i in range(projected.shape[1]):
+        point_coordinates = (int(projected[0, i]), int(projected[1, i]))
+        result_img = cv2.circle(images[4]["mat"], point_coordinates, radius, color, thickness)
+
+    plt.imshow(result_img)
+    plt.title('Image with Points')
+    plt.savefig('../results/3_5_1(5).png', dpi=300)
     
     min_depth = np.min(depth_values)
     max_depth = np.max(depth_values)
