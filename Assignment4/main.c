@@ -42,8 +42,8 @@ int main(int argCount, char** args) {
         for(int i = 1; i < num_tracks; i++){
             value = strtok(NULL, ",");
             track_raw[i] = atoi(value);
-            if (track_raw[i]>199){
-                fprintf(stderr, "Error: Invalid input. input %d is greater than 199.\n",track_raw[i]);
+            if (track_raw[i]>199 || track_raw[i]<0){
+                fprintf(stderr, "Error: Invalid input. input %d.\n",track_raw[i]);
                 return 1;
             }else if(!isUnique(track_raw[i], track_raw, i)){
                 fprintf(stderr, "Error: Invalid input. input %d is duplicated.\n",track_raw[i]);

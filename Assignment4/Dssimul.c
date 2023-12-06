@@ -120,12 +120,14 @@ T* SCAN(int* raw, int size) {
         tuple->number_of_tracks_traversed += abs(tuple->result[result_index] - tuple->result[result_index-1]);
     }
 
-    tuple->number_of_tracks_traversed += 2 * tuple->result[result_index];
+    if(start_index+1<size){
+        tuple->number_of_tracks_traversed += 2 * tuple->result[result_index];
 
-    for (int i = start_index+1; i < size; i++) {
-        result_index ++;
-        tuple->result[result_index] = temp_raw[i];
-        tuple->number_of_tracks_traversed += abs(tuple->result[result_index] - tuple->result[result_index-1]);
+        for (int i = start_index+1; i < size; i++) {
+            result_index ++;
+            tuple->result[result_index] = temp_raw[i];
+            tuple->number_of_tracks_traversed += abs(tuple->result[result_index] - tuple->result[result_index-1]);
+        }
     }
 
     for (int i = 0; i < size; i++){
